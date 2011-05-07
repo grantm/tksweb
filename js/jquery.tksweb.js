@@ -144,7 +144,8 @@ create_activity({
                 var act_data = activity.tmplItem().data;
                 act_data.height = activity.height();
                 act_data.hours  = (act_data.height + app.border_allowance) / (4 * y_inc);
-                week_hours.focus();
+                unselect_activity();
+                select_activity(activity);
             }
         });
 
