@@ -7,16 +7,6 @@
  *   http://www.opensource.org/licenses/mit-license.php
  *   http://www.gnu.org/licenses/gpl.html
  *
- * Rough TODO list:
-   * pop-up help for key-bindings
-   * auto scroll when cursor moved out of viewport with keyboard
-   * copy to clipboard
-   * paste new activity
-   * undo ?
-   * dialog title: "edit" vs "create"
-   * nudge algorithm to avoid overlaps
-   * load: initialise week view using data from server
-   * save: marshall activities and send to server
  */
 
 (function($) {
