@@ -271,6 +271,7 @@ create_activity({
     function delete_activity() {
         var activity = app.current_activity;
         if(!activity) {
+            app_alert('You must select an activity first');
             return;
         }
         unselect_activity();
@@ -308,6 +309,12 @@ create_activity({
         var act = $.tmpl("tmpl_activity", data);
         act.dblclick(function(e) { dblclick_activity(e) });
         activities.append(act);
+    }
+
+    function app_alert(message) {
+        alert(message);
+        week_hours.focus();           // Work-around keyboard focus being lost
+        week_hours.css({'outline': 'none'});
     }
 
     function add_activity_dialog($app_el) {
