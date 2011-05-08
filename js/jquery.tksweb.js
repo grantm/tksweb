@@ -181,7 +181,7 @@ create_activity({
         var m = size % 4;
         tooltip.text(h + ':' + min[m]).show();
         tooltip.position({
-          my: "left top",
+          my: "left bottom",
           at: "right bottom",
           of: activity
         });
