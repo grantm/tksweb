@@ -1,5 +1,5 @@
-* turn off key event handling while dialog active
 * pop-up help for key-bindings
+* key bindings for increase/descrease activity duration
 * show number of hours when resizing
 * show start time when dragging
 * auto scroll when cursor moved out of viewport with keyboard

@@ -25,8 +25,9 @@ $.fn.tksweb.build = function(app_el, options) {
     var y_max      = (app.last_hour - app.first_hour + 0.75) * 4 * y_inc;
     var keyCode    = $.ui.keyCode;
 
-    app.current_activity = null;
-    app.clipboard        = null;
+    app.current_activity       = null;
+    app.clipboard              = null;
+    app.activity_dialog_active = false;
 
     register_templates();
 
@@ -202,6 +203,9 @@ create_activity({
     }
 
     function key_handler(e) {
+        if(app.activity_dialog_active) {
+            return true;
+        }
         var curr = null;
         if(app.current_activity) {
             curr = $(app.current_activity).tmplItem().data;
@@ -372,10 +376,14 @@ create_activity({
             height:        230,
             modal:         true,
             open: function() {
+                app.activity_dialog_active = true;
                 var data = current_activity_data() || default_activity_data();
                 wr_inp.val(data.wr_number);
                 hr_inp.val(data.hours);
                 desc_inp.val(data.description);
+            },
+            close: function() {
+                app.activity_dialog_active = false;
             },
             buttons:       {
                 "Ok":  function() {
