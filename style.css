@@ -87,6 +87,16 @@ noscript p {
   border: 1px dashed #ff0000;
 }
 
+.tksweb-app .tooltip {
+  position: absolute;
+  border: 1px solid #999999;
+  background-color: #fff766;
+  color: #333333;
+  padding: 1px 2px;
+  font-size: 12px;
+  z-index: 999;
+}
+
 .tksweb-app div.activity {
   font-size: 10px;
   padding: 0 1px;

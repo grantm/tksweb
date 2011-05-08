@@ -36,7 +36,10 @@ $.fn.tksweb.build = function(app_el, options) {
     var hours      = $('<ul class="hour-labels" />');
     var week_hours = $('<div class="week-hours" />');
     var activities = $('<div class="activities" />');
+    var tooltip    = $('<div class="tooltip" />').hide();
     var cursor     = add_cursor(activities);
+
+    activities.append(tooltip);
 
     $(app.day_names).each(function(i, day) {
         week_hdr.append( $('<li />').text(day) )
@@ -132,10 +135,17 @@ create_activity({
         activity.resizable({
             handles: 'n, s',
             grid: [0, y_inc],
+            start: function (event, ui) {
+                show_duration_tooltip(activity);
+            },
+            resize: function (event, ui) {
+                show_duration_tooltip(activity);
+            },
             stop: function (event, ui) {
                 var act_data = activity.tmplItem().data;
                 act_data.height = activity.height();
                 act_data.hours  = (act_data.height + app.border_allowance) / (4 * y_inc);
+                hide_tooltip();
                 unselect_activity();
                 select_activity(activity);
             }
@@ -153,6 +163,23 @@ create_activity({
 
         parent.append(cursor);
         return cursor;
+    }
+
+    function show_duration_tooltip(activity) {
+        var size = (activity.height() + app.border_allowance) / y_inc;
+        var min  = [ '00', '15', '30', '45' ];
+        var h = Math.floor(size / 4);
+        var m = size % 4;
+        tooltip.text(h + ':' + min[m]).show();
+        tooltip.position({
+          my: "left top",
+          at: "right bottom",
+          of: activity
+        });
+    }
+
+    function hide_tooltip() {
+        tooltip.hide();
     }
 
     function set_cursor_pos(x, y) {
