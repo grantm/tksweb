@@ -26,6 +26,7 @@ $.fn.tksweb.build = function(app_el, options) {
     var keyCode    = $.ui.keyCode;
 
     app.current_activity = null;
+    app.clipboard        = null;
 
     register_templates();
 
@@ -189,6 +190,10 @@ create_activity({
         if(app.current_activity) {
             return $(app.current_activity).tmplItem().data;
         }
+        return null;
+    }
+
+    function default_activity_data() {
         return {
             wr_number   : '',
             hours       : app.default_duration,
@@ -212,7 +217,21 @@ create_activity({
                 move_cursor(0, curr ? curr.hours * 4 * y_inc : y_inc);
                 break;
             case keyCode.DELETE: delete_activity();       break;
-            default: return;
+            default:
+                if(e.ctrlKey && e.keyCode == 67) {  // Ctrl-C
+                    copy_activity();
+                }
+                else if(e.ctrlKey && e.keyCode == 88) {  // Ctrl-X
+                    copy_activity();
+                    delete_activity();
+                }
+                else if(e.ctrlKey && e.keyCode == 86) {  // Ctrl-V
+                    paste_activity();
+                }
+                else {
+                    return;
+                }
+                break;
         }
         e.preventDefault();
     }
@@ -278,6 +297,28 @@ create_activity({
         $(activity).remove();
     }
 
+    function copy_activity() {
+        var data = current_activity_data();
+        if(!data) {
+            app_alert('You must select an activity first');
+            return;
+        }
+        app.clipboard = {};
+        for(var key in data) {
+            app.clipboard[key] = data[key];
+        }
+    }
+
+    function paste_activity() {
+        var data = {};
+        for(var key in app.clipboard) {
+            data[key] = app.clipboard[key];
+        }
+        create_activity(data);
+        var p = cursor.position();
+        select_activity( find_activity_at_cursor(p) );
+    }
+
     function activate_cursor() {
         dlg_activity.dialog('open');
     }
@@ -337,7 +378,7 @@ create_activity({
             height:        230,
             modal:         true,
             open: function() {
-                var data = current_activity_data();
+                var data = current_activity_data() || default_activity_data();
                 wr_inp.val(data.wr_number);
                 hr_inp.val(data.hours);
                 desc_inp.val(data.description);

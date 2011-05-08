@@ -1,11 +1,10 @@
+* turn off key event handling while dialog active
 * pop-up help for key-bindings
 * show number of hours when resizing
 * show start time when dragging
 * auto scroll when cursor moved out of viewport with keyboard
 * restrict drag from going outside configured hours
 * restrict resize from going outside configured hours
-* copy to clipboard
-* paste new activity
 * undo ?
 * dialog title: "edit" vs "create"
 * nudge algorithm to avoid overlaps
