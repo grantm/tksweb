@@ -303,20 +303,13 @@ create_activity({
             app_alert('You must select an activity first');
             return;
         }
-        app.clipboard = {};
-        for(var key in data) {
-            app.clipboard[key] = data[key];
-        }
+        app.clipboard = $.extend({}, data);
     }
 
     function paste_activity() {
-        var data = {};
-        for(var key in app.clipboard) {
-            data[key] = app.clipboard[key];
-        }
-        create_activity(data);
-        var p = cursor.position();
-        select_activity( find_activity_at_cursor(p) );
+        var data = $.extend({}, app.clipboard);
+        var activity = create_activity(data);
+        select_activity( activity );
     }
 
     function activate_cursor() {
@@ -347,9 +340,10 @@ create_activity({
         data.height = data.hours * 4 * y_inc - app.border_allowance;
         data.x      = p.left;
         data.y      = p.top;
-        var act = $.tmpl("tmpl_activity", data);
-        act.dblclick(function(e) { dblclick_activity(e) });
-        activities.append(act);
+        var activity = $.tmpl("tmpl_activity", data);
+        activity.dblclick(function(e) { dblclick_activity(e) });
+        activities.append(activity);
+        return activity;
     }
 
     function app_alert(message) {
