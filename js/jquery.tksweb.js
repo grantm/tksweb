@@ -124,6 +124,7 @@ create_activity({
             cursor: 'move',
             zIndex:  100,
             start: function (event, ui) {
+                cursor.hide();
                 show_start_time_tooltip(activity);
             },
             drag: function (event, ui) {
@@ -136,6 +137,7 @@ create_activity({
                 act_data.y = p.top;
                 set_cursor_pos(p.left, p.top);
                 hide_tooltip();
+                cursor.show();
             }
         });
 
