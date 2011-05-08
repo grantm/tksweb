@@ -123,12 +123,19 @@ create_activity({
             containment: 'parent',
             cursor: 'move',
             zIndex:  100,
+            start: function (event, ui) {
+                show_start_time_tooltip(activity);
+            },
+            drag: function (event, ui) {
+                show_start_time_tooltip(activity);
+            },
             stop: function () {
                 var act_data = activity.tmplItem().data;
                 p = activity.position()
                 act_data.x = p.left;
                 act_data.y = p.top;
                 set_cursor_pos(p.left, p.top);
+                hide_tooltip();
             }
         });
 
@@ -174,6 +181,20 @@ create_activity({
         tooltip.position({
           my: "left top",
           at: "right bottom",
+          of: activity
+        });
+    }
+
+    function show_start_time_tooltip(activity) {
+        var p = activity.position();
+        var start = p.top / y_inc;
+        var min  = [ '00', '15', '30', '45' ];
+        var h = Math.floor(start / 4);
+        var m = start % 4;
+        tooltip.text(h + ':' + (min[m] || '00')).show();
+        tooltip.position({
+          my: "right top",
+          at: "left top",
           of: activity
         });
     }

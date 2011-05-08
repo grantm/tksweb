@@ -1,7 +1,6 @@
+* hide cursor when activity selected
 * pop-up help for key-bindings
 * key bindings for increase/descrease activity duration
-* show number of hours when resizing
-* show start time when dragging
 * auto scroll when cursor moved out of viewport with keyboard
 * restrict drag from going outside configured hours
 * restrict resize from going outside configured hours
