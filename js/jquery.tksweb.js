@@ -381,6 +381,14 @@ create_activity({
                 wr_inp.val(data.wr_number);
                 hr_inp.val(data.hours);
                 desc_inp.val(data.description);
+                if(data.x) {
+                    dlg_activity.dialog('option', 'title', 'Edit Activity');
+                    desc_inp.focus();
+                }
+                else {
+                    dlg_activity.dialog('option', 'title', 'Create Activity');
+                    wr_inp.focus();
+                }
             },
             close: function() {
                 app.activity_dialog_active = false;

@@ -6,7 +6,6 @@
 * restrict drag from going outside configured hours
 * restrict resize from going outside configured hours
 * undo ?
-* dialog title: "edit" vs "create"
 * nudge algorithm to avoid overlaps
 * load: initialise week view using data from server
 * save: marshall activities and send to server
