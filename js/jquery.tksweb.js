@@ -65,7 +65,7 @@ $.fn.tksweb.build = function(app_el, options) {
     });
 
     $(document).keydown(function(e) { key_handler(e); });
-    activities.dblclick(function(e) { dblclick_canvas(e); })
+    activities.dblclick(function(e) { edit_activity_at_cursor(e); })
     week_hours.mousedown(function(e) { mousedown_handler(e) });
 
 set_cursor_pos(100, 10 * app.hour_height);
@@ -178,11 +178,7 @@ create_activity({
         set_cursor_pos(x, y);
     }
 
-    function dblclick_canvas(e) {
-        activate_cursor();
-    }
-
-    function dblclick_activity(e) {
+    function edit_activity_at_cursor(e) {
         dlg_activity.dialog('open');
         e.stopPropagation();
     }
@@ -211,9 +207,9 @@ create_activity({
             curr = $(app.current_activity).tmplItem().data;
         }
         switch(e.keyCode) {
-            case keyCode.LEFT:   move_cursor(-x_inc,  0); break;
-            case keyCode.RIGHT:  move_cursor( x_inc,  0); break;
-            case keyCode.ENTER:  activate_cursor();       break;
+            case keyCode.LEFT:   move_cursor(-x_inc,  0);    break;
+            case keyCode.RIGHT:  move_cursor( x_inc,  0);    break;
+            case keyCode.ENTER:  edit_activity_at_cursor(e); break;
             case keyCode.UP:
                 move_cursor(0, -y_inc);
                 break;
@@ -316,10 +312,6 @@ create_activity({
         select_activity( activity );
     }
 
-    function activate_cursor() {
-        dlg_activity.dialog('open');
-    }
-
     function save_activity(data) {
         if(app.current_activity) {
             update_activity(data);
@@ -345,7 +337,6 @@ create_activity({
         data.x      = p.left;
         data.y      = p.top;
         var activity = $.tmpl("tmpl_activity", data);
-        activity.dblclick(function(e) { dblclick_activity(e) });
         activities.append(activity);
         return activity;
     }
