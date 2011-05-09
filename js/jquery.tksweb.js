@@ -94,7 +94,7 @@ create_activity({
 
 set_cursor_pos(300, 9 * app.hour_height);
 create_activity({
-    description : "Decommision obselete thing",
+    description : "Decommission obselete thing",
     hours       : 1,
     wr_number   : "44632"
 });
