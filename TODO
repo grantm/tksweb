@@ -1,3 +1,5 @@
+* validate hours value (duration beyond end-of-day; fractional part not 15m)
+* change gb colour if no WR number
 * pop-up help for key-bindings
 * key bindings for increase/descrease activity duration
 * auto scroll when cursor moved out of viewport with keyboard

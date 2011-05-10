@@ -103,9 +103,16 @@ noscript p {
   position: absolute;
   width: 97px;
   border: 1px solid #ddd;
-  background-image: url(images/activity-bg-yellow.jpg);
+  background-image: url(images/activity-bg.jpg);
   z-index: 1;
 }
+
+.bg-0 { background-position: -5px 0; }
+.bg-1 { background-position: -115px 0; }
+.bg-2 { background-position: -225px 0; }
+.bg-3 { background-position: -335px 0; }
+.bg-4 { background-position: -445px 0; }
+.bg-5 { background-position: -555px 0; }
 
 .tksweb-app div.activity:hover {
   border: 1px solid #aaa;

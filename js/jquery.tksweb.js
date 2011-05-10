@@ -105,7 +105,7 @@ create_activity({
     function register_templates() {
         $.template(
             "tmpl_activity",
-            '<div class="activity" style="'
+            '<div class="activity bg-${bg}" style="'
             + 'height: ${height}px; top: ${y}px; left: ${x}px;'
             + '">'
             + '<p>${wr_number}: ${description}</p></div>'
@@ -278,6 +278,12 @@ create_activity({
                 else if(e.ctrlKey && e.keyCode == 86) {  // Ctrl-V
                     paste_activity();
                 }
+                else if(e.keyCode == 67) {  // C
+                    var activity = app.current_activity;
+                    var data = current_activity_data();
+                    data.bg = (data.bg + 1) % 6;
+                    update_activity(data);
+                }
                 else {
                     return;
                 }
@@ -386,6 +392,7 @@ create_activity({
         data.height = data.hours * 4 * y_inc - app.border_allowance;
         data.x      = p.left;
         data.y      = p.top;
+        data.bg     = data.bg || 0;
         var activity = $.tmpl("tmpl_activity", data);
         activities.append(activity);
         return activity;
