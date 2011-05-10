@@ -385,6 +385,7 @@ create_activity({
         tmpl_data.description = data.description;
         tmpl_data.height      = data.hours * 4 * y_inc - app.border_allowance;
         tmpl_item.update();
+        select_activity(tmpl_item.nodes[0]);  // Why is this hack necessary?
     }
 
     function create_activity(data) {
