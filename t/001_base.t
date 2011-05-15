@@ -1,5 +1,10 @@
-use Test::More tests => 1;
+use Test::More;
+
 use strict;
 use warnings;
 
-use_ok 'tksweb';
+use TKS::Web;
+
+ok(1, 'loaded main app library');
+
+done_testing();
