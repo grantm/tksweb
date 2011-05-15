@@ -5,7 +5,7 @@ use Dancer ':syntax';
 our $VERSION = '0.1';
 
 get '/dancer' => sub {
-    template 'dancer';
+    template 'dancer', {}, { layout => 'dancer' };
 };
 
 true;
