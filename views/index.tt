@@ -1,0 +1,9 @@
+<h1>TKS-Web</h1>
+
+<noscript>
+  <h1>Javascript Required</h1>
+  <p>You must enable Javascript in your browser to access this application.</p>
+</noscript>
+
+<div id="tks-web"></div>
+
