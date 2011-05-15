@@ -4,12 +4,10 @@ use ExtUtils::MakeMaker;
 
 WriteMakefile(
     NAME                => 'tksweb',
-    AUTHOR              => q{YOUR NAME <youremail@example.com>},
-    VERSION_FROM        => 'lib/tksweb.pm',
-    ABSTRACT            => 'YOUR APPLICATION ABSTRACT',
-    ($ExtUtils::MakeMaker::VERSION >= 6.3002
-      ? ('LICENSE'=> 'perl')
-      : ()),
+    AUTHOR              => q{Grant McLean <grant@catalyst.net.nz>},
+    VERSION_FROM        => 'lib/TKS/Web.pm',
+    ABSTRACT            => 'Web front-end',
+    LICENSE             => 'perl',
     PL_FILES            => {},
     PREREQ_PM => {
         'Test::More' => 0,
