@@ -12,9 +12,4 @@ get '/' => sub {
     template 'index', {};
 };
 
-
-get '/dancer' => sub {
-    template 'dancer', {}, { layout => 'dancer' };
-};
-
 1;
