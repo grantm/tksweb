@@ -1,4 +1,4 @@
-package TKS::Web::Helpers;
+package TKSWeb::Helpers;
 
 use Dancer ':syntax';
 

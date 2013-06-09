@@ -1,6 +1,6 @@
 #!/usr/bin/env perl
 
 use Dancer;
-use TKS::Web;
+use TKSWeb;
 
 dance;

@@ -1,7 +1,7 @@
-package TKS::Web;
+package TKSWeb;
 
 use Dancer ':syntax';
-use TKS::Web::Helpers;
+use TKSWeb::Helpers;
 
 our $VERSION = '0.1';
 
