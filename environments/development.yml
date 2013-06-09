@@ -25,3 +25,13 @@ show_errors: 1
 # DO NOT EVER USE THAT FEATURE IN PRODUCTION 
 # OR TINY KITTENS SHALL DIE WITH LOTS OF SUFFERING
 auto_reload: 1
+
+plugins:
+  DBIC:
+    default:
+      dsn: dbi:SQLite:dbname=var/db/tksweb-dev.db
+      schema_class: TKSWeb::Schema
+      options:
+        RaiseError: 1
+        PrintError: 0
+
