@@ -6,6 +6,9 @@ use Dancer::Plugin::Passphrase;
 
 use TKSWeb::Schema;
 
+use DateTime;
+
+
 our $VERSION = '0.1';
 
 
@@ -67,8 +70,20 @@ get '/logout' => sub {
 
 
 get '/' => sub {
-    template 'week-view';
+    my $monday = monday_of_week();
+    return redirect "/week/$monday";
 };
+
+
+get qr{^/week/?(?<date>.*)$} => sub {
+    my $date = captures->{date} // '';
+    my $monday = monday_of_week( $date );
+    return redirect "/week/$monday" if $date ne $monday;
+    template 'week-view', { monday => $monday };
+};
+
+
+############################  Support Routines  ##############################
 
 
 sub get_user_from_login {
@@ -92,4 +107,16 @@ sub user_by_email {
 }
 
 
+sub monday_of_week {
+    my $date = shift || '';
+    my $dt = eval {
+        $date =~ m{\A(\d\d\d\d)-(\d\d)-(\d\d)\z}
+            and DateTime->new( year => $1, month => $2, day => $3 );
+    } || DateTime->now;
+    my $dow = $dt->dow;
+    $dt->add( days => -1 * $dow + 1 ) if $dow != 1;
+    return $dt->ymd;
+}
+
 1;
+
