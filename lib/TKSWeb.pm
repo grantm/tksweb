@@ -20,7 +20,7 @@ hook before => sub {
         return;
     }
     if( request->path !~ m{^/(login|logout)$} ) {
-        redirect "/login";
+        return redirect "/login";
     }
 };
 
@@ -53,7 +53,7 @@ post '/login' => sub {
     my $user = get_user_from_login( param('email'), param('password') );
     if( $user ) {
         session email => $user->email;
-        redirect '/';
+        return redirect '/';
     }
     alert 'Invalid username or password';
     template 'login', { email => param('email') };
@@ -62,7 +62,7 @@ post '/login' => sub {
 
 get '/logout' => sub {
     session->destroy;
-    redirect "/login";
+    return redirect "/login";
 };
 
 
