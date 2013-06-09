@@ -3,6 +3,7 @@ package TKSWeb;
 use Dancer ':syntax';
 use Dancer::Plugin::DBIC;
 use Dancer::Plugin::Passphrase;
+use Dancer::Plugin::CDN;
 
 use TKSWeb::Schema;
 
@@ -34,6 +35,7 @@ hook before_template_render => sub {
     my $vars = vars;
     $tokens->{user}  = $vars->{user};
     $tokens->{alert} = $vars->{alert};
+    $tokens->{'cdn_url'}  = \&cdn_url;
 };
 
 

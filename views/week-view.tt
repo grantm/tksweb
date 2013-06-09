@@ -1,9 +1,9 @@
 <div id="week-view"></div>
 
-<script type="text/javascript" src="/js/jquery.js"></script>
-<script type="text/javascript" src="/js/underscore-min.js"></script>
-<script type="text/javascript" src="/js/backbone-min.js"></script>
-<script type="text/javascript" src="/js/tksweb.js"></script>
+<script type="text/javascript" src="[% cdn_url("/js/jquery.js")         %]"></script>
+<script type="text/javascript" src="[% cdn_url("/js/underscore-min.js") %]"></script>
+<script type="text/javascript" src="[% cdn_url("/js/backbone-min.js")   %]"></script>
+<script type="text/javascript" src="[% cdn_url("/js/tksweb.js")         %]"></script>
 <script type="text/javascript">
     TKSWeb.show_week($('#week-view'), '[% monday %]');
 </script>
