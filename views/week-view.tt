@@ -1,5 +1,5 @@
 <div id="tks-web">
   <h1>Week view goes here</h1>
-  <p>User: [% user %]</p>
+  <p>User: [% user.full_name %]</p>
 </div>
 

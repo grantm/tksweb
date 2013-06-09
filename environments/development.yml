@@ -26,7 +26,14 @@ show_errors: 1
 # OR TINY KITTENS SHALL DIE WITH LOTS OF SUFFERING
 auto_reload: 1
 
+session: "YAML"
+session_dir: "var/dev-sessions"
+
 plugins:
+  Passphrase:
+    default: 'bcrypt'
+    bcrypt:
+      cost: 8
   DBIC:
     default:
       dsn: dbi:SQLite:dbname=var/db/tksweb-dev.db

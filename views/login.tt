@@ -1,0 +1,9 @@
+<form method="POST">
+
+<label for="email">Email Address</label>
+<input type="text" class="text" id="email" name="email" value="[% email |html %]">
+<label for="password">Password</label>
+<input type="password" class="password" id="password" name="password">
+<input type="submit" value="Log In">
+
+</form>

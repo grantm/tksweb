@@ -9,7 +9,11 @@
   [%- END -%]
 </head>
 <body>
-
+[% IF alert %]
+<div class="alert">
+  [% alert %]
+</div>
+[% END %]
 [% content %]
 
 </body>
