@@ -4,10 +4,10 @@
         day_name          : [ 'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat' ],
         month_name        : [ 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
                               'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec' ],
-        hour_width        : 50,
-        hour_height       : 50,
-        day_width         : 200,
-        day_height        : 28
+        hour_label_width  : 50,
+        hour_label_height : 50,
+        day_label_width   : 200,
+        day_label_height  : 28
     };
     var week_days, hours;
 
@@ -31,15 +31,15 @@
             this.resize();
         },
         size_activities: function() {
-            this.activities_width  = TKSWeb.day_width * 7;
-            this.activities_height = TKSWeb.hour_height * 24;
+            this.activities_width  = TKSWeb.day_label_width * 7;
+            this.activities_height = TKSWeb.hour_label_height * 24;
             this.$('.activities')
                 .width(this.activities_width)
                 .height(this.activities_height);
         },
         resize: function() {
-            var app_width = this.activities_width + TKSWeb.hour_width;
-            var app_height = this.activities_height + TKSWeb.day_height;
+            var app_width = this.activities_width + TKSWeb.hour_label_width;
+            var app_height = this.activities_height + TKSWeb.day_label_height;
             this.el.width( app_width ).height( app_height );
         },
         init_week_days: function(monday) {
