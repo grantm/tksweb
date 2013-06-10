@@ -4,7 +4,8 @@
 <script type="text/javascript" src="[% cdn_url("/js/underscore-min.js") %]"></script>
 <script type="text/javascript" src="[% cdn_url("/js/backbone-min.js")   %]"></script>
 <script type="text/javascript" src="[% cdn_url("/js/handlebars.js")     %]"></script>
-<script type="text/javascript" src="[% cdn_url("/js/jquery-ui-1.10.3/ui/jquery-ui.js")     %]"></script>
+<script type="text/javascript" src="[% cdn_url("/js/jquery-ui-1.10.3/ui/jquery-ui.js") %]"></script>
+<script type="text/javascript" src="[% cdn_url("/js/jquery.ui.touch-punch.min.js")     %]"></script>
 <script type="text/javascript" src="[% cdn_url("/js/tksweb.js")         %]"></script>
 
 <script id="week-view-template" type="text/x-handlebars-template">
