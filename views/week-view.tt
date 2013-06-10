@@ -1,9 +1,25 @@
-<div id="week-view"></div>
+<div class="week-view"></div>
 
 <script type="text/javascript" src="[% cdn_url("/js/jquery.js")         %]"></script>
 <script type="text/javascript" src="[% cdn_url("/js/underscore-min.js") %]"></script>
 <script type="text/javascript" src="[% cdn_url("/js/backbone-min.js")   %]"></script>
+<script type="text/javascript" src="[% cdn_url("/js/handlebars.js")     %]"></script>
 <script type="text/javascript" src="[% cdn_url("/js/tksweb.js")         %]"></script>
+
+<script id="week-view-template" type="text/x-handlebars-template">
+  <ul class="hour-labels">
+  {{#each hours}}
+    <li>{{hour}}</li>
+  {{/each}}
+  </ul>
+  <ul class="day-labels">
+  {{#each week_days}}
+    <li>{{day_name}} {{month_name}}-{{day}}</li>
+  {{/each}}
+  </ul>
+  <div class="activities"></div>
+</script>
+
 <script type="text/javascript">
-    TKSWeb.show_week($('#week-view'), '[% monday %]');
+    TKSWeb.show_week($('.week-view'), '[% monday %]');
 </script>
