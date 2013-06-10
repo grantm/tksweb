@@ -1,4 +1,5 @@
 (function($) {
+    'use strict';
 
     var TKSWeb = window.TKSWeb = {
         day_name          : [ 'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat' ],
