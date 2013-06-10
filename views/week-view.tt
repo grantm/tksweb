@@ -7,16 +7,20 @@
 <script type="text/javascript" src="[% cdn_url("/js/tksweb.js")         %]"></script>
 
 <script id="week-view-template" type="text/x-handlebars-template">
-  <ul class="hour-labels">
-  {{#each hours}}
-    <li>{{hour}}</li>
-  {{/each}}
-  </ul>
-  <ul class="day-labels">
-  {{#each week_days}}
-    <li>{{day_name}} {{month_name}}-{{day}}</li>
-  {{/each}}
-  </ul>
+  <div class="hour-labels">
+    <ul>
+    {{#each hours}}
+      <li>{{hour}}</li>
+    {{/each}}
+    </ul>
+  </div>
+  <div class="day-labels">
+    <ul>
+    {{#each week_days}}
+      <li>{{day_name}} {{month_name}}-{{day}}</li>
+    {{/each}}
+    </ul>
+  </div>
   <div class="activities"></div>
 </script>
 
