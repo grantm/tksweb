@@ -73,16 +73,16 @@
         init_week_days: function(monday) {
             week_days = [];
             var one_day = 24 * 60 * 60 * 1000;
-            var ms = (new Date(monday + 'T12:00:00')).getTime();
+            var ms = (new Date(monday + 'T12:00:00Z')).getTime();
             for(var i = 0; i < 7; i++) {
                 var dt = new Date(ms + i * one_day);
                 week_days.push({
                     date: dt.toISOString().substr(0,10),
-                    day: pad2( dt.getDate() ),
-                    day_name: TKSWeb.day_name[ dt.getDay() ],
-                    month: pad2( dt.getMonth() + 1),
-                    month_name: TKSWeb.month_name[ dt.getMonth() ],
-                    year: dt.getFullYear()
+                    day: pad2( dt.getUTCDate() ),
+                    day_name: TKSWeb.day_name[ dt.getUTCDay() ],
+                    month: pad2( dt.getUTCMonth() + 1),
+                    month_name: TKSWeb.month_name[ dt.getUTCMonth() ],
+                    year: dt.getUTCFullYear()
                 });
             }
         },
