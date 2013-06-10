@@ -28,6 +28,7 @@
             };
             this.el.html( this.template(context) );
             this.size_activities();
+            this.enable_workspace_drag();
             this.resize();
         },
         size_activities: function() {
@@ -43,10 +44,31 @@
                 .width(TKSWeb.hour_label_width)
                 .height(this.activities_height);
         },
+        enable_workspace_drag: function() {
+            var view = this;
+            this.$('.activities').draggable({
+                drag: function(event, ui) { view.drag( ui.position ); }
+            });
+        },
         resize: function() {
-            var app_width = this.activities_width + TKSWeb.hour_label_width;
-            var app_height = this.activities_height + TKSWeb.day_label_height;
-            this.el.width( app_width ).height( app_height );
+            this.app_width  = Math.min(this.activities_width + TKSWeb.hour_label_width, window.innerWidth);
+            this.app_height = Math.min(this.activities_height + TKSWeb.day_label_height, window.innerHeight);
+            this.el.width( this.app_width ).height( this.app_height );
+            this.set_drag_constraints();
+        },
+        set_drag_constraints: function() {
+            this.$('.activities').draggable("option", {
+                containment: [
+                    this.app_width - this.activities_width,
+                    this.app_height - this.activities_height,
+                    TKSWeb.hour_label_width + 1,
+                    TKSWeb.day_label_height + 1
+                ]
+            });
+        },
+        drag: function(pos) {
+            this.$('.day-labels ul').css({left: pos.left - TKSWeb.hour_label_width});
+            this.$('.hour-labels ul').css({top: pos.top - TKSWeb.day_label_height});
         },
         init_week_days: function(monday) {
             week_days = [];
