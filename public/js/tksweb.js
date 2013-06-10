@@ -30,6 +30,7 @@
             this.size_activities();
             this.enable_workspace_drag();
             this.resize();
+            $(window).resize( $.proxy(view.resize, view) );
         },
         size_activities: function() {
             this.activities_width  = TKSWeb.day_label_width * 7;
