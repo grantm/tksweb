@@ -1,12 +1,20 @@
+* mouse wheel for vertical scroll
+* initialise view scrolled to show 09:00-05:00
+* load: initialise week view using data from server
+* drag activity
+* edit activity
+* save activity update
+* create new activity
+* copy activity
+* paste activity
 * validate hours value (duration beyond end-of-day; fractional part not 15m)
-* change gb colour if no WR number
+* change bg colour if no WR number
 * pop-up help for key-bindings
-* key bindings for increase/descrease activity duration
+* key bindings for increase/decrease activity duration
 * auto scroll when cursor moved out of viewport with keyboard
 * restrict drag from going outside configured hours
 * restrict resize from going outside configured hours
 * undo ?
 * nudge algorithm to avoid overlaps
-* load: initialise week view using data from server
 * save: marshall activities and send to server
 
