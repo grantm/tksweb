@@ -36,6 +36,12 @@
             this.$('.activities')
                 .width(this.activities_width)
                 .height(this.activities_height);
+            this.$('.day-labels')
+                .width(this.activities_width)
+                .height(TKSWeb.day_label_height);
+            this.$('.hour-labels')
+                .width(TKSWeb.hour_label_width)
+                .height(this.activities_height);
         },
         resize: function() {
             var app_width = this.activities_width + TKSWeb.hour_label_width;
