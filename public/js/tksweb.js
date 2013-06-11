@@ -19,7 +19,6 @@
     var WeekView = Backbone.View.extend({
         initialize: function(options) {
             var view = this;
-            this.el = options.el;
             this.init_week_days(options.monday);
             this.init_hours();
             this.template = Handlebars.compile( $('#week-view-template').html() );
@@ -27,7 +26,7 @@
                 week_days: week_days,
                 hours: hours
             };
-            this.el.html( this.template(context) );
+            this.$el.html( this.template(context) );
             this.size_activities();
             this.enable_workspace_drag();
             this.resize();
@@ -55,7 +54,7 @@
         resize: function() {
             this.app_width  = Math.min(this.activities_width + TKSWeb.hour_label_width, window.innerWidth);
             this.app_height = Math.min(this.activities_height + TKSWeb.day_label_height, window.innerHeight);
-            this.el.width( this.app_width ).height( this.app_height );
+            this.$el.width( this.app_width ).height( this.app_height );
             this.set_drag_constraints();
         },
         set_drag_constraints: function() {
@@ -93,9 +92,6 @@
             for(var i = 0; i < 24; i++) {
                 hours.push({ hour: pad2(i) + ':00' });
             }
-        },
-        $: function(selector) {
-            return this.el.find(selector);
         }
     });
 
