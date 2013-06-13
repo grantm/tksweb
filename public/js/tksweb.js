@@ -16,21 +16,46 @@
         return num < 10 ? '0' + num : '' + num;
     }
 
+
+    var Activity = Backbone.Model.extend({
+        defaults: {
+            date          : '',
+            start_time    : '',
+            duration      : '',
+            wr_number     : '',
+            description   : ''
+        }
+    });
+
+
+    var Activities = Backbone.Collection.extend({
+        model: Activity,
+        url: '/activity'
+    });
+
+
     var WeekView = Backbone.View.extend({
         initialize: function(options) {
             var view = this;
-            this.init_week_days(options.monday);
+            this.init_label_data(options.monday);
+            this.render();
+            this.collection.on('add', this.add_activity, this);
+            $(window).resize( $.proxy(view.resize, view) );
+        },
+        init_label_data: function(monday) {
+            this.init_week_days(monday);
             this.init_hours();
-            this.template = Handlebars.compile( $('#week-view-template').html() );
+        },
+        render: function() {
+            var template = Handlebars.compile( $('#week-view-template').html() );
             var context = {
                 week_days: week_days,
                 hours: hours
             };
-            this.$el.html( this.template(context) );
+            this.$el.html( template(context) );
             this.size_activities();
             this.enable_workspace_drag();
             this.resize();
-            $(window).resize( $.proxy(view.resize, view) );
         },
         size_activities: function() {
             this.activities_width  = TKSWeb.day_label_width * 7;
@@ -92,11 +117,20 @@
             for(var i = 0; i < 24; i++) {
                 hours.push({ hour: pad2(i) + ':00' });
             }
+        },
+        add_activity: function() {
+console.log("Adding an activity", arguments);
         }
     });
 
-    TKSWeb.show_week = function (el, monday) {
-        new WeekView({ el: el, monday: monday });
+    TKSWeb.show_week = function (el, monday, activities_data) {
+        var activities = new Activities();
+        new WeekView({
+            el: el,
+            monday: monday,
+            collection: activities
+        });
+        activities.add(activities_data);
     };
 
 })(jQuery);
