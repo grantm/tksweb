@@ -25,6 +25,9 @@
     </ul>
   </div>
 </script>
+<script id="activity-template" type="text/x-handlebars-template">
+<p>{{wr_number}}: {{description}}</p>
+</script>
 
 <script type="text/javascript">
 (function() {

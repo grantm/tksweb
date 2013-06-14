@@ -20,8 +20,8 @@
     var Activity = Backbone.Model.extend({
         defaults: {
             date          : '',
-            start_time    : '',
-            duration      : '',
+            start_time    : 0,
+            duration      : 60,
             wr_number     : '',
             description   : ''
         }
@@ -34,10 +34,28 @@
     });
 
 
+    var ActivityView = Backbone.View.extend({
+        tagName: 'div',
+        className: 'activity',
+
+        initialize: function() {
+            this.week_view = this.model.collection.view;
+            this.listenTo(this.model, "change:wr_number change:description", this.render);
+        },
+
+        render: function() {
+            var context = this.model.toJSON();
+            this.$el.html( this.week_view.activity_template(context) );
+            return this;
+        }
+    });
+
+
     var WeekView = Backbone.View.extend({
         initialize: function(options) {
             var view = this;
             this.init_label_data(options.monday);
+            this.compile_templates();
             this.render();
             this.collection.on('add', this.add_activity, this);
             $(window).resize( $.proxy(view.resize, view) );
@@ -46,13 +64,16 @@
             this.init_week_days(monday);
             this.init_hours();
         },
+        compile_templates: function() {
+            this.template = Handlebars.compile( $('#week-view-template').html() );
+            this.activity_template = Handlebars.compile( $('#activity-template').html() );
+        },
         render: function() {
-            var template = Handlebars.compile( $('#week-view-template').html() );
             var context = {
                 week_days: week_days,
                 hours: hours
             };
-            this.$el.html( template(context) );
+            this.$el.html( this.template(context) );
             this.size_activities();
             this.enable_workspace_drag();
             this.resize();
@@ -118,14 +139,18 @@
                 hours.push({ hour: pad2(i) + ':00' });
             }
         },
-        add_activity: function() {
-console.log("Adding an activity", arguments);
+        add_activity: function(activity) {
+            this.$('.activities').append(
+                new ActivityView({
+                    model: activity
+                }).render().el
+            );
         }
     });
 
     TKSWeb.show_week = function (el, monday, activities_data) {
         var activities = new Activities();
-        new WeekView({
+        activities.view = new WeekView({
             el: el,
             monday: monday,
             collection: activities
