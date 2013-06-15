@@ -24,11 +24,10 @@ CREATE TABLE wr_system (
 
 CREATE TABLE activity (
     activity_id     TEXT CONSTRAINT PK_ACTIVITY PRIMARY KEY,
-    app_user_id     INTEGER NOT NULL,
-    date            TEXT    NOT NULL,
-    start_time      TEXT    NOT NULL,
-    duration        INTEGER NOT NULL,
-    wr_system_id    INTEGER NOT NULL,
+    app_user_id     INTEGER  NOT NULL,
+    date_time       DATETIME NOT NULL,
+    duration        INTEGER  NOT NULL,
+    wr_system_id    INTEGER  NOT NULL,
     wr_number       TEXT,
     description     TEXT,
 

@@ -11,22 +11,30 @@ INSERT INTO wr_system VALUES (2,1,'catalyst','EEC WRMS',1);
 INSERT INTO activity VALUES (
     '1',
     1,
-    '2013-06-10',
-    '09:00',
-    1.5,
+    '2013-06-10 09:00:00',
+    60,
     2,
-    '33705',
-    'Fix test failures'
+    '55555',
+    'Weekly meeting'
 );
 
 INSERT INTO activity VALUES (
     '2',
     1,
-    '2013-06-10',
-    '10:00',
-    0.5,
+    '2013-06-10 10:00:00',
+    180,
     1,
-    '40390',
-    'Update level 9 map'
+    '81754',
+    'Implement "delete account"'
+);
+
+INSERT INTO activity VALUES (
+    '3',
+    1,
+    '2013-06-11 09:30:00',
+    45,
+    1,
+    '81754',
+    'Implement "delete account"'
 );
 
