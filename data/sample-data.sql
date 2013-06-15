@@ -38,3 +38,13 @@ INSERT INTO activity VALUES (
     'Implement "delete account"'
 );
 
+INSERT INTO activity VALUES (
+    '4',
+    1,
+    '2013-06-11 10:15:00',
+    165,
+    1,
+    '42424',
+    'Analyse log files from before "the incident"'
+);
+

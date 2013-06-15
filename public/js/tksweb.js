@@ -20,19 +20,19 @@
     }
 
     function init_week_days(days) {
-        week_days = [];
         column_for_date = {};
+        week_days       = [];
         for(var i = 0; i < 7; i++) {
-            var ymd = days[i];
+            column_for_date[ days[i] ] = i;
+            var part = days[i].split('-');
             week_days.push({
-                date: ymd,
-                day: ymd.substr(8, 2),
-                month: ymd.substr(5, 2),
-                year: ymd.substr(0, 4),
-                day_name: TKSWeb.day_name[ i ],
-                month_name: TKSWeb.month_name[ parseInt(ymd.substr(5, 2), 10) ],
+                date      : days[i],
+                day       : part[2],
+                month     : part[1],
+                year      : part[0],
+                day_name  : TKSWeb.day_name[ i ],
+                month_name: TKSWeb.month_name[ parseInt(part[1], 10) - 1 ],
             });
-            column_for_date[ymd] = i;
         }
     };
 

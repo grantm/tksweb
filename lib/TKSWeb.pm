@@ -13,7 +13,8 @@ use DateTime;
 our $VERSION = '0.1';
 
 
-sub User { schema->resultset('AppUser'); }
+sub User      { schema->resultset('AppUser'); }
+sub Activity  { schema->resultset('Activity'); }
 
 
 ##################################  Hooks  ###################################
@@ -83,6 +84,7 @@ get qr{^/week/?(?<date>.*)$} => sub {
     return redirect "/week/$monday" if $date ne $monday;
     template 'week-view', {
         days        => to_json( days_of_week($monday) ),
+        activities  => to_json( activities_for_week($monday) ),
     };
 };
 
@@ -127,6 +129,29 @@ sub days_of_week {
         $dt->add(days => 1);
     }
     return \@days;
+}
+
+
+sub activities_for_week {
+    my $monday = parse_date(shift);
+    my $start_date = $monday->ymd . ' 00:00:00';
+    my $end_date   = $monday->add(days => 7)->ymd . ' 00:00:00';
+    my @activities;
+    my $user = var 'user';
+    my $rs = $user->activities->search({
+        date_time => {
+          -between => [ $start_date, $end_date ],
+        }
+    });
+    while(my $activity = $rs->next) {
+        my %act = $activity->get_columns;
+        my($date, $hours, $minutes)
+            = (delete $act{date_time}) =~ m{(\d\d\d\d-\d\d-\d\d) (\d\d):(\d\d)};
+        $act{date} = $date;
+        $act{start_time} = $hours * 60 + $minutes;
+        push @activities, \%act;
+    }
+    return \@activities;
 }
 
 
