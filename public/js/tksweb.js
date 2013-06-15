@@ -10,7 +10,7 @@
         day_label_width   : 200,
         day_label_height  : 28
     };
-    var week_days, hours;
+    var week_days, hours, dow;
 
     function pad2(num) {
         return num < 10 ? '0' + num : '' + num;
@@ -24,6 +24,9 @@
             duration      : 60,
             wr_number     : '',
             description   : ''
+        },
+        initialize: function() {
+            this.set('dow', dow[ this.get('date') ]);
         }
     });
 
@@ -41,12 +44,25 @@
         initialize: function() {
             this.week_view = this.model.collection.view;
             this.listenTo(this.model, "change:wr_number change:description", this.render);
+            this.position_element();
+            this.size_element();
         },
 
         render: function() {
             var context = this.model.toJSON();
             this.$el.html( this.week_view.activity_template(context) );
             return this;
+        },
+        position_element: function() {
+            var activity = this.model;
+            this.$el.css({
+                left: (activity.get('dow') - 1) * 200,
+                top:  (activity.get('start_time') * 50) / 60
+            });
+        },
+        size_element: function() {
+            var activity = this.model;
+            this.$el.height(activity.get('duration') * 50 / 60);
         }
     });
 
@@ -119,6 +135,7 @@
         },
         init_week_days: function(monday) {
             week_days = [];
+            dow = {};
             var one_day = 24 * 60 * 60 * 1000;
             var ms = (new Date(monday + 'T12:00:00Z')).getTime();
             for(var i = 0; i < 7; i++) {
@@ -131,6 +148,7 @@
                     month_name: TKSWeb.month_name[ dt.getUTCMonth() ],
                     year: dt.getUTCFullYear()
                 });
+                dow[dt.toISOString().substr(0,10)] = i + 1;
             }
         },
         init_hours: function() {

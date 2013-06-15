@@ -34,22 +34,22 @@
     var activities = [
         {
             date          : '2013-06-10',
-            start_time    : '09:00',
-            duration      : '60',
+            start_time    : 540,
+            duration      : 60,
             wr_number     : '55555',
             description   : 'Weekly meeting'
         },
         {
             date          : '2013-06-10',
-            start_time    : '10:00',
-            duration      : '180',
+            start_time    : 600,
+            duration      : 180,
             wr_number     : '81754',
             description   : 'Implement "delete account"'
         },
         {
             date          : '2013-06-11',
-            start_time    : '09:30',
-            duration      : '45',
+            start_time    : 570,
+            duration      : 45,
             wr_number     : '81754',
             description   : 'Implement "delete account"'
         }
