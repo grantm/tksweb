@@ -138,11 +138,16 @@ sub activities_for_week {
     my $end_date   = $monday->add(days => 7)->ymd . ' 00:00:00';
     my @activities;
     my $user = var 'user';
-    my $rs = $user->activities->search({
-        date_time => {
-          -between => [ $start_date, $end_date ],
+    my $rs = $user->activities->search(
+        {
+            date_time => {
+              -between => [ $start_date, $end_date ],
+            },
+        },
+        {
+            order_by => 'date_time'
         }
-    });
+    );
     while(my $activity = $rs->next) {
         my %act = $activity->get_columns;
         my($date, $hours, $minutes)
