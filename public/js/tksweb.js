@@ -57,7 +57,11 @@
 
     var Activities = Backbone.Collection.extend({
         model: Activity,
-        url: '/activity'
+        url: '/activity',
+        comparator: function(activity) {
+            return activity.get("date") + ' ' +
+                   ('0000' + activity.get("start_time")).substr(-4);
+        }
     });
 
 
