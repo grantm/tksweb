@@ -97,6 +97,7 @@
             this.compile_templates();
             this.render();
             this.collection.on('add', this.add_activity, this);
+            this.$('.activities').on('mousewheel', $.proxy(this.mousewheel, this));
             $(window).resize( $.proxy(view.resize, view) );
         },
         compile_templates: function() {
@@ -139,18 +140,27 @@
             this.set_drag_constraints();
         },
         set_drag_constraints: function() {
+            this.min_y = this.app_height - this.activities_height;
+            this.max_y = TKSWeb.day_label_height + 1;
             this.$('.activities').draggable("option", {
                 containment: [
                     this.app_width - this.activities_width,
-                    this.app_height - this.activities_height,
+                    this.min_y,
                     TKSWeb.hour_label_width + 1,
-                    TKSWeb.day_label_height + 1
+                    this.max_y
                 ]
             });
         },
         drag: function(pos) {
-            this.$('.day-labels ul').css({left: pos.left - TKSWeb.hour_label_width});
-            this.$('.hour-labels ul').css({top: pos.top - TKSWeb.day_label_height});
+            this.$('.day-labels ul').css('left', pos.left - TKSWeb.hour_label_width);
+            this.$('.hour-labels ul').css('top', pos.top - TKSWeb.day_label_height);
+        },
+        mousewheel: function(e, delta) {
+            var $activities = this.$('.activities');
+            var y = parseInt($activities.css('top'), 10) + delta * 12;
+            y = Math.min( Math.max(y, this.min_y), this.max_y);
+            $activities.css('top', y);
+            this.$('.hour-labels ul').css('top', y - TKSWeb.day_label_height);
         },
         add_activity: function(activity) {
             this.$('.activities').append(

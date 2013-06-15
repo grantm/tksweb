@@ -1,6 +1,6 @@
-* mouse wheel for vertical scroll
+* make activities collection ordered
+* fix up sizing to match labels
 * initialise view scrolled to show 09:00-05:00
-* load: initialise week view using data from server
 * drag activity
 * edit activity
 * save activity update
