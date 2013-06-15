@@ -45,34 +45,40 @@ noscript p {
 
 .week-view .hour-labels {
   position: absolute;
+  width: 50px;
   font-size: 14px;
-  border-top: 26px solid #cccc99;
+  border-top: 26px solid #dddddd;
   overflow: hidden;
 }
 
 .week-view .hour-labels ul {
   position: absolute;
+  background-color: #777777;
   width: 100%;
   list-style: none;
   margin: 0;
-  padding: 0;
+  padding: 0 0 20px 0;
   white-space: nowrap;
 }
 
 .week-view .hour-labels li {
-  background-color: #777777;
   color: #dddddd;
-  border: 1px solid #ffffff;
+  border: none;
   text-align: center;
   height: 48px;
   margin: 0;
   padding: 0;
 }
 
+.week-view .hour-labels li:first-child {
+  height: 40px;
+}
+
 .week-view .day-labels {
   position: absolute;
   font-size: 14px;
-  border-left: 50px solid #cccc99;
+  height: 26px;
+  border-left: 50px solid #777777;
   overflow: hidden;
 }
 
@@ -89,7 +95,8 @@ noscript p {
   float: left;
   background-color: #777777;
   color: #dddddd;
-  border: 1px solid #ffffff;
+  border-left: 1px solid #dddddd;
+  border-right: 1px solid #dddddd;
   text-align: center;
   width: 198px;
   height: 100%;
@@ -99,9 +106,9 @@ noscript p {
 
 .week-view .activities {
   position: absolute;
-  top: 26px;
+  top: 28px;
   left: 50px;
-  background-color: #eeeeff;
+  background-image: url(../images/bands.png);
 }
 
 .activity {

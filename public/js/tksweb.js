@@ -6,15 +6,15 @@
         month_name        : [ 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
                               'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec' ],
         hour_label_width  : 50,
-        hour_label_height : 50,
+        hour_label_height : 48,
         day_label_width   : 200,
         day_label_height  : 28
     };
     var week_days, hours, column_for_date;
 
     function init_hours() {
-        hours = [];
-        for(var i = 0; i < 24; i++) {
+        hours = [ '' ];
+        for(var i = 1; i < 24; i++) {
             hours.push({ hour: pad2(i) + ':00' });
         }
     }
@@ -125,10 +125,8 @@
                 .width(this.activities_width)
                 .height(this.activities_height);
             this.$('.day-labels')
-                .width(this.activities_width)
-                .height(TKSWeb.day_label_height);
+                .width(this.activities_width);
             this.$('.hour-labels')
-                .width(TKSWeb.hour_label_width)
                 .height(this.activities_height);
         },
         enable_workspace_drag: function() {
