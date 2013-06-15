@@ -150,6 +150,7 @@ sub activities_for_week {
     );
     while(my $activity = $rs->next) {
         my %act = $activity->get_columns;
+        $act{id} = delete $act{activity_id};
         my($date, $hours, $minutes)
             = (delete $act{date_time}) =~ m{(\d\d\d\d-\d\d-\d\d) (\d\d):(\d\d)};
         $act{date} = $date;
