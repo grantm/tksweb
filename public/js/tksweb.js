@@ -2,7 +2,7 @@
     'use strict';
 
     var TKSWeb = window.TKSWeb = {
-        day_name          : [ 'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat' ],
+        day_name          : [ 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun' ],
         month_name        : [ 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
                               'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec' ],
         hour_label_width  : 50,
@@ -10,7 +10,31 @@
         day_label_width   : 200,
         day_label_height  : 28
     };
-    var week_days, hours, dow;
+    var week_days, hours, column_for_date;
+
+    function init_hours() {
+        hours = [];
+        for(var i = 0; i < 24; i++) {
+            hours.push({ hour: pad2(i) + ':00' });
+        }
+    }
+
+    function init_week_days(days) {
+        week_days = [];
+        column_for_date = {};
+        for(var i = 0; i < 7; i++) {
+            var ymd = days[i];
+            week_days.push({
+                date: ymd,
+                day: ymd.substr(8, 2),
+                month: ymd.substr(5, 2),
+                year: ymd.substr(0, 4),
+                day_name: TKSWeb.day_name[ i ],
+                month_name: TKSWeb.month_name[ parseInt(ymd.substr(5, 2), 10) ],
+            });
+            column_for_date[ymd] = i;
+        }
+    };
 
     function pad2(num) {
         return num < 10 ? '0' + num : '' + num;
@@ -26,7 +50,7 @@
             description   : ''
         },
         initialize: function() {
-            this.set('dow', dow[ this.get('date') ]);
+            this.set('column', column_for_date[ this.get('date') ]);
         }
     });
 
@@ -56,7 +80,7 @@
         position_element: function() {
             var activity = this.model;
             this.$el.css({
-                left: (activity.get('dow') - 1) * 200,
+                left: activity.get('column') * 200,
                 top:  (activity.get('start_time') * 50) / 60
             });
         },
@@ -70,15 +94,10 @@
     var WeekView = Backbone.View.extend({
         initialize: function(options) {
             var view = this;
-            this.init_label_data(options.monday);
             this.compile_templates();
             this.render();
             this.collection.on('add', this.add_activity, this);
             $(window).resize( $.proxy(view.resize, view) );
-        },
-        init_label_data: function(monday) {
-            this.init_week_days(monday);
-            this.init_hours();
         },
         compile_templates: function() {
             this.template = Handlebars.compile( $('#week-view-template').html() );
@@ -133,30 +152,6 @@
             this.$('.day-labels ul').css({left: pos.left - TKSWeb.hour_label_width});
             this.$('.hour-labels ul').css({top: pos.top - TKSWeb.day_label_height});
         },
-        init_week_days: function(monday) {
-            week_days = [];
-            dow = {};
-            var one_day = 24 * 60 * 60 * 1000;
-            var ms = (new Date(monday + 'T12:00:00Z')).getTime();
-            for(var i = 0; i < 7; i++) {
-                var dt = new Date(ms + i * one_day);
-                week_days.push({
-                    date: dt.toISOString().substr(0,10),
-                    day: pad2( dt.getUTCDate() ),
-                    day_name: TKSWeb.day_name[ dt.getUTCDay() ],
-                    month: pad2( dt.getUTCMonth() + 1),
-                    month_name: TKSWeb.month_name[ dt.getUTCMonth() ],
-                    year: dt.getUTCFullYear()
-                });
-                dow[dt.toISOString().substr(0,10)] = i + 1;
-            }
-        },
-        init_hours: function() {
-            hours = [];
-            for(var i = 0; i < 24; i++) {
-                hours.push({ hour: pad2(i) + ':00' });
-            }
-        },
         add_activity: function(activity) {
             this.$('.activities').append(
                 new ActivityView({
@@ -166,11 +161,13 @@
         }
     });
 
-    TKSWeb.show_week = function (el, monday, activities_data) {
+    TKSWeb.show_week = function (el, days, activities_data) {
+        init_week_days(days);
+        init_hours();
         var activities = new Activities();
         activities.view = new WeekView({
             el: el,
-            monday: monday,
+            monday: days[0],
             collection: activities
         });
         activities.add(activities_data);

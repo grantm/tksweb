@@ -31,6 +31,7 @@
 
 <script type="text/javascript">
 (function() {
+    var days = [% days -%];
     var activities = [
         {
             date          : '2013-06-10',
@@ -54,6 +55,6 @@
             description   : 'Implement "delete account"'
         }
     ];
-    TKSWeb.show_week($('.week-view'), '[% monday %]', activities);
+    TKSWeb.show_week($('.week-view'), days, activities);
 })();
 </script>

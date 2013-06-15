@@ -81,7 +81,9 @@ get qr{^/week/?(?<date>.*)$} => sub {
     my $date = captures->{date} // '';
     my $monday = monday_of_week( $date );
     return redirect "/week/$monday" if $date ne $monday;
-    template 'week-view', { monday => $monday };
+    template 'week-view', {
+        days        => to_json( days_of_week($monday) ),
+    };
 };
 
 
@@ -110,14 +112,30 @@ sub user_by_email {
 
 
 sub monday_of_week {
-    my $date = shift || '';
-    my $dt = eval {
-        $date =~ m{\A(\d\d\d\d)-(\d\d)-(\d\d)\z}
-            and DateTime->new( year => $1, month => $2, day => $3 );
-    } || DateTime->now;
+    my $dt = parse_date(shift) || DateTime->now;
     my $dow = $dt->dow;
     $dt->add( days => -1 * $dow + 1 ) if $dow != 1;
     return $dt->ymd;
+}
+
+
+sub days_of_week {
+    my $dt = parse_date(shift) or return;
+    my @days;
+    foreach (1..7) {
+        push @days, $dt->ymd;
+        $dt->add(days => 1);
+    }
+    return \@days;
+}
+
+
+sub parse_date {
+    my $date = shift or return;
+    return eval {
+        $date =~ m{\A(\d\d\d\d)-(\d\d)-(\d\d)\z}
+            and DateTime->new( year => $1, month => $2, day => $3 );
+    };
 }
 
 1;
