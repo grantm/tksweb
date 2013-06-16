@@ -85,12 +85,12 @@
             var activity = this.model;
             this.$el.css({
                 left: activity.get('column') * 200,
-                top:  (activity.get('start_time') * 50) / 60
+                top:  (activity.get('start_time') * TKSWeb.hour_label_height) / 60
             });
         },
         size_element: function() {
             var activity = this.model;
-            this.$el.height(activity.get('duration') * 50 / 60);
+            this.$el.height(activity.get('duration') * TKSWeb.hour_label_height / 60);
         }
     });
 
@@ -117,6 +117,7 @@
             this.size_activities();
             this.enable_workspace_drag();
             this.resize();
+            this.set_initial_scroll();
         },
         size_activities: function() {
             this.activities_width  = TKSWeb.day_label_width * 7;
@@ -156,6 +157,16 @@
         drag: function(pos) {
             this.$('.day-labels ul').css('left', pos.left - TKSWeb.hour_label_width);
             this.$('.hour-labels ul').css('top', pos.top - TKSWeb.day_label_height);
+        },
+        set_initial_scroll: function() {
+            var $activities = this.$('.activities');
+            var day_height = (18 - 8) * TKSWeb.hour_label_height;
+            var y = -8 * TKSWeb.hour_label_height;
+            if(day_height < this.app_height) {
+                y = y + (this.app_height - day_height) / 2
+            }
+            $activities.css('top', y);
+            this.$('.hour-labels ul').css('top', y - TKSWeb.day_label_height);
         },
         mousewheel: function(e, delta) {
             var $activities = this.$('.activities');
