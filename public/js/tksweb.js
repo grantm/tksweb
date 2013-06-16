@@ -166,6 +166,7 @@
         enable_workspace_drag: function() {
             var view = this;
             this.$('.activities').draggable({
+                distance: 5,
                 drag: function(event, ui) { view.drag( ui.position ); }
             });
         },
