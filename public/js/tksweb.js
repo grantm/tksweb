@@ -112,7 +112,7 @@
         },
         size_element: function() {
             var activity = this.model;
-            this.$el.height(activity.get('duration') * TKSWeb.hour_label_height / 60);
+            this.$el.height(activity.get('duration') * TKSWeb.hour_label_height / 60 - 2);
         },
         week_view: function() {
             return this.collection.view;
