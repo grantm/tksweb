@@ -1,12 +1,12 @@
-* make activities collection ordered
-* fix up sizing to match labels
-* initialise view scrolled to show 09:00-05:00
-* drag activity
-* edit activity
-* save activity update
+* move dialog code to a separate view
+* use borders (top and left) to offset activities from 0,0
+* add activity resize drag handles
 * create new activity
+* drag activity
 * copy activity
 * paste activity
+* reset drag position on window resize (eg: rotate)
+* disable zoom on mobile
 * validate hours value (duration beyond end-of-day; fractional part not 15m)
 * change bg colour if no WR number
 * pop-up help for key-bindings
