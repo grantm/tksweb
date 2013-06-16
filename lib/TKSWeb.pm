@@ -89,6 +89,21 @@ get qr{^/week/?(?<date>.*)$} => sub {
 };
 
 
+put '/activity/:id' => sub {
+    my $activity = activity_by_id( param('id') )
+        or return status "not_found";
+    my $new = from_json( request->body );
+    my $start_date_time = combine_date_time($new->{date}, $new->{start_time});
+    $activity->date_time($start_date_time);
+    $activity->duration($new->{duration});
+    $activity->wr_system_id($new->{wr_system_id});
+    $activity->wr_number($new->{wr_number});
+    $activity->description($new->{description});
+    $activity->update;
+    return to_json({ id => $activity->id });
+};
+
+
 ############################  Support Routines  ##############################
 
 
@@ -168,6 +183,25 @@ sub parse_date {
             and DateTime->new( year => $1, month => $2, day => $3 );
     };
 }
+
+
+sub activity_by_id {
+    my $id = shift or return;
+    return Activity->find({
+        activity_id => $id,
+        app_user_id => var('user')->id,
+    });
+}
+
+
+sub combine_date_time {
+    my($date, $minutes) = @_;
+
+    my $hours = int( $minutes / 60 );
+    $minutes  = $minutes % 60;
+    return sprintf('%s %02u:%02u:00', $date, $hours, $minutes);
+}
+
 
 1;
 
