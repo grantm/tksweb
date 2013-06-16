@@ -1,3 +1,14 @@
+/*
+ * tksweb - Web UI for timesheet entry
+ *
+ * Copyright (c) 2011-2013 Grant McLean (grant@mclean.net.nz)
+ *
+ * Dual licensed under the MIT and GPL licenses:
+ *   http://www.opensource.org/licenses/mit-license.php
+ *   http://www.gnu.org/licenses/gpl.html
+ *
+ */
+
 (function($) {
     'use strict';
 
@@ -59,6 +70,18 @@
         unselect: function() {
             this.set('selected', false);
         },
+        for_edit_dialog: function() {
+            var data = this.toJSON();
+            data.duration = data.duration / 60;
+            return data;
+        },
+        update_from_dialog: function(data) {
+            this.set('wr_number', data.wr_number);
+            this.set('description', data.description);
+            var duration = Math.floor(4 * data.duration) * 15;
+            this.set('duration', duration);
+            this.save();
+        }
     });
 
 
@@ -87,12 +110,14 @@
         className: 'activity',
 
         events: {
-            "click": "select_activity"
+            "click": "select_activity",
+            "dblclick": "edit_activity"
         },
 
         initialize: function() {
             this.week_view = this.model.collection.view;
             this.listenTo(this.model, "change:wr_number change:description", this.render);
+            this.listenTo(this.model, "change:duration", this.size_element);
             this.listenTo(this.model, "change:selected", this.show_selection);
             this.position_element();
             this.size_element();
@@ -122,6 +147,9 @@
         },
         show_selection: function() {
             this.$el.toggleClass('selected', this.model.get('selected'));
+        },
+        edit_activity: function() {
+            this.model.trigger('start_activity_edit', this.model);
         }
     });
 
@@ -135,11 +163,13 @@
             this.compile_templates();
             this.render();
             this.collection.on('add', this.add_activity, this);
+            this.collection.on('start_activity_edit', this.start_activity_edit, this);
             $(window).resize( $.proxy(view.resize, view) );
         },
         compile_templates: function() {
             this.template = Handlebars.compile( $('#week-view-template').html() );
             this.activity_template = Handlebars.compile( $('#activity-template').html() );
+            this.activity_dialog_template = Handlebars.compile( $('#activity-dialog-template').html() );
         },
         render: function() {
             var context = {
@@ -215,6 +245,57 @@
                     model: activity
                 }).render().el
             );
+        },
+        create_edit_dialog: function(activity) {
+            var week_view = this;
+            var $edit_dialog =
+                this.$edit_dialog = $('<div class="tksweb-activity-dialog" />');
+            $edit_dialog.dialog({
+                autoOpen:      false,
+                resizable:     false,
+                closeOnEscape: true,
+                width:         360,
+                height:        230,
+                modal:         true,
+                open: function() {
+                    if($edit_dialog.find('.activity-wr input').val()) {
+                        $edit_dialog.dialog('option', 'title', 'Edit Activity');
+                        $edit_dialog.find('.activity-dc input').focus();
+                    }
+                    else {
+                        $edit_dialog.dialog('option', 'title', 'Add Activity');
+                        $edit_dialog.find('.activity-wr input').focus();
+                    }
+                },
+                buttons:       {
+                    "Ok":  function() {
+                        var data = {
+                            wr_number   : $edit_dialog.find('.activity-wr input').val(),
+                            duration    : $edit_dialog.find('.activity-hr input').val(),
+                            description : $edit_dialog.find('.activity-dc input').val()
+                        };
+                        week_view.save_activity(data);
+                        $edit_dialog.dialog("close");
+                    },
+                    "Cancel": function() { $edit_dialog.dialog("close"); }
+                }
+
+            });
+            return $edit_dialog;
+        },
+        start_activity_edit: function(activity) {
+            var data = activity.for_edit_dialog();
+            var $dialog = this.$edit_dialog || this.create_edit_dialog();
+            $dialog.html( this.activity_dialog_template(data) ).dialog('open');
+        },
+        save_activity: function(data) {
+            var activity = this.collection.current_activity;
+            if(activity) {
+                return activity.update_from_dialog(data);
+            }
+            else {
+                alert('Need to create from dialog');
+            }
         }
     });
 

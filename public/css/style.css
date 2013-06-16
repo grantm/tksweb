@@ -122,3 +122,56 @@ noscript p {
   border: 1px dashed #ff0000;
 }
 
+
+/* ###############  Activity Edit Dialog  ################# */
+
+body .ui-widget {
+  font-size: 14px;
+}
+
+div.tksweb-activity-dialog {
+  font-size: 14px;
+}
+
+div.tksweb-activity-dialog form {
+  padding: 0 4px 0 0;
+}
+
+div.tksweb-activity-dialog label {
+  display: block;
+  margin: 0.5em 0 2px; 0;
+}
+
+div.tksweb-activity-dialog div.activity-wr {
+  float: left;
+}
+
+div.tksweb-activity-dialog div.activity-hr {
+  float: left;
+  margin-left: 60px;
+}
+
+div.tksweb-activity-dialog div.activity-dc {
+  clear: left;
+  padding-top: 0.5em;
+}
+
+div.tksweb-activity-dialog div.activity-wr input {
+  width: 6em;
+}
+
+div.tksweb-activity-dialog div.activity-hr input {
+  width: 6em;
+}
+
+div.tksweb-activity-dialog div.activity-dc input {
+  width: 100%;
+}
+
+body .ui-dialog .ui-dialog-buttonpane {
+  padding: 0 6px 0 0;
+}
+
+body .ui-widget-overlay {
+  opacity: 0.5;
+}

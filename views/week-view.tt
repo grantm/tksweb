@@ -29,6 +29,13 @@
 <script id="activity-template" type="text/x-handlebars-template">
 <p>{{wr_number}}: {{description}}</p>
 </script>
+<script id="activity-dialog-template" type="text/x-handlebars-template">
+<form>
+  <div class="activity-wr"><label>WR Number</label><input type="text" value="{{wr_number}}"></div>
+  <div class="activity-hr"><label>Hours</label><input type="text" value="{{duration}}"></div>
+  <div class="activity-dc"><label>Activity Description</label><input type="text" value="{{description}}"></div>
+</form>
+</script>
 
 <script type="text/javascript">
 (function() {
