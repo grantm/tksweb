@@ -96,12 +96,14 @@
 
 
     var WeekView = Backbone.View.extend({
+        events: {
+            "mousewheel .activities": "mousewheel"
+        },
         initialize: function(options) {
             var view = this;
             this.compile_templates();
             this.render();
             this.collection.on('add', this.add_activity, this);
-            this.$('.activities').on('mousewheel', $.proxy(this.mousewheel, this));
             $(window).resize( $.proxy(view.resize, view) );
         },
         compile_templates: function() {
