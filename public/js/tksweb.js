@@ -51,16 +51,33 @@
         },
         initialize: function() {
             this.set('column', column_for_date[ this.get('date') ]);
-        }
+        },
+        select: function() {
+            this.trigger('selection_changed', this);
+            this.set('selected', true);
+        },
+        unselect: function() {
+            this.set('selected', false);
+        },
     });
 
 
     var Activities = Backbone.Collection.extend({
         model: Activity,
         url: '/activity',
+
+        initialize: function() {
+            this.on("selection_changed", this.selection_changed);
+        },
         comparator: function(activity) {
             return activity.get("date") + ' ' +
                    ('0000' + activity.get("start_time")).substr(-4);
+        },
+        selection_changed: function(new_selection) {
+            if(this.current_activity) {
+                this.current_activity.unselect();
+            }
+            this.current_activity = new_selection;
         }
     });
 
@@ -69,9 +86,14 @@
         tagName: 'div',
         className: 'activity',
 
+        events: {
+            "click": "select_activity"
+        },
+
         initialize: function() {
             this.week_view = this.model.collection.view;
             this.listenTo(this.model, "change:wr_number change:description", this.render);
+            this.listenTo(this.model, "change:selected", this.show_selection);
             this.position_element();
             this.size_element();
         },
@@ -91,6 +113,15 @@
         size_element: function() {
             var activity = this.model;
             this.$el.height(activity.get('duration') * TKSWeb.hour_label_height / 60);
+        },
+        week_view: function() {
+            return this.collection.view;
+        },
+        select_activity: function() {
+            this.model.select();
+        },
+        show_selection: function() {
+            this.$el.toggleClass('selected', this.model.get('selected'));
         }
     });
 

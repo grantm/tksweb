@@ -119,6 +119,6 @@ noscript p {
 }
 
 .activity.selected {
-  border: 1px solid #ff8888;
+  border: 1px dashed #ff0000;
 }
 
