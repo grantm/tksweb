@@ -75,7 +75,7 @@
             data.duration = data.duration / 60;
             return data;
         },
-        update_from_dialog: function(data) {
+        update_from_editor: function(data) {
             this.set('wr_number', data.wr_number);
             this.set('description', data.description);
             var duration = Math.floor(4 * data.duration) * 15;
@@ -101,6 +101,15 @@
                 this.current_activity.unselect();
             }
             this.current_activity = new_selection;
+        },
+        save_from_editor: function(data) {
+            var activity = this.current_activity;
+            if(activity) {
+                return activity.update_from_editor(data);
+            }
+            else {
+                alert('Need to create from dialog');
+            }
         }
     });
 
@@ -154,6 +163,57 @@
     });
 
 
+    var ActivityEditor = Backbone.View.extend({
+        tagName: 'div',
+        className: 'tksweb-activity-dialog',
+
+        initialize: function() {
+            this.create_edit_dialog();
+            this.activity_dialog_template = Handlebars.compile( $('#activity-dialog-template').html() );
+            this.collection.on('start_activity_edit', this.start_activity_edit, this);
+        },
+        create_edit_dialog: function() {
+            var editor = this;
+            this.$el.dialog({
+                autoOpen:      false,
+                resizable:     false,
+                closeOnEscape: true,
+                width:         360,
+                height:        230,
+                modal:         true,
+                buttons:       {
+                    "Ok":     function() { editor.save_activity(); },
+                    "Cancel": function() { editor.close(); }
+                }
+
+            });
+        },
+        close: function() {
+            this.$el.dialog("close");
+        },
+        start_activity_edit: function(activity) {
+            var data = activity.for_edit_dialog();
+            this.$el.html( this.activity_dialog_template(data) ).dialog('open');
+            this.set_title(data.id ? 'Edit Activity' : 'Add Activity');
+            this.set_focus(data.wr_number ? '.activity-dc input' : '.activity-wr input');
+        },
+        set_title: function(new_title) {
+            this.$el.dialog('option', 'title', new_title);
+        },
+        set_focus: function(selector) {
+            this.$(selector).focus();
+        },
+        save_activity: function(data) {
+            this.collection.save_from_editor({
+                wr_number   : this.$('.activity-wr input').val(),
+                duration    : this.$('.activity-hr input').val(),
+                description : this.$('.activity-dc input').val()
+            });
+            this.close();
+        }
+    });
+
+
     var WeekView = Backbone.View.extend({
         events: {
             "mousewheel .activities": "mousewheel"
@@ -163,13 +223,11 @@
             this.compile_templates();
             this.render();
             this.collection.on('add', this.add_activity, this);
-            this.collection.on('start_activity_edit', this.start_activity_edit, this);
             $(window).resize( $.proxy(view.resize, view) );
         },
         compile_templates: function() {
             this.template = Handlebars.compile( $('#week-view-template').html() );
             this.activity_template = Handlebars.compile( $('#activity-template').html() );
-            this.activity_dialog_template = Handlebars.compile( $('#activity-dialog-template').html() );
         },
         render: function() {
             var context = {
@@ -245,57 +303,6 @@
                     model: activity
                 }).render().el
             );
-        },
-        create_edit_dialog: function(activity) {
-            var week_view = this;
-            var $edit_dialog =
-                this.$edit_dialog = $('<div class="tksweb-activity-dialog" />');
-            $edit_dialog.dialog({
-                autoOpen:      false,
-                resizable:     false,
-                closeOnEscape: true,
-                width:         360,
-                height:        230,
-                modal:         true,
-                open: function() {
-                    if($edit_dialog.find('.activity-wr input').val()) {
-                        $edit_dialog.dialog('option', 'title', 'Edit Activity');
-                        $edit_dialog.find('.activity-dc input').focus();
-                    }
-                    else {
-                        $edit_dialog.dialog('option', 'title', 'Add Activity');
-                        $edit_dialog.find('.activity-wr input').focus();
-                    }
-                },
-                buttons:       {
-                    "Ok":  function() {
-                        var data = {
-                            wr_number   : $edit_dialog.find('.activity-wr input').val(),
-                            duration    : $edit_dialog.find('.activity-hr input').val(),
-                            description : $edit_dialog.find('.activity-dc input').val()
-                        };
-                        week_view.save_activity(data);
-                        $edit_dialog.dialog("close");
-                    },
-                    "Cancel": function() { $edit_dialog.dialog("close"); }
-                }
-
-            });
-            return $edit_dialog;
-        },
-        start_activity_edit: function(activity) {
-            var data = activity.for_edit_dialog();
-            var $dialog = this.$edit_dialog || this.create_edit_dialog();
-            $dialog.html( this.activity_dialog_template(data) ).dialog('open');
-        },
-        save_activity: function(data) {
-            var activity = this.collection.current_activity;
-            if(activity) {
-                return activity.update_from_dialog(data);
-            }
-            else {
-                alert('Need to create from dialog');
-            }
         }
     });
 
@@ -309,6 +316,7 @@
             collection: activities
         });
         activities.add(activities_data);
+        var activity_editor = new ActivityEditor({ collection: activities });
     };
 
 })(jQuery);
