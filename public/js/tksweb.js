@@ -164,8 +164,12 @@
 
 
     var ActivityEditor = Backbone.View.extend({
-        tagName: 'div',
+        tagName: 'form',
         className: 'tksweb-activity-dialog',
+
+        events: {
+            "submit": "enter_pressed"
+        },
 
         initialize: function() {
             this.create_edit_dialog();
@@ -203,7 +207,11 @@
         set_focus: function(selector) {
             this.$(selector).focus();
         },
-        save_activity: function(data) {
+        enter_pressed: function(e) {
+            e.preventDefault();
+            this.save_activity();
+        },
+        save_activity: function() {
             this.collection.save_from_editor({
                 wr_number   : this.$('.activity-wr input').val(),
                 duration    : this.$('.activity-hr input').val(),

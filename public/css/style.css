@@ -135,43 +135,48 @@ body .ui-widget {
   font-size: 14px;
 }
 
-div.tksweb-activity-dialog {
+.tksweb-activity-dialog {
   font-size: 14px;
-}
-
-div.tksweb-activity-dialog form {
   padding: 0 4px 0 0;
 }
 
-div.tksweb-activity-dialog label {
+.tksweb-activity-dialog label {
   display: block;
   margin: 0.5em 0 2px; 0;
 }
 
-div.tksweb-activity-dialog div.activity-wr {
+.tksweb-activity-dialog div.activity-wr {
   float: left;
 }
 
-div.tksweb-activity-dialog div.activity-hr {
+.tksweb-activity-dialog div.activity-hr {
   float: left;
   margin-left: 60px;
 }
 
-div.tksweb-activity-dialog div.activity-dc {
+.tksweb-activity-dialog div.activity-dc {
   clear: left;
   padding-top: 0.5em;
 }
 
-div.tksweb-activity-dialog div.activity-wr input {
+.tksweb-activity-dialog div.activity-wr input {
   width: 6em;
 }
 
-div.tksweb-activity-dialog div.activity-hr input {
+.tksweb-activity-dialog div.activity-hr input {
   width: 6em;
 }
 
-div.tksweb-activity-dialog div.activity-dc input {
+.tksweb-activity-dialog div.activity-dc input {
   width: 100%;
+}
+
+input.save {
+  position: absolute;
+  height: 0px;
+  width: 0px;
+  border: none;
+  padding: 0px;
 }
 
 body .ui-dialog .ui-dialog-buttonpane {
@@ -181,3 +186,4 @@ body .ui-dialog .ui-dialog-buttonpane {
 body .ui-widget-overlay {
   opacity: 0.5;
 }
+
