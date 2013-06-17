@@ -267,26 +267,26 @@
             });
         },
         resize: function() {
-            this.app_width  = Math.min(this.activities_width + TKSWeb.hour_label_width, window.innerWidth);
-            this.app_height = Math.min(this.activities_height + TKSWeb.day_label_height, window.innerHeight);
+            this.app_width  = Math.min(this.activities_width, window.innerWidth);
+            this.app_height = Math.min(this.activities_height, window.innerHeight);
             this.$el.width( this.app_width ).height( this.app_height );
             this.set_drag_constraints();
         },
         set_drag_constraints: function() {
-            this.min_y = this.app_height - this.activities_height;
-            this.max_y = TKSWeb.day_label_height + 1;
+            this.min_y = this.app_height - this.activities_height - TKSWeb.day_label_height;
+            this.max_y = 0;
             this.$('.activities').draggable("option", {
                 containment: [
-                    this.app_width - this.activities_width,
+                    this.app_width - this.activities_width - TKSWeb.hour_label_width,
                     this.min_y,
-                    TKSWeb.hour_label_width + 1,
-                    this.max_y
+                    1,
+                    this.max_y + 1
                 ]
             });
         },
         drag: function(pos) {
-            this.$('.day-labels ul').css('left', pos.left - TKSWeb.hour_label_width);
-            this.$('.hour-labels ul').css('top', pos.top - TKSWeb.day_label_height);
+            this.$('.day-labels ul').css('left', pos.left);
+            this.$('.hour-labels ul').css('top', pos.top);
         },
         set_initial_scroll: function() {
             var $activities = this.$('.activities');
@@ -296,14 +296,14 @@
                 y = y + (this.app_height - day_height) / 2
             }
             $activities.css('top', y);
-            this.$('.hour-labels ul').css('top', y - TKSWeb.day_label_height);
+            this.$('.hour-labels ul').css('top', y);
         },
         mousewheel: function(e, delta) {
             var $activities = this.$('.activities');
             var y = parseInt($activities.css('top'), 10) + delta * 12;
             y = Math.min( Math.max(y, this.min_y), this.max_y);
             $activities.css('top', y);
-            this.$('.hour-labels ul').css('top', y - TKSWeb.day_label_height);
+            this.$('.hour-labels ul').css('top', y);
         },
         add_activity: function(activity) {
             this.$('.activities').append(

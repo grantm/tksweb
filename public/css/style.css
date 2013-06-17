@@ -71,7 +71,8 @@ noscript p {
 }
 
 .week-view .hour-labels li:first-child {
-  height: 40px;
+  height: 39px;
+  border-top: 1px solid #dddddd;
 }
 
 .week-view .day-labels {
@@ -106,9 +107,9 @@ noscript p {
 
 .week-view .activities {
   position: absolute;
-  top: 28px;
-  left: 50px;
   background-image: url(../images/bands.png);
+  border-left: 50px solid white;
+  border-top: 28px solid white;
 }
 
 .activity {
