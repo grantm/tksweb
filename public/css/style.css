@@ -114,8 +114,14 @@ noscript p {
 .activity {
   position: absolute;
   width: 198px;
+  font-size: 13.5px;
   border: 1px solid #cccccc;
   background-color: #ffffcc;
+  overflow: hidden;
+}
+
+.activity p {
+  padding: 2px 4px;
 }
 
 .activity.selected {
