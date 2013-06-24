@@ -109,6 +109,14 @@
         clear_selection: function() {
             this.current_activity = null;
         },
+        find_by_date_time: function(date, time) {
+            return this.find(function(activity) {
+                if(activity.get("date") !== date) { return false; }
+                var start_time = activity.get("start_time");
+                var end_time = start_time + activity.get("duration");
+                return(start_time <= time && time < end_time);
+            });
+        },
         editor_active: function() {
             return this.editor.active;
         },
@@ -177,6 +185,7 @@
         initialize: function() {
             var cursor = this;
             this.init_units();
+            this.collection.on("selection_changed", this.selection_changed, cursor);
             this.$el.parent().mousedown( $.proxy(cursor.activities_mousedown, cursor) );
             $(window).keydown( $.proxy(cursor.key_handler, cursor) );
             this.move_to(0, 8 * this.units_per_hour);
@@ -187,17 +196,43 @@
             this.units_per_hour = 60 / TKSWeb.duration_unit;
             this.max_x = 6;
             this.max_y = 24 * this.units_per_hour - 1;
-            this.$el.width(this.x_scale - 2).height(this.y_scale - 2);
+            this.$el.width(this.x_scale - 2);
+            this.size_cursor(1);
+        },
+        size_cursor: function(h) {
+            this.$el.height((h * this.y_scale) - 2);
         },
         move_to: function(x, y) {
             this.x = x;
             this.y = y;
-            this.$el.css({ left: (x * this.x_scale) + 'px', top: (y * this.y_scale) + 'px' });
+            this.position_cursor();
+            this.select_activity_at_cursor();
         },
         move: function(delta_x, delta_y) {
             var new_x = Math.max(0, Math.min(this.x + delta_x, this.max_x));
             var new_y = Math.max(0, Math.min(this.y + delta_y, this.max_y));
             this.move_to(new_x, new_y);
+        },
+        position_cursor: function() {
+            this.$el.css({ left: (this.x * this.x_scale) + 'px', top: (this.y * this.y_scale) + 'px' });
+        },
+        select_activity_at_cursor: function() {
+            var cursor_date = week_days[this.x].date;
+            var cursor_time = this.y * TKSWeb.duration_unit;
+            var activity = this.collection.find_by_date_time(cursor_date, cursor_time);
+            if(activity) {
+                activity.select();
+            }
+            else if(this.collection.current_activity){
+                this.collection.current_activity.unselect();
+                this.size_cursor(1);
+            }
+        },
+        selection_changed: function(activity) {
+            this.x = column_for_date[ activity.get("date") ];
+            this.y = activity.get("start_time") / TKSWeb.duration_unit;
+            this.position_cursor();
+            this.size_cursor( activity.get("duration")  / TKSWeb.duration_unit );
         },
         activities_mousedown: function(e) {
             if(!$(e.target).hasClass('activities')) {
@@ -221,7 +256,7 @@
                     this.move(0, -1);
                     break;
                 case keyCode.DOWN:
-                    this.move(0, curr ? curr.duration / TKSWeb.duration_unit : 1);
+                    this.move(0, curr ? curr.get("duration") / TKSWeb.duration_unit : 1);
                     break;
                 case keyCode.DELETE: delete_activity();       break;
                 default:

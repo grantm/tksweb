@@ -132,10 +132,6 @@ noscript p {
   padding: 2px 4px;
 }
 
-.activity.selected {
-  border: 1px dashed #ff0000;
-}
-
 
 /* ###############  Activity Edit Dialog  ################# */
 
