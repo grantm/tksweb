@@ -216,10 +216,14 @@
         position_cursor: function() {
             this.$el.css({ left: (this.x * this.x_scale) + 'px', top: (this.y * this.y_scale) + 'px' });
         },
+        cursor_date: function() {
+            return week_days[this.x].date;
+        },
+        cursor_time: function() {
+            return this.y * TKSWeb.duration_unit;
+        },
         select_activity_at_cursor: function() {
-            var cursor_date = week_days[this.x].date;
-            var cursor_time = this.y * TKSWeb.duration_unit;
-            var activity = this.collection.find_by_date_time(cursor_date, cursor_time);
+            var activity = this.collection.find_by_date_time(this.cursor_date(), this.cursor_time());
             if(activity) {
                 activity.select();
             }
