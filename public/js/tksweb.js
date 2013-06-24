@@ -19,8 +19,10 @@
         hour_label_width  : 50,
         hour_label_height : 48,
         day_label_width   : 200,
-        day_label_height  : 28
+        day_label_height  : 28,
+        duration_unit     : 15
     };
+    var keyCode = $.ui.keyCode;
     var week_days, hours, column_for_date;
 
     function init_hours() {
@@ -167,6 +169,84 @@
         },
         edit_activity: function() {
             this.model.trigger('start_activity_edit', this.model);
+        }
+    });
+
+
+    var ActivityCursor = Backbone.View.extend({
+        initialize: function() {
+            var cursor = this;
+            this.init_units();
+            this.$el.parent().mousedown( $.proxy(cursor.activities_mousedown, cursor) );
+            $(window).keydown( $.proxy(cursor.key_handler, cursor) );
+            this.move_to(0, 8 * this.units_per_hour);
+        },
+        init_units: function() {
+            this.x_scale = TKSWeb.day_label_width;
+            this.y_scale = TKSWeb.hour_label_height / (60 / TKSWeb.duration_unit);
+            this.units_per_hour = 60 / TKSWeb.duration_unit;
+            this.max_x = 6;
+            this.max_y = 24 * this.units_per_hour - 1;
+            this.$el.width(this.x_scale - 2).height(this.y_scale - 2);
+        },
+        move_to: function(x, y) {
+            this.x = x;
+            this.y = y;
+            this.$el.css({ left: (x * this.x_scale) + 'px', top: (y * this.y_scale) + 'px' });
+        },
+        move: function(delta_x, delta_y) {
+            var new_x = Math.max(0, Math.min(this.x + delta_x, this.max_x));
+            var new_y = Math.max(0, Math.min(this.y + delta_y, this.max_y));
+            this.move_to(new_x, new_y);
+        },
+        activities_mousedown: function(e) {
+            if(!$(e.target).hasClass('activities')) {
+                return;
+            }
+            e = e.originalEvent;
+            var x = (e.layerX || e.offsetX) - TKSWeb.hour_label_width;
+            var y = (e.layerY || e.offsetY) - TKSWeb.day_label_height;
+            this.move_to(Math.floor(x / this.x_scale), Math.floor(y / this.y_scale));
+        },
+        key_handler: function(e) {
+            if(this.collection.editor_active()) {
+                return true;
+            }
+            var curr = this.collection.current_activity;
+            switch(e.keyCode) {
+                case keyCode.LEFT:   this.move(-1,  0);    break;
+                case keyCode.RIGHT:  this.move( 1,  0);    break;
+                case keyCode.ENTER:  edit_activity_at_cursor(e); break;
+                case keyCode.UP:
+                    this.move(0, -1);
+                    break;
+                case keyCode.DOWN:
+                    this.move(0, curr ? curr.duration / TKSWeb.duration_unit : 1);
+                    break;
+                case keyCode.DELETE: delete_activity();       break;
+                default:
+                    if(e.ctrlKey && e.keyCode == 67) {  // Ctrl-C
+                        copy_activity();
+                    }
+                    else if(e.ctrlKey && e.keyCode == 88) {  // Ctrl-X
+                        copy_activity();
+                        delete_activity();
+                    }
+                    else if(e.ctrlKey && e.keyCode == 86) {  // Ctrl-V
+                        paste_activity();
+                    }
+                    else if(e.keyCode == 67) {  // C
+                        var activity = app.current_activity;
+                        var data = current_activity_data();
+                        data.bg = (data.bg + 1) % 6;
+                        update_activity(data);
+                    }
+                    else {
+                        return;
+                    }
+                    break;
+            }
+            e.preventDefault();
         }
     });
 
@@ -319,6 +399,9 @@
             $activities.css('top', y);
             this.$('.hour-labels ul').css('top', y);
         },
+        cursor_el: function() {
+            return this.$('.activities .cursor');
+        },
         add_activity: function(activity) {
             this.$('.activities').append(
                 new ActivityView({
@@ -337,8 +420,9 @@
             monday: days[0],
             collection: activities
         });
+        activities.cursor = new ActivityCursor({ collection: activities, el: activities.view.cursor_el() });
+        activities.editor = new ActivityEditor({ collection: activities });
         activities.add(activities_data);
-        var activity_editor = new ActivityEditor({ collection: activities });
     };
 
 })(jQuery);

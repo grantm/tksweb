@@ -10,7 +10,9 @@
 <script type="text/javascript" src="[% cdn_url("/js/tksweb.js")         %]"></script>
 
 <script id="week-view-template" type="text/x-handlebars-template">
-  <div class="activities"></div>
+  <div class="activities">
+    <div class="cursor"></div>
+  </div>
   <div class="hour-labels">
     <ul>
     {{#each hours}}

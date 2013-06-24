@@ -112,6 +112,13 @@ noscript p {
   border-top: 28px solid white;
 }
 
+.week-view .cursor {
+  position: absolute;
+  border: 1px dashed #ff0000;
+  z-index: 10;
+}
+
+
 .activity {
   position: absolute;
   width: 198px;
