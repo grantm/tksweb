@@ -102,6 +102,9 @@
             }
             this.current_activity = new_selection;
         },
+        editor_active: function() {
+            return this.editor.active;
+        },
         save_from_editor: function(data) {
             var activity = this.current_activity;
             if(activity) {
@@ -185,6 +188,8 @@
                 width:         360,
                 height:        230,
                 modal:         true,
+                open:          function() { editor.active = true;  },
+                close:         function() { editor.active = false; },
                 buttons:       {
                     "Ok":     function() { editor.save_activity(); },
                     "Cancel": function() { editor.close(); }
@@ -192,14 +197,18 @@
 
             });
         },
+        open: function() {
+            this.$el.dialog("open");
+        },
         close: function() {
             this.$el.dialog("close");
         },
         start_activity_edit: function(activity) {
             var data = activity.for_edit_dialog();
-            this.$el.html( this.activity_dialog_template(data) ).dialog('open');
+            this.$el.html( this.activity_dialog_template(data) );
             this.set_title(data.id ? 'Edit Activity' : 'Add Activity');
             this.set_focus(data.wr_number ? '.activity-dc input' : '.activity-wr input');
+            this.open();
         },
         set_title: function(new_title) {
             this.$el.dialog('option', 'title', new_title);
