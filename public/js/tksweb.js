@@ -137,8 +137,7 @@
         className: 'activity',
 
         events: {
-            "click": "select_activity",
-            "dblclick": "edit_activity"
+            "click": "select_activity"
         },
 
         initialize: function() {
@@ -174,14 +173,15 @@
         },
         show_selection: function() {
             this.$el.toggleClass('selected', this.model.get('selected'));
-        },
-        edit_activity: function() {
-            this.model.trigger('start_activity_edit', this.model);
         }
     });
 
 
     var ActivityCursor = Backbone.View.extend({
+        events: {
+            "dblclick": "dblclick"
+        },
+
         initialize: function() {
             var cursor = this;
             this.init_units();
@@ -282,6 +282,12 @@
                     break;
             }
             e.preventDefault();
+        },
+        dblclick: function() {
+            var curr = this.collection.current_activity;
+            if(curr) {
+                curr.trigger('start_activity_edit', curr);
+            }
         }
     });
 
