@@ -130,6 +130,7 @@ noscript p {
 
 .activity p {
   padding: 2px 4px;
+  cursor: default;
 }
 
 
