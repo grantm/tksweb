@@ -69,6 +69,7 @@
         },
         unselect: function() {
             this.set('selected', false);
+            this.trigger('clear_selection');
         },
         for_edit_dialog: function() {
             var data = this.toJSON();
@@ -91,6 +92,7 @@
 
         initialize: function() {
             this.on("selection_changed", this.selection_changed);
+            this.on("clear_selection", this.clear_selection);
         },
         comparator: function(activity) {
             return activity.get("date") + ' ' +
@@ -101,6 +103,9 @@
                 this.current_activity.unselect();
             }
             this.current_activity = new_selection;
+        },
+        clear_selection: function() {
+            this.current_activity = null;
         },
         editor_active: function() {
             return this.editor.active;
