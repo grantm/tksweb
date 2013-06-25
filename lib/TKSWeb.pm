@@ -120,6 +120,14 @@ put '/activity/:id' => sub {
 };
 
 
+del '/activity/:id' => sub {
+    my $activity = activity_by_id( param('id') )
+        or return status "not_found";
+    $activity->delete;
+    return to_json({status => 'deleted'});
+};
+
+
 ############################  Support Routines  ##############################
 
 

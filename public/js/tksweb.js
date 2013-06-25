@@ -139,6 +139,13 @@
                 this.add(activity);
             }
             return activity.update_from_editor(data);
+        },
+        delete_current_activity: function(data) {
+            var activity = this.current_activity;
+            if(activity) {
+                this.clear_selection();
+                activity.destroy();
+            }
         }
     });
 
@@ -156,6 +163,7 @@
             this.listenTo(this.model, "change:wr_number change:description", this.render);
             this.listenTo(this.model, "change:duration", this.size_element);
             this.listenTo(this.model, "change:selected", this.show_selection);
+            this.listenTo(this.model, "destroy", this.destroy);
             this.position_element();
             this.size_element();
         },
@@ -184,6 +192,9 @@
         },
         show_selection: function() {
             this.$el.toggleClass('selected', this.model.get('selected'));
+        },
+        destroy: function() {
+            this.$el.remove();
         }
     });
 
@@ -277,23 +288,17 @@
                 case keyCode.DOWN:
                     this.move(0, curr ? curr.get("duration") / TKSWeb.duration_unit : 1);
                     break;
-                case keyCode.DELETE: delete_activity();       break;
+                case keyCode.DELETE: this.delete_activity(); break;
                 default:
                     if(e.ctrlKey && e.keyCode == 67) {  // Ctrl-C
-                        copy_activity();
+                        this.copy_activity();
                     }
                     else if(e.ctrlKey && e.keyCode == 88) {  // Ctrl-X
                         copy_activity();
-                        delete_activity();
+                        this.delete_activity();
                     }
                     else if(e.ctrlKey && e.keyCode == 86) {  // Ctrl-V
-                        paste_activity();
-                    }
-                    else if(e.keyCode == 67) {  // C
-                        var activity = app.current_activity;
-                        var data = current_activity_data();
-                        data.bg = (data.bg + 1) % 6;
-                        update_activity(data);
+                        this.paste_activity();
                     }
                     else {
                         return;
@@ -314,6 +319,10 @@
                     duration: this.default_duration()
                 });
             }
+        },
+        delete_activity: function() {
+            this.collection.delete_current_activity();
+            this.size_cursor(1);
         }
     });
 
