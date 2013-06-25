@@ -146,6 +146,9 @@
                 this.clear_selection();
                 activity.destroy();
             }
+        },
+        create_from_clipboard: function(data) {
+            this.create(data);
         }
     });
 
@@ -294,7 +297,7 @@
                         this.copy_activity();
                     }
                     else if(e.ctrlKey && e.keyCode == 88) {  // Ctrl-X
-                        copy_activity();
+                        this.copy_activity();
                         this.delete_activity();
                     }
                     else if(e.ctrlKey && e.keyCode == 86) {  // Ctrl-V
@@ -323,6 +326,25 @@
         delete_activity: function() {
             this.collection.delete_current_activity();
             this.size_cursor(1);
+        },
+        copy_activity: function() {
+            var curr = this.collection.current_activity;
+            if(curr) {
+                this.clipboard = curr.toJSON();
+                delete this.clipboard.id;
+                delete this.clipboard.selected;
+                delete this.clipboard.column;
+            }
+        },
+        paste_activity: function() {
+            if(this.collection.current_activity) {
+                return;
+            }
+            var data = this.clipboard;
+            data.date = this.cursor_date();
+            data.start_time = this.cursor_time();
+            this.collection.create_from_clipboard(data);
+            this.select_activity_at_cursor();
         }
     });
 
