@@ -89,6 +89,22 @@ get qr{^/week/?(?<date>.*)$} => sub {
 };
 
 
+post '/activity' => sub {
+    my $new = from_json( request->body );
+    my $start_date_time = combine_date_time($new->{date}, $new->{start_time});
+    my $activity = Activity->new({
+        app_user_id   => var('user')->id,
+        date_time     => $start_date_time,
+        duration      => $new->{duration},
+        wr_system_id  => $new->{wr_system_id},
+        wr_number     => $new->{wr_number},
+        description   => $new->{description},
+    });
+    $activity->insert;
+    return to_json({ id => $activity->id });
+};
+
+
 put '/activity/:id' => sub {
     my $activity = activity_by_id( param('id') )
         or return status "not_found";
