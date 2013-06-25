@@ -5,7 +5,7 @@ use parent 'DBIx::Class::Core';
 __PACKAGE__->table('activity');
 __PACKAGE__->add_columns(
     activity_id  => {
-                        data_type     => 'text',
+                        data_type     => 'integer',
                         is_nullable   => 0,
                     },
     app_user_id  => {

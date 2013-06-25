@@ -23,7 +23,7 @@ CREATE TABLE wr_system (
 );
 
 CREATE TABLE activity (
-    activity_id     TEXT CONSTRAINT PK_ACTIVITY PRIMARY KEY,
+    activity_id     INTEGER CONSTRAINT PK_ACTIVITY PRIMARY KEY AUTOINCREMENT,
     app_user_id     INTEGER  NOT NULL,
     date_time       DATETIME NOT NULL,
     duration        INTEGER  NOT NULL,
