@@ -1,7 +1,9 @@
-* move dialog code to a separate view
-* use borders (top and left) to offset activities from 0,0
+* initialise cursor to current time if today is in the target week
+* use click instead of mousedown(?)
+* put .activities and .cursor inside .content with 0,0 offsets
 * add activity resize drag handles
-* create new activity
+* implement wr_system_id
+* validate activity dialog fields(?)
 * drag activity
 * copy activity
 * paste activity
@@ -17,4 +19,5 @@
 * undo ?
 * nudge algorithm to avoid overlaps
 * save: marshall activities and send to server
+* websockets channel to advise of updates from other clients
 
