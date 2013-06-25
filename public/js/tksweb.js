@@ -190,7 +190,7 @@
 
     var ActivityCursor = Backbone.View.extend({
         events: {
-            "dblclick": "dblclick"
+            "dblclick": "edit_activity"
         },
 
         initialize: function() {
@@ -270,7 +270,7 @@
             switch(e.keyCode) {
                 case keyCode.LEFT:   this.move(-1,  0);    break;
                 case keyCode.RIGHT:  this.move( 1,  0);    break;
-                case keyCode.ENTER:  edit_activity_at_cursor(e); break;
+                case keyCode.ENTER:  this.edit_activity(); break;
                 case keyCode.UP:
                     this.move(0, -1);
                     break;
@@ -302,7 +302,7 @@
             }
             e.preventDefault();
         },
-        dblclick: function() {
+        edit_activity: function() {
             var curr = this.collection.current_activity;
             if(curr) {
                 curr.start_activity_edit();
