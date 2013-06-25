@@ -59,6 +59,7 @@
             date          : '',
             start_time    : 0,
             duration      : 60,
+            wr_system_id  : 1,
             wr_number     : '',
             description   : ''
         },
@@ -73,6 +74,9 @@
             this.set('selected', false);
             this.trigger('clear_selection');
         },
+        start_activity_edit: function() {
+            this.trigger('start_activity_edit', this.for_edit_dialog());
+        },
         for_edit_dialog: function() {
             var data = this.toJSON();
             data.duration = data.duration / 60;
@@ -81,9 +85,9 @@
         update_from_editor: function(data) {
             this.set('wr_number', data.wr_number);
             this.set('description', data.description);
-            var duration = Math.floor(4 * data.duration) * 15;
-            this.set('duration', duration);
+            this.set('duration', data.duration);
             this.save();
+            this.trigger('selection_updated', this);
         }
     });
 
@@ -120,14 +124,21 @@
         editor_active: function() {
             return this.editor.active;
         },
+        edit_new_activity: function(data) {
+            data.duration = data.duration / 60;
+            this.new_activity = data;
+            this.trigger('start_activity_edit', data);
+        },
         save_from_editor: function(data) {
             var activity = this.current_activity;
-            if(activity) {
-                return activity.update_from_editor(data);
+            data.duration = Math.floor(4 * data.duration) * 15;
+            if(!activity) {
+                data.date = this.new_activity.date;
+                data.start_time = this.new_activity.start_time;
+                activity = new Activity(data);
+                this.add(activity);
             }
-            else {
-                alert('Need to create from dialog');
-            }
+            return activity.update_from_editor(data);
         }
     });
 
@@ -186,6 +197,7 @@
             var cursor = this;
             this.init_units();
             this.collection.on("selection_changed", this.selection_changed, cursor);
+            this.collection.on("selection_updated", this.select_activity_at_cursor, cursor);
             this.$el.parent().mousedown( $.proxy(cursor.activities_mousedown, cursor) );
             $(window).keydown( $.proxy(cursor.key_handler, cursor) );
             this.move_to(0, 8 * this.units_per_hour);
@@ -221,6 +233,9 @@
         },
         cursor_time: function() {
             return this.y * TKSWeb.duration_unit;
+        },
+        default_duration: function() {
+            return 15;
         },
         select_activity_at_cursor: function() {
             var activity = this.collection.find_by_date_time(this.cursor_date(), this.cursor_time());
@@ -290,7 +305,14 @@
         dblclick: function() {
             var curr = this.collection.current_activity;
             if(curr) {
-                curr.trigger('start_activity_edit', curr);
+                curr.start_activity_edit();
+            }
+            else {
+                this.collection.edit_new_activity({
+                    date: this.cursor_date(),
+                    start_time: this.cursor_time(),
+                    duration: this.default_duration()
+                });
             }
         }
     });
@@ -333,8 +355,7 @@
         close: function() {
             this.$el.dialog("close");
         },
-        start_activity_edit: function(activity) {
-            var data = activity.for_edit_dialog();
+        start_activity_edit: function(data) {
             this.$el.html( this.activity_dialog_template(data) );
             this.set_title(data.id ? 'Edit Activity' : 'Add Activity');
             this.set_focus(data.wr_number ? '.activity-dc input' : '.activity-wr input');
