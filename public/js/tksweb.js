@@ -63,9 +63,6 @@
             wr_number     : '',
             description   : ''
         },
-        initialize: function() {
-            this.set('column', column_for_date[ this.get('date') ]);
-        },
         select: function() {
             this.trigger('selection_changed', this);
             this.set('selected', true);
@@ -179,7 +176,7 @@
         position_element: function() {
             var activity = this.model;
             this.$el.css({
-                left: activity.get('column') * 200,
+                left: column_for_date[ activity.get('date') ] * 200,
                 top:  (activity.get('start_time') * TKSWeb.hour_label_height) / 60
             });
         },
@@ -333,7 +330,6 @@
                 this.clipboard = curr.toJSON();
                 delete this.clipboard.id;
                 delete this.clipboard.selected;
-                delete this.clipboard.column;
             }
         },
         paste_activity: function() {
