@@ -23,6 +23,7 @@
         duration_unit     : 15
     };
     var keyCode = $.ui.keyCode;
+    var end_of_day = 24 * 60;
     var week_days, hours, column_for_date;
 
     function init_hours() {
@@ -85,6 +86,22 @@
             this.set('duration', data.duration);
             this.save();
             this.trigger('selection_updated', this);
+        },
+        try_move_to: function(new_date, new_time) {
+            var new_end = new_time + this.get("duration");
+            var next = this.collection.find_at_or_after_date_time(new_date, new_time, this);
+            if(next) {
+                if(next.get("start_time") < new_end) {
+                    return false;
+                }
+            }
+            if(new_end > end_of_day) {
+                return false;
+            }
+            this.set({date: new_date, start_time: new_time});
+            this.save();
+            this.trigger('selection_updated', this);
+            return true;
         }
     });
 
@@ -116,6 +133,18 @@
                 var start_time = activity.get("start_time");
                 var end_time = start_time + activity.get("duration");
                 return(start_time <= time && time < end_time);
+            });
+        },
+        find_at_or_after_date_time: function(date, time, except) {
+            return this.find(function(activity) {
+                if(activity === except) { return false; }
+                if(activity.get("date") !== date) { return false; }
+                var start_time = activity.get("start_time");
+                var end_time = start_time + activity.get("duration");
+                if(start_time <= time && time < end_time) {
+                    return true;
+                }
+                return(start_time >= time);
             });
         },
         editor_active: function() {
@@ -161,6 +190,7 @@
         initialize: function() {
             this.week_view = this.model.collection.view;
             this.listenTo(this.model, "change:wr_number change:description", this.render);
+            this.listenTo(this.model, "change:date change:start_time", this.position_element);
             this.listenTo(this.model, "change:duration", this.size_element);
             this.listenTo(this.model, "change:selected", this.show_selection);
             this.listenTo(this.model, "destroy", this.destroy);
@@ -232,9 +262,28 @@
             this.select_activity_at_cursor();
         },
         move: function(delta_x, delta_y) {
-            var new_x = Math.max(0, Math.min(this.x + delta_x, this.max_x));
-            var new_y = Math.max(0, Math.min(this.y + delta_y, this.max_y));
-            this.move_to(new_x, new_y);
+            var pos = this.relative_position(delta_x, delta_y);
+            if(pos) {
+                this.move_to(pos.x, pos.y);
+            }
+        },
+        move_activity: function(delta_x, delta_y) {
+            var pos = this.relative_position(delta_x, delta_y);
+            if(!pos) {
+                return;
+            }
+            var activity = this.collection.current_activity;
+            var date = week_days[pos.x].date;
+            var time = pos.y * TKSWeb.duration_unit;
+            if(activity.try_move_to(date, time)) {
+                this.move_to(pos.x, pos.y);
+            }
+        },
+        relative_position: function(delta_x, delta_y) {
+            var pos = {};
+            pos.x = Math.max(0, Math.min(this.x + delta_x, this.max_x));
+            pos.y = Math.max(0, Math.min(this.y + delta_y, this.max_y));
+            return pos.x === this.x && pos.y === this.y ? null : pos;
         },
         position_cursor: function() {
             this.$el.css({ left: (this.x * this.x_scale) + 'px', top: (this.y * this.y_scale) + 'px' });
@@ -278,32 +327,45 @@
                 return true;
             }
             var curr = this.collection.current_activity;
-            switch(e.keyCode) {
-                case keyCode.LEFT:   this.move(-1,  0);    break;
-                case keyCode.RIGHT:  this.move( 1,  0);    break;
-                case keyCode.ENTER:  this.edit_activity(); break;
-                case keyCode.UP:
-                    this.move(0, -1);
-                    break;
-                case keyCode.DOWN:
-                    this.move(0, curr ? curr.get("duration") / TKSWeb.duration_unit : 1);
-                    break;
-                case keyCode.DELETE: this.delete_activity(); break;
-                default:
-                    if(e.ctrlKey && e.keyCode == 67) {  // Ctrl-C
+            if(!e.shiftKey && !e.ctrlKey) {
+                switch(e.keyCode) {
+                    case keyCode.LEFT:   this.move(-1,  0);       break;
+                    case keyCode.RIGHT:  this.move( 1,  0);       break;
+                    case keyCode.UP:     this.move( 0, -1);       break;
+                    case keyCode.DOWN:
+                        this.move(0, curr ? curr.get("duration") / TKSWeb.duration_unit : 1);
+                        break;
+                    case keyCode.ENTER:  this.edit_activity();    break;
+                    case keyCode.DELETE: this.delete_activity();  break;
+                    default:
+                        return;
+                }
+            }
+            else if(e.shiftKey) {
+                switch(e.keyCode) {
+                    case keyCode.LEFT:   this.move_activity(-1,  0);    break;
+                    case keyCode.RIGHT:  this.move_activity( 1,  0);    break;
+                    case keyCode.UP:     this.move_activity( 0, -1);    break;
+                    case keyCode.DOWN:   this.move_activity( 0,  1);    break;
+                    default:
+                        return;
+                }
+            }
+            else if(e.ctrlKey) {
+                switch(e.keyCode) {
+                    case 67:  // Ctrl-C
                         this.copy_activity();
-                    }
-                    else if(e.ctrlKey && e.keyCode == 88) {  // Ctrl-X
+                        break;
+                    case 88:  // Ctrl-X
                         this.copy_activity();
                         this.delete_activity();
-                    }
-                    else if(e.ctrlKey && e.keyCode == 86) {  // Ctrl-V
+                        break;
+                    case 86:  // Ctrl-V
                         this.paste_activity();
-                    }
-                    else {
+                        break;
+                    default:
                         return;
-                    }
-                    break;
+                }
             }
             e.preventDefault();
         },
