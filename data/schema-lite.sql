@@ -16,7 +16,7 @@ CREATE TABLE wr_system (
     app_user_id     INTEGER NOT NULL,
     name            TEXT    NOT NULL,
     description     TEXT    NOT NULL,
-    colour_code     INTEGER,
+    colour_code     INTEGER NOT NULL DEFAULT '0',
 
     CONSTRAINT FK_WR_SYSTEM_USER
         FOREIGN KEY (app_user_id) REFERENCES app_user (app_user_id)
