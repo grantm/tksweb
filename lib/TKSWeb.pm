@@ -14,7 +14,6 @@ our $VERSION = '0.1';
 
 
 sub User      { schema->resultset('AppUser'); }
-sub Activity  { schema->resultset('Activity'); }
 
 
 ##################################  Hooks  ###################################
@@ -84,6 +83,7 @@ get qr{^/week/?(?<date>.*)$} => sub {
     return redirect "/week/$monday" if $date ne $monday;
     template 'week-view', {
         dates       => to_json( dates_for_weekview($monday) ),
+        wr_systems  => to_json( wr_system_list() ),
         activities  => to_json( activities_for_week($monday) ),
     };
 };
@@ -178,6 +178,23 @@ sub days_of_week {
         $dt->add(days => 1);
     }
     return \@days;
+}
+
+
+sub wr_system_list {
+    my @wr_systems;
+    my $user = var 'user';
+    my $rs = $user->wr_systems->search(
+        {},
+        {
+            order_by => 'wr_system_id'
+        }
+    );
+    while(my $wr_system = $rs->next) {
+        my %sys = $wr_system->get_columns;
+        push @wr_systems, \%sys;
+    }
+    return \@wr_systems;
 }
 
 

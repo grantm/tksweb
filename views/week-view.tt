@@ -41,7 +41,8 @@
 <script type="text/javascript">
 (function() {
     var dates = [% dates %];
+    var wr_systems = [% wr_systems %];
     var activities = [% activities %];
-    TKSWeb.show_week($('.week-view'), dates, activities);
+    TKSWeb.show_week($('.week-view'), dates, wr_systems, activities);
 })();
 </script>

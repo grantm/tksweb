@@ -24,7 +24,7 @@
     };
     var keyCode = $.ui.keyCode;
     var end_of_day = 24 * 60;
-    var week_days, hours, column_for_date;
+    var wr_systems, week_days, hours, column_for_date;
 
     function init_hours() {
         hours = [ '' ];
@@ -640,7 +640,8 @@
         }
     });
 
-    TKSWeb.show_week = function (el, dates, activities_data) {
+    TKSWeb.show_week = function (el, dates, wr_sys, activities_data) {
+        wr_systems = wr_sys;
         init_week_days(dates.week_dates);
         init_hours();
         var activities = new Activities();
