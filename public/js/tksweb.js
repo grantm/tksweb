@@ -424,10 +424,12 @@
                 return;
             }
             var data = this.clipboard;
-            data.date = this.cursor_date();
-            data.start_time = this.cursor_time();
-            this.collection.create_from_clipboard(data);
-            this.select_activity_at_cursor();
+            if(data && data.duration) {
+                data.date = this.cursor_date();
+                data.start_time = this.cursor_time();
+                this.collection.create_from_clipboard(data);
+                this.select_activity_at_cursor();
+            }
         }
     });
 
