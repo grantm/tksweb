@@ -127,6 +127,9 @@
         clear_selection: function() {
             this.current_activity = null;
         },
+        trigger_cursor_move: function(pos) {
+            this.trigger('cursor_move', pos);
+        },
         find_by_date_time: function(date, time) {
             return this.find(function(activity) {
                 if(activity.get("date") !== date) { return false; }
@@ -286,7 +289,14 @@
             return pos.x === this.x && pos.y === this.y ? null : pos;
         },
         position_cursor: function() {
-            this.$el.css({ left: (this.x * this.x_scale) + 'px', top: (this.y * this.y_scale) + 'px' });
+            var pos = {
+                left: this.x * this.x_scale,
+                right: this.x * this.x_scale + this.x_scale,
+                top: this.y * this.y_scale,
+                bottom: this.y * this.y_scale + this.y_scale
+            };
+            this.$el.css({ left: pos.left + 'px', top: pos.top + 'px' });
+            this.collection.trigger_cursor_move(pos);
         },
         cursor_date: function() {
             return week_days[this.x].date;
@@ -504,9 +514,12 @@
         },
         initialize: function(options) {
             var view = this;
+            this.left = 0;
+            this.top = 0;
             this.compile_templates();
             this.render();
             this.collection.on('add', this.add_activity, this);
+            this.collection.on("cursor_move", this.scroll_to_show_cursor, this);
             $(window).resize( $.proxy(view.resize, view) );
         },
         compile_templates: function() {
@@ -561,18 +574,28 @@
             });
         },
         drag: function(pos) {
+            this.left = pos.left;
+            this.top = pos.top;
             this.$('.day-labels ul').css('left', pos.left);
             this.$('.hour-labels ul').css('top', pos.top);
         },
+        set_position_top: function(y) {
+            this.top = y;
+            this.$('.activities').css('top', y);
+            this.$('.hour-labels ul').css('top', y);
+        },
+        set_position_left: function(x) {
+            this.left = x;
+            this.$('.activities').css('left', x);
+            this.$('.day-labels ul').css('left', x);
+        },
         set_initial_scroll: function() {
-            var $activities = this.$('.activities');
             var day_height = (18 - 8) * TKSWeb.hour_label_height;
             var y = -8 * TKSWeb.hour_label_height;
             if(day_height < this.app_height) {
                 y = y + (this.app_height - day_height) / 2
             }
-            $activities.css('top', y);
-            this.$('.hour-labels ul').css('top', y);
+            this.set_position_top(y);
         },
         mousewheel: function(e, delta) {
             var $activities = this.$('.activities');
@@ -590,6 +613,26 @@
                     model: activity
                 }).render().el
             );
+        },
+        scroll_to_show_cursor: function(cursor) {
+            var viewport = {
+                top: 0 - this.top,
+                bottom: this.app_height - this.top - TKSWeb.day_label_height,
+                left: 0 - this.left,
+                right: this.app_width - this.left - TKSWeb.hour_label_width
+            };
+            if(cursor.top < viewport.top) {
+                this.set_position_top(0 - cursor.top);
+            }
+            else if(cursor.bottom > viewport.bottom) {
+                this.set_position_top(0 - viewport.top - cursor.bottom + viewport.bottom);
+            }
+            if(cursor.left < viewport.left) {
+                this.set_position_left(0 - cursor.left);
+            }
+            else if(cursor.right > viewport.right) {
+                this.set_position_left(0 - viewport.left - cursor.right + viewport.right);
+            }
         }
     });
 
