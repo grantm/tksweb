@@ -335,6 +335,7 @@
                     case keyCode.DOWN:
                         this.move(0, curr ? curr.get("duration") / TKSWeb.duration_unit : 1);
                         break;
+                    case keyCode.TAB:    this.select_next_activity();   break;
                     case keyCode.ENTER:  this.edit_activity();    break;
                     case keyCode.DELETE: this.delete_activity();  break;
                     default:
@@ -347,6 +348,7 @@
                     case keyCode.RIGHT:  this.move_activity( 1,  0);    break;
                     case keyCode.UP:     this.move_activity( 0, -1);    break;
                     case keyCode.DOWN:   this.move_activity( 0,  1);    break;
+                    case keyCode.TAB:    this.select_previous_activity();   break;
                     default:
                         return;
                 }
@@ -368,6 +370,29 @@
                 }
             }
             e.preventDefault();
+        },
+        select_next_activity: function() {
+            var curr = this.collection.current_activity;
+            var next;
+            if(curr) {
+                next = this.collection.at( this.collection.indexOf(curr) + 1 );
+            }
+            else {
+                next = this.collection.find_at_or_after_date_time(this.cursor_date(), this.cursor_time());
+            }
+            if(next) {
+                next.select();
+            }
+        },
+        select_previous_activity: function() {
+            var curr = this.collection.current_activity;
+            var prev;
+            if(curr) {
+                prev = this.collection.at( this.collection.indexOf(curr) - 1 );
+            }
+            if(prev) {
+                prev.select();
+            }
         },
         edit_activity: function() {
             var curr = this.collection.current_activity;
