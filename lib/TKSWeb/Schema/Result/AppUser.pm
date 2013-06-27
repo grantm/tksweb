@@ -41,7 +41,8 @@ __PACKAGE__->add_columns(
 
 __PACKAGE__->set_primary_key('app_user_id');
 
- __PACKAGE__->has_many( activities => 'Activity' => { 'foreign.app_user_id' => 'self.app_user_id' } );
+__PACKAGE__->has_many( activities => 'Activity' => { 'foreign.app_user_id' => 'self.app_user_id' } );
+__PACKAGE__->has_many( wr_systems => 'WRSystem' => { 'foreign.app_user_id' => 'self.app_user_id' } );
 
 1;
 
