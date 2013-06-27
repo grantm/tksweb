@@ -83,7 +83,7 @@ get qr{^/week/?(?<date>.*)$} => sub {
     my $monday = monday_of_week( $date );
     return redirect "/week/$monday" if $date ne $monday;
     template 'week-view', {
-        days        => to_json( days_of_week($monday) ),
+        dates       => to_json( dates_for_weekview($monday) ),
         activities  => to_json( activities_for_week($monday) ),
     };
 };
@@ -160,8 +160,18 @@ sub monday_of_week {
 }
 
 
+sub dates_for_weekview {
+    my $monday = parse_date(shift) or die "Date needed";
+    return {
+        next_monday => $monday->clone->add(days => 7)->ymd,
+        last_monday => $monday->clone->add(days => -7)->ymd,
+        week_dates  => days_of_week( $monday->clone ),
+    };
+}
+
+
 sub days_of_week {
-    my $dt = parse_date(shift) or return;
+    my $dt = shift or die "Date needed";
     my @days;
     foreach (1..7) {
         push @days, $dt->ymd;

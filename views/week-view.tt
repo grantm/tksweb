@@ -40,8 +40,8 @@
 
 <script type="text/javascript">
 (function() {
-    var days = [% days %];
+    var dates = [% dates %];
     var activities = [% activities %];
-    TKSWeb.show_week($('.week-view'), days, activities);
+    TKSWeb.show_week($('.week-view'), dates, activities);
 })();
 </script>

@@ -514,6 +514,8 @@
         },
         initialize: function(options) {
             var view = this;
+            this.last_monday = options.last_monday;
+            this.next_monday = options.next_monday;
             this.left = 0;
             this.top = 0;
             this.compile_templates();
@@ -529,7 +531,9 @@
         render: function() {
             var context = {
                 week_days: week_days,
-                hours: hours
+                hours: hours,
+                last_monday: this.last_monday,
+                next_monday: this.next_monday
             };
             this.$el.html( this.template(context) );
             this.size_activities();
@@ -636,13 +640,15 @@
         }
     });
 
-    TKSWeb.show_week = function (el, days, activities_data) {
-        init_week_days(days);
+    TKSWeb.show_week = function (el, dates, activities_data) {
+        init_week_days(dates.week_dates);
         init_hours();
         var activities = new Activities();
         activities.view = new WeekView({
             el: el,
-            monday: days[0],
+            monday: dates.week_dates[0],
+            last_monday: dates.last_monday,
+            next_monday: dates.next_monday,
             collection: activities
         });
         activities.cursor = new ActivityCursor({ collection: activities, el: activities.view.cursor_el() });
