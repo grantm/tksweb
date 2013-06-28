@@ -119,6 +119,9 @@
             this.save();
             this.trigger('selection_updated', this);
             return true;
+        },
+        max_duration: function() {
+            return this.collection.max_duration(this.get("date"), this.get("start_time"), this);
         }
     });
 
@@ -166,6 +169,13 @@
                 }
                 return(start_time >= time);
             });
+        },
+        max_duration: function(date, start_time, except) {
+            var next = this.find_at_or_after_date_time(date, start_time, except);
+            if(next && next.get("date") === date) {
+                return next.get("start_time") - start_time;
+            }
+            return end_of_day - start_time;
         },
         editor_active: function() {
             return this.editor.active;
@@ -323,7 +333,7 @@
             return this.y * TKSWeb.duration_unit;
         },
         default_duration: function() {
-            return 15;
+            return 60;
         },
         select_activity_at_cursor: function() {
             var activity = this.collection.find_by_date_time(this.cursor_date(), this.cursor_time());
@@ -428,10 +438,13 @@
                 curr.start_activity_edit();
             }
             else {
+                var date = this.cursor_date();
+                var start_time = this.cursor_time();
+                var max_duration = this.collection.max_duration(date, start_time);
                 this.collection.edit_new_activity({
-                    date: this.cursor_date(),
-                    start_time: this.cursor_time(),
-                    duration: this.default_duration()
+                    date: date,
+                    start_time: start_time,
+                    duration: Math.min(this.default_duration(), max_duration)
                 });
             }
         },
@@ -517,9 +530,9 @@
         },
         save_activity: function() {
             this.collection.save_from_editor({
-                wr_system_id  : this.$('input[name=wr_system_id]:checked').val(),
+                wr_system_id  : parseInt(this.$('input[name=wr_system_id]:checked').val(), 10),
                 wr_number   : this.$('.activity-wr input').val(),
-                duration    : this.$('.activity-hr input').val(),
+                duration    : parseFloat(this.$('.activity-hr input').val()),
                 description : this.$('.activity-dc input').val()
             });
             this.close();
