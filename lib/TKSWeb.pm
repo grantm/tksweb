@@ -14,6 +14,7 @@ our $VERSION = '0.1';
 
 
 sub User      { schema->resultset('AppUser'); }
+sub Activity  { schema->resultset('Activity'); }
 
 
 ##################################  Hooks  ###################################
