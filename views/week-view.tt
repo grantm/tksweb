@@ -32,6 +32,13 @@
 <p>{{wr_number}}: {{description}}</p>
 </script>
 <script id="activity-dialog-template" type="text/x-handlebars-template">
+{{#if wr_systems}}
+  {{#each wr_systems}}
+    <label class="wr-sys"><input type="radio" name="wr_system_id" value="{{wr_system_id}}" {{checked}}> {{description}}</label>
+  {{/each}}
+{{else}}
+  <input type="hidden" name="wr_system_id" value="{{wr_system_id}}">
+{{/if}}
   <div class="activity-wr"><label>WR Number</label><input type="text" value="{{wr_number}}"></div>
   <div class="activity-hr"><label>Hours</label><input type="text" value="{{duration}}"></div>
   <div class="activity-dc"><label>Activity Description</label><input type="text" value="{{description}}"></div>

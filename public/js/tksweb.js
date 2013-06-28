@@ -50,6 +50,22 @@
         }
     };
 
+    function add_wr_systems(data) {
+        if(!data.wr_system_id) {
+            data.wr_system_id = wr_systems[0].wr_system_id;
+        }
+        if(wr_systems.length > 1) {
+            data.wr_systems = [];
+            _.each(wr_systems, function(sys) {
+                data.wr_systems.push({
+                    wr_system_id: sys.wr_system_id,
+                    description: sys.description,
+                    checked: data.wr_system_id === sys.wr_system_id ? 'checked' : ''
+                });
+            });
+        }
+    };
+
     function pad2(num) {
         return num < 10 ? '0' + num : '' + num;
     }
@@ -60,7 +76,6 @@
             date          : '',
             start_time    : 0,
             duration      : 60,
-            wr_system_id  : 1,
             wr_number     : '',
             description   : ''
         },
@@ -78,9 +93,11 @@
         for_edit_dialog: function() {
             var data = this.toJSON();
             data.duration = data.duration / 60;
+            add_wr_systems(data);
             return data;
         },
         update_from_editor: function(data) {
+            this.set('wr_system_id', parseInt(data.wr_system_id, 10));
             this.set('wr_number', data.wr_number);
             this.set('description', data.description);
             this.set('duration', data.duration);
@@ -155,6 +172,7 @@
         },
         edit_new_activity: function(data) {
             data.duration = data.duration / 60;
+            add_wr_systems(data);
             this.new_activity = data;
             this.trigger('start_activity_edit', data);
         },
@@ -464,7 +482,7 @@
                 resizable:     false,
                 closeOnEscape: true,
                 width:         360,
-                height:        230,
+                height:        290,
                 modal:         true,
                 open:          function() { editor.active = true;  },
                 close:         function() { editor.active = false; },
@@ -499,6 +517,7 @@
         },
         save_activity: function() {
             this.collection.save_from_editor({
+                wr_system_id  : this.$('input[name=wr_system_id]:checked').val(),
                 wr_number   : this.$('.activity-wr input').val(),
                 duration    : this.$('.activity-hr input').val(),
                 description : this.$('.activity-dc input').val()
