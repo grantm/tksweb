@@ -573,9 +573,9 @@
         save_activity: function() {
             var success = this.collection.save_from_editor({
                 wr_system_id  : parseInt(this.$('input[name=wr_system_id]:checked').val(), 10),
-                wr_number   : this.$('.activity-wr input').val(),
-                duration    : parseFloat(this.$('.activity-hr input').val()),
-                description : this.$('.activity-dc input').val()
+                wr_number   : this.$('.activity-wr input').val().trim(),
+                duration    : parseFloat(this.$('.activity-hr input').val().trim()),
+                description : this.$('.activity-dc input').val().trim()
             });
             if(success) {
                 return this.close();
