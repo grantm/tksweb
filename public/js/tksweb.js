@@ -79,6 +79,29 @@
             wr_number     : '',
             description   : ''
         },
+        validate: function(attr) {
+            if(!column_for_date.hasOwnProperty(attr.date)) {
+                return "Invalid date: " + attr.date;
+            }
+            if(typeof(attr.start_time) !== "number") {
+                return "Invalid start time - must be a number";
+            }
+            if(attr.start_time < 0  ||  attr.start_time >= end_of_day) {
+                return "Invalid start time - expected minutes value in range 0-" + end_of_day;
+            }
+            if(typeof(attr.duration) !== "number") {
+                return "Invalid duration - must be a number";
+            }
+            if(attr.duration < TKSWeb.duration_unit) {
+                return "Invalid duration - too short";
+            }
+            if(attr.duration > this.max_duration()) {
+                return "Invalid duration - too long";
+            }
+            if(!attr.description.match(/\S/)) {
+                return "Description field is required";
+            }
+        },
         select: function() {
             this.trigger('selection_changed', this);
             this.set('selected', true);
@@ -97,12 +120,17 @@
             return data;
         },
         update_from_editor: function(data) {
+            var attr_before = this.toJSON();
             this.set('wr_system_id', parseInt(data.wr_system_id, 10));
             this.set('wr_number', data.wr_number);
             this.set('description', data.description);
             this.set('duration', data.duration);
-            this.save();
+            if(!this.save()) {
+                this.set(attr_before);
+                return false;
+            }
             this.trigger('selection_updated', this);
+            return true;
         },
         try_move_to: function(new_date, new_time) {
             var new_end = new_time + this.get("duration");
@@ -121,7 +149,12 @@
             return true;
         },
         max_duration: function() {
-            return this.collection.max_duration(this.get("date"), this.get("start_time"), this);
+            if(this.collection) {
+                return this.collection.max_duration(this.get("date"), this.get("start_time"), this);
+            }
+            else {
+                return this.initial_max_duration;
+            }
         }
     });
 
@@ -131,12 +164,16 @@
         url: '/activity',
 
         initialize: function() {
+            this.on("invalid", this.validation_failed);
             this.on("selection_changed", this.selection_changed);
             this.on("clear_selection", this.clear_selection);
         },
         comparator: function(activity) {
             return activity.get("date") + ' ' +
                    ('0000' + activity.get("start_time")).substr(-4);
+        },
+        validation_failed: function(activity) {
+            this.last_validation_error = activity.validationError;
         },
         selection_changed: function(new_selection) {
             if(this.current_activity) {
@@ -193,6 +230,11 @@
                 data.date = this.new_activity.date;
                 data.start_time = this.new_activity.start_time;
                 activity = new Activity(data);
+                activity.initial_max_duration = this.cursor.max_duration();
+                if(!activity.isValid()) {
+                    this.last_validation_error = activity.validationError;
+                    return false;
+                }
                 this.add(activity);
             }
             return activity.update_from_editor(data);
@@ -432,19 +474,19 @@
                 prev.select();
             }
         },
+        max_duration: function() {
+            return this.collection.max_duration(this.cursor_date(), this.cursor_time());
+        },
         edit_activity: function() {
             var curr = this.collection.current_activity;
             if(curr) {
                 curr.start_activity_edit();
             }
             else {
-                var date = this.cursor_date();
-                var start_time = this.cursor_time();
-                var max_duration = this.collection.max_duration(date, start_time);
                 this.collection.edit_new_activity({
-                    date: date,
-                    start_time: start_time,
-                    duration: Math.min(this.default_duration(), max_duration)
+                    date: this.cursor_date(),
+                    start_time: this.cursor_time(),
+                    duration: Math.min(this.default_duration(), this.max_duration())
                 });
             }
         },
@@ -529,13 +571,16 @@
             this.save_activity();
         },
         save_activity: function() {
-            this.collection.save_from_editor({
+            var success = this.collection.save_from_editor({
                 wr_system_id  : parseInt(this.$('input[name=wr_system_id]:checked').val(), 10),
                 wr_number   : this.$('.activity-wr input').val(),
                 duration    : parseFloat(this.$('.activity-hr input').val()),
                 description : this.$('.activity-dc input').val()
             });
-            this.close();
+            if(success) {
+                return this.close();
+            }
+            alert(this.collection.last_validation_error);
         }
     });
 
