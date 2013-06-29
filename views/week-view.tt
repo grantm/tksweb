@@ -29,7 +29,7 @@
   </div>
 </script>
 <script id="activity-template" type="text/x-handlebars-template">
-<p>{{wr_number}}: {{description}}</p>
+<p>{{#if wr_number}}{{wr_number}}{{else}}<em>?????</em>{{/if}}: {{description}}</p>
 </script>
 <script id="activity-dialog-template" type="text/x-handlebars-template">
 {{#if wr_systems}}
