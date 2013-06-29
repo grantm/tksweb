@@ -120,6 +120,48 @@ noscript p {
   z-index: 10;
 }
 
+.menu {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 30;
+}
+
+.menu .marker {
+  display: block;
+  background-color: #777777;
+  color: #dddddd;
+  width: 50px;
+  height: 26px;
+  text-align: center;
+}
+
+.menu ul {
+  display: none;
+  background-color: #777777;
+}
+
+.menu:hover ul {
+  display: block;
+}
+
+.menu li {
+  padding: 0;
+  margin 0;
+}
+
+.menu li a {
+  display: block;
+  padding: 6px 12px;
+  text-decoration: none;
+  color: #dddddd;
+}
+
+.menu li:hover a {
+  background-color: #dddddd;
+  color: #333333;
+}
+
 
 .activity {
   position: absolute;

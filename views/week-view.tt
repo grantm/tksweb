@@ -27,6 +27,13 @@
     {{/each}}
     </ul>
   </div>
+  <div class="menu">
+    <span class="marker">&#9662;</span>
+    <ul>
+      <li><a href="{{last_monday}}">&#9666; Previous Week</a></li>
+      <li><a href="{{next_monday}}">Next Week &#9656;</a></li>
+    </ul>
+  </div>
 </script>
 <script id="activity-template" type="text/x-handlebars-template">
 <p>{{#if wr_number}}{{wr_number}}{{else}}<em>?????</em>{{/if}}: {{description}}</p>
