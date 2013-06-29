@@ -49,6 +49,7 @@ noscript p {
   font-size: 14px;
   border-top: 26px solid #dddddd;
   overflow: hidden;
+  z-index: 20;
 }
 
 .week-view .hour-labels ul {
@@ -81,6 +82,7 @@ noscript p {
   height: 26px;
   border-left: 50px solid #777777;
   overflow: hidden;
+  z-index: 20;
 }
 
 .week-view .day-labels ul {
