@@ -316,9 +316,10 @@
             this.init_units();
             this.collection.on("selection_changed", this.selection_changed, cursor);
             this.collection.on("selection_updated", this.select_activity_at_cursor, cursor);
+            this.collection.on("view_replaced", this.view_replaced, cursor);
             this.$el.parent().mousedown( $.proxy(cursor.activities_mousedown, cursor) );
             $(window).keydown( $.proxy(cursor.key_handler, cursor) );
-            this.move_to(0, 8 * this.units_per_hour);
+            this.view_replaced();
         },
         init_units: function() {
             this.x_scale = TKSWeb.day_label_width;
@@ -328,6 +329,9 @@
             this.max_y = 24 * this.units_per_hour - 1;
             this.$el.width(this.x_scale - 2);
             this.size_cursor(1);
+        },
+        view_replaced: function() {
+            this.move_to(0, 8 * this.units_per_hour);
         },
         size_cursor: function(h) {
             this.$el.height((h * this.y_scale) - 2);
