@@ -20,6 +20,8 @@ sub Activity  { schema->resultset('Activity'); }
 ##################################  Hooks  ###################################
 
 hook before => sub {
+    my $path = request->path;
+    return if $path =~ m{^/cdn/};
     if( my $user = user_by_email( session('email') ) ) {
         var user => $user;
         return;
@@ -28,11 +30,12 @@ hook before => sub {
         var user => $api_user;
         return;
     }
-    if( request->path =~ m{^/export/} ) {
+    if( $path =~ m{^/export/} ) {
         status "forbidden";
         halt "Unauthorized";
     }
-    if( request->path !~ m{^/(login|logout)$} ) {
+    if( $path !~ m{^/(login|logout)$} ) {
+        session original_url => $path;
         return redirect '/login';
     }
 };
@@ -67,6 +70,10 @@ post '/login' => sub {
     my $user = get_user_from_login( param('email'), param('password') );
     if( $user ) {
         session email => $user->email;
+        if( my $url = session('original_url') ) {
+            session original_url => undef;
+            return redirect $url;
+        }
         return redirect '/';
     }
     alert 'Invalid username or password';
