@@ -354,6 +354,9 @@
                 return;
             }
             var activity = this.collection.current_activity;
+            if(!activity) {
+                return;
+            }
             var date = week_days[pos.x].date;
             var time = pos.y * TKSWeb.duration_unit;
             if(activity.try_move_to(date, time)) {
