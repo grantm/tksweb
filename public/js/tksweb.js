@@ -242,7 +242,7 @@
         delete_current_activity: function(data) {
             var activity = this.current_activity;
             if(activity) {
-                this.clear_selection();
+                activity.unselect();
                 activity.destroy();
             }
         },
