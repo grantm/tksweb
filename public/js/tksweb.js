@@ -266,6 +266,7 @@
             this.listenTo(this.model, "change:date change:start_time", this.position_element);
             this.listenTo(this.model, "change:duration", this.size_element);
             this.listenTo(this.model, "change:selected", this.show_selection);
+            this.listenTo(this.model, "remove", this.remove, this);
             this.listenTo(this.model, "destroy", this.destroy);
             this.position_element();
             this.size_element();
@@ -295,6 +296,9 @@
         },
         show_selection: function() {
             this.$el.toggleClass('selected', this.model.get('selected'));
+        },
+        remove: function() {
+            this.remove();
         },
         destroy: function() {
             this.$el.remove();
@@ -587,7 +591,8 @@
 
     var WeekView = Backbone.View.extend({
         events: {
-            "mousewheel .activities": "mousewheel"
+            "mousewheel .activities": "mousewheel",
+            "click  a.week-link": "week_link"
         },
         initialize: function(options) {
             var view = this;
@@ -604,6 +609,7 @@
         },
         compile_templates: function() {
             this.template = Handlebars.compile( $('#week-view-template').html() );
+            this.menu_template = Handlebars.compile( $('#menu-template').html() );
             this.activity_template = Handlebars.compile( $('#activity-template').html() );
         },
         wr_systems_for_exports: function() {
@@ -619,17 +625,23 @@
         render: function() {
             var context = {
                 week_days: week_days,
-                hours: hours,
-                exports_by_sys: this.wr_systems_for_exports(),
-                this_monday: this.monday,
-                last_monday: this.last_monday,
-                next_monday: this.next_monday
+                hours: hours
             };
             this.$el.html( this.template(context) );
+            this.update_menu();
             this.size_activities();
             this.enable_workspace_drag();
             this.resize();
             this.set_initial_scroll();
+        },
+        update_menu: function(dates) {
+            var context = {
+                exports_by_sys: this.wr_systems_for_exports(),
+                this_monday: this.monday,
+                last_monday: this.last_monday,
+                next_monday: this.next_monday
+            }
+            this.$('.menu ul').html( this.menu_template(context) );
         },
         size_activities: function() {
             this.activities_width  = TKSWeb.day_label_width * 7;
@@ -697,6 +709,32 @@
             y = Math.min( Math.max(y, this.min_y), this.max_y);
             $activities.css('top', y);
             this.$('.hour-labels ul').css('top', y);
+        },
+        week_link: function(e) {
+            var href = e.currentTarget.href;
+            var date = href.substr(-10);
+            this.$('.menu ul li').hide();
+            this.collection.remove( this.collection.toArray() );
+            $.ajax({
+                url: "/week/" + date + ".json",
+                dataType: 'json',
+                success: $.proxy(this.update_week_view, this)
+            });
+            history.pushState(null, null, href);
+            e.preventDefault();
+        },
+        update_week_view: function(data) {
+            var dates = data.dates;
+            this.monday = dates.week_dates[0];
+            this.last_monday = dates.last_monday;
+            this.next_monday = dates.next_monday;
+            init_week_days(dates.week_dates);
+            this.$('.day-labels li').each(function(i, el) {
+                var day = week_days[i];
+                $(el).text(day.day_name + ' ' + day.month_name + '-' + day.day);
+            });
+            this.update_menu();
+            this.collection.add( data.activities );
         },
         cursor_el: function() {
             return this.$('.activities .cursor');

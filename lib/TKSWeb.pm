@@ -93,6 +93,15 @@ get '/' => sub {
 };
 
 
+get qr{^/week/?(?<date>\d\d\d\d-\d\d-\d\d)[.]json$} => sub {
+    my $monday = monday_of_week( captures->{date} );
+    return to_json({
+        dates       => dates_for_weekview($monday),
+        activities  => activities_for_week($monday),
+    });
+};
+
+
 get qr{^/week/?(?<date>.*)$} => sub {
     my $date = captures->{date} // '';
     my $monday = monday_of_week( $date );
