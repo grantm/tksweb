@@ -30,8 +30,11 @@
   <div class="menu">
     <span class="marker">&#9662;</span>
     <ul>
-      <li><a href="{{last_monday}}">&#9666; Previous Week</a></li>
-      <li><a href="{{next_monday}}">Next Week &#9656;</a></li>
+      <li><a href="{{last_monday}}"><span class="icon">&#9664;</span>Previous Week</a></li>
+      <li><a href="{{next_monday}}"><span class="icon">&#9654;</span>Next Week</a></li>
+      {{#each exports_by_sys }}
+        <li><a href="/export/{{sys_name}}/{{period_start}}.tks"><span class="icon">&#9783;</span>Export TKS month file for {{sys_description}}</a></li>
+      {{/each}}
     </ul>
   </div>
 </script>

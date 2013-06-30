@@ -591,6 +591,7 @@
         },
         initialize: function(options) {
             var view = this;
+            this.monday = options.monday;
             this.last_monday = options.last_monday;
             this.next_monday = options.next_monday;
             this.left = 0;
@@ -605,10 +606,22 @@
             this.template = Handlebars.compile( $('#week-view-template').html() );
             this.activity_template = Handlebars.compile( $('#activity-template').html() );
         },
+        wr_systems_for_exports: function() {
+            var period_start = this.monday.replace(/\d\d$/, '01');
+            return _.map(wr_systems, function(sys) {
+                return {
+                    sys_name: sys.name,
+                    sys_description: sys.description,
+                    period_start: period_start
+                }
+            });
+        },
         render: function() {
             var context = {
                 week_days: week_days,
                 hours: hours,
+                exports_by_sys: this.wr_systems_for_exports(),
+                this_monday: this.monday,
                 last_monday: this.last_monday,
                 next_monday: this.next_monday
             };

@@ -129,6 +129,18 @@ del '/activity/:id' => sub {
 };
 
 
+get qr{^/export/(?<sys_name>\w+)/(?<date>\d\d\d\d-\d\d-\d\d)[.]tks$} => sub {
+    my $sys_name  = captures->{sys_name};
+    my $date      = captures->{date};
+    my $filename  = substr($date, 7) . '-' . $sys_name . '.tks';
+    my $period_detail = activities_for_month_by_day($sys_name, $date)
+        or return status "not_found";
+    content_type 'text/plain';
+    header 'Content-disposition' => qq{attachment; filename="$filename"};
+    template "export-tks", $period_detail, { layout => undef };
+};
+
+
 ############################  Support Routines  ##############################
 
 
@@ -199,6 +211,15 @@ sub wr_system_list {
 }
 
 
+sub wr_system_by_name {
+    my $system_name = shift or return;
+    my $user = var 'user';
+    return $user->wr_systems->search({
+        name => $system_name,
+    })->first;
+}
+
+
 sub activities_for_week {
     my $monday = parse_date(shift);
     my $start_date = $monday->ymd . ' 00:00:00';
@@ -225,6 +246,50 @@ sub activities_for_week {
         push @activities, \%act;
     }
     return \@activities;
+}
+
+
+sub activities_for_month_by_day {
+    my $wr_system = wr_system_by_name(shift) or return;
+    my $date = parse_date(shift) or return;
+    my $period_start = $date->set_day(1)->ymd . ' 00:00:00';
+    my $period_end   = $date->add(months => 1)->ymd . ' 00:00:00';
+    my %days;
+    my $user = var 'user';
+    my $rs = $user->activities->search(
+        {
+            date_time => {
+              -between => [ $period_start, $period_end ],
+            },
+            wr_system_id => $wr_system->id,
+        },
+        {
+            order_by => 'date_time'
+        }
+    );
+    while(my $activity = $rs->next) {
+        my $date = do {
+            $activity->date_time =~ m{\A(\d\d\d\d)-(\d\d)-(\d\d) }
+                and DateTime->new( year => $1, month => $2, day => $3 );
+        };
+        my $ymd = $date->ymd;
+        $days{$date} ||= {
+            date        => $ymd,
+            dow         => $date->day_name,
+            activities  => [],
+        };
+        my $detail = {
+            wr_number   => $activity->wr_number,
+            duration    => $activity->duration / 60,
+            description => $activity->description,
+        };
+        push @{ $days{$date}->{activities} }, $detail;
+    }
+    return {
+        month_start => $period_start,
+        wr_system   => $wr_system->description,
+        days        => [ map { $days{$_} } sort keys %days ],
+    };
 }
 
 

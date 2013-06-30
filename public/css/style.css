@@ -136,13 +136,18 @@ noscript p {
   text-align: center;
 }
 
+.menu:hover .marker {
+  background-color: #aaaaaa;
+  color: #ffffff;
+}
+
 .menu ul {
   display: none;
-  background-color: #777777;
 }
 
 .menu:hover ul {
   display: block;
+  background-color: #aaaaaa;
 }
 
 .menu li {
@@ -154,12 +159,22 @@ noscript p {
   display: block;
   padding: 6px 12px;
   text-decoration: none;
-  color: #dddddd;
+  color: #ffffff;
 }
 
 .menu li:hover a {
   background-color: #dddddd;
   color: #333333;
+}
+
+.menu .icon {
+  display: inline-block;
+  width: 1em;
+  font-size: 10px;
+  text-align: center;
+  padding: 0 8px 0 0;
+  position: relative;
+  top: -2px;
 }
 
 
