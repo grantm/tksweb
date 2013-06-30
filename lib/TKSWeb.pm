@@ -28,6 +28,10 @@ hook before => sub {
         var user => $api_user;
         return;
     }
+    if( request->path =~ m{^/export/} ) {
+        status "forbidden";
+        halt "Unauthorized";
+    }
     if( request->path !~ m{^/(login|logout)$} ) {
         return redirect '/login';
     }
