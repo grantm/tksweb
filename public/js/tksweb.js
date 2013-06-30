@@ -726,6 +726,9 @@
             var href = e.currentTarget.href;
             var date = href.substr(-10);
             this.$('.menu ul li').hide();
+            if(this.collection.current_activity) {
+                this.collection.current_activity.unselect();
+            }
             this.collection.remove( this.collection.toArray() );
             $.ajax({
                 url: "/week/" + date + ".json",
