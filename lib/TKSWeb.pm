@@ -24,8 +24,12 @@ hook before => sub {
         var user => $user;
         return;
     }
+    if( request->method eq 'POST'  and  my $api_user = user_by_api_key() ) {
+        var user => $api_user;
+        return;
+    }
     if( request->path !~ m{^/(login|logout)$} ) {
-        return redirect "/login";
+        return redirect '/login';
     }
 };
 
@@ -129,7 +133,8 @@ del '/activity/:id' => sub {
 };
 
 
-get qr{^/export/(?<sys_name>\w+)/(?<date>\d\d\d\d-\d\d-\d\d)[.]tks$} => sub {
+any ['get', 'post'] =>
+    qr{^/export/(?<sys_name>\w+)/(?<date>\d\d\d\d-\d\d-\d\d)[.]tks$} => sub {
     my $sys_name  = captures->{sys_name};
     my $date      = captures->{date};
     my $filename  = substr($date, 7) . '-' . $sys_name . '.tks';
@@ -160,6 +165,15 @@ sub user_by_email {
     my $email = shift or return;
     return User->search({
         email   => lc( $email ),
+        status  => 'active',
+    })->first;
+}
+
+
+sub user_by_api_key {
+    my $api_key = param('api-key') or return;
+    return User->search({
+        api_key   => lc( $api_key ),
         status  => 'active',
     })->first;
 }
