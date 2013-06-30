@@ -301,7 +301,8 @@
             this.$el.toggleClass('selected', this.model.get('selected'));
         },
         remove: function() {
-            this.remove();
+            // Should be this.remove() ?  Seems to cause hard looping
+            this.$el.remove();
         },
         destroy: function() {
             this.$el.remove();
