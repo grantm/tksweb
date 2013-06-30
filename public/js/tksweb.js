@@ -393,8 +393,10 @@
             if(activity) {
                 activity.select();
             }
-            else if(this.collection.current_activity){
-                this.collection.current_activity.unselect();
+            else {
+                if(this.collection.current_activity){
+                    this.collection.current_activity.unselect();
+                }
                 this.size_cursor(1);
             }
         },
