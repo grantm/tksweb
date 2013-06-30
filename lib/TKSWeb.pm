@@ -31,7 +31,7 @@ hook before => sub {
         return;
     }
     if( $path =~ m{^/export/} ) {
-        status "forbidden";
+        status 401;
         halt "Unauthorized";
     }
     if( $path !~ m{^/(login|logout)$} ) {
