@@ -508,7 +508,7 @@
         },
         delete_activity: function() {
             this.collection.delete_current_activity();
-            this.size_cursor(1);
+            this.select_activity_at_cursor();
         },
         copy_activity: function() {
             var curr = this.collection.current_activity;
