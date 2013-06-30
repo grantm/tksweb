@@ -1,23 +1,18 @@
+* date picker to select week
 * initialise cursor to current time if today is in the target week
 * use click instead of mousedown(?)
 * put .activities and .cursor inside .content with 0,0 offsets
 * add activity resize drag handles
-* implement wr_system_id
-* validate activity dialog fields(?)
 * drag activity
-* copy activity
-* paste activity
 * reset drag position on window resize (eg: rotate)
 * disable zoom on mobile
-* validate hours value (duration beyond end-of-day; fractional part not 15m)
+* remember original URL when redirecting to login and return there after
 * change bg colour if no WR number
 * pop-up help for key-bindings
 * key bindings for increase/decrease activity duration
-* auto scroll when cursor moved out of viewport with keyboard
 * restrict drag from going outside configured hours
 * restrict resize from going outside configured hours
 * undo ?
 * nudge algorithm to avoid overlaps
-* save: marshall activities and send to server
 * websockets channel to advise of updates from other clients
 
