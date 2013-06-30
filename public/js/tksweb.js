@@ -187,6 +187,9 @@
         trigger_cursor_move: function(pos) {
             this.trigger('cursor_move', pos);
         },
+        trigger_view_replaced: function(pos) {
+            this.trigger('view_replaced');
+        },
         find_by_date_time: function(date, time) {
             return this.find(function(activity) {
                 if(activity.get("date") !== date) { return false; }
@@ -744,6 +747,8 @@
             });
             this.update_menu();
             this.collection.add( data.activities );
+            this.set_initial_scroll();
+            this.collection.trigger_view_replaced();
         },
         cursor_el: function() {
             return this.$('.activities .cursor');
