@@ -4,3 +4,4 @@
 /blib
 /tks-data
 /var
+/logs/*.log
