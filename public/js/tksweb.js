@@ -614,7 +614,8 @@
     var WeekView = Backbone.View.extend({
         events: {
             "mousewheel .activities": "mousewheel",
-            "click  a.week-link": "week_link"
+            "click  #week-prev": "previous_week",
+            "click  #week-next": "next_week"
         },
         initialize: function(options) {
             var view = this;
@@ -732,21 +733,25 @@
             $activities.css('top', y);
             this.$('.hour-labels ul').css('top', y);
         },
-        week_link: function(e) {
-            var href = e.currentTarget.href;
-            var date = href.substr(-10);
-            this.$('.menu ul li').hide();
-            if(this.collection.current_activity) {
+        previous_week: function(e) {
+            this.load_new_week(this.last_monday);
+            e.preventDefault();
+        },
+        next_week: function(e) {
+            this.load_new_week(this.next_monday);
+            e.preventDefault();
+        },
+        load_new_week: function(date) {
+            if(this.collection.current_activity) { // ensure no hanging reference
                 this.collection.current_activity.unselect();
             }
-            this.collection.remove( this.collection.toArray() );
             $.ajax({
                 url: "/week/" + date + ".json",
                 dataType: 'json',
                 success: $.proxy(this.update_week_view, this)
             });
-            history.pushState(null, null, href);
-            e.preventDefault();
+            this.collection.remove( this.collection.toArray() );
+            history.pushState(null, null, '/week/' + date);
         },
         update_week_view: function(data) {
             var dates = data.dates;
