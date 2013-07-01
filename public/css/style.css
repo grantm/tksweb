@@ -187,6 +187,11 @@ noscript p {
   overflow: hidden;
 }
 
+
+.activity.no-wr {
+  background-color: #ffddcc;
+}
+
 .activity p {
   padding: 2px 4px;
   cursor: default;

@@ -268,11 +268,13 @@
             this.listenTo(this.model, "change:wr_number change:description", this.render);
             this.listenTo(this.model, "change:date change:start_time", this.position_element);
             this.listenTo(this.model, "change:duration", this.size_element);
+            this.listenTo(this.model, "change:wr_number", this.apply_colour);
             this.listenTo(this.model, "change:selected", this.show_selection);
             this.listenTo(this.model, "remove", this.remove, this);
             this.listenTo(this.model, "destroy", this.destroy);
             this.position_element();
             this.size_element();
+            this.apply_colour();
         },
 
         render: function() {
@@ -296,6 +298,13 @@
         },
         select_activity: function() {
             this.model.select();
+        },
+        apply_colour: function() {
+            var activity = this.model;
+            if( !activity.get("wr_number").match(/^\d+$/) ) {
+                return this.$el.addClass('no-wr');
+            }
+            this.$el.removeClass('no-wr');
         },
         show_selection: function() {
             this.$el.toggleClass('selected', this.model.get('selected'));
