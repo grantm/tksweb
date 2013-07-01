@@ -205,6 +205,8 @@ noscript p {
   color: #777777;
 }
 
+.activity.cc0 { background-color: #ffffcc; }
+.activity.cc1 { background-color: #eeffe4; }
 
 /* ###############  Activity Edit Dialog  ################# */
 

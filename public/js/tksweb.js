@@ -300,11 +300,16 @@
             this.model.select();
         },
         apply_colour: function() {
+            var view = this;
             var activity = this.model;
             if( !activity.get("wr_number").match(/^\d+$/) ) {
                 return this.$el.addClass('no-wr');
             }
             this.$el.removeClass('no-wr');
+            _.each(wr_systems, function(sys) {
+                var match = sys.wr_system_id === activity.get("wr_system_id");
+                view.$el.toggleClass('cc' + sys.colour_code, match);
+            });
         },
         show_selection: function() {
             this.$el.toggleClass('selected', this.model.get('selected'));
