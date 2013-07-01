@@ -197,6 +197,10 @@ noscript p {
   cursor: default;
 }
 
+.activity p em {
+  color: #777777;
+}
+
 
 /* ###############  Activity Edit Dialog  ################# */
 
