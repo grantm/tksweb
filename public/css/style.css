@@ -167,6 +167,10 @@ noscript p {
   color: #333333;
 }
 
+.menu .hot-key {
+  float: right;
+}
+
 .menu .icon {
   display: inline-block;
   width: 1em;
