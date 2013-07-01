@@ -335,7 +335,7 @@
             this.size_cursor(1);
         },
         view_replaced: function() {
-            this.move_to(0, 8 * this.units_per_hour);
+            this.move_to(0, 9 * this.units_per_hour);
         },
         size_cursor: function(h) {
             this.$el.height((h * this.y_scale) - 2);
