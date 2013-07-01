@@ -435,50 +435,50 @@
             var curr = this.collection.current_activity;
             if(!e.shiftKey && !e.ctrlKey) {
                 switch(e.keyCode) {
-                    case keyCode.LEFT:   this.move(-1,  0);       break;
-                    case keyCode.RIGHT:  this.move( 1,  0);       break;
-                    case keyCode.UP:     this.move( 0, -1);       break;
+                    case keyCode.LEFT:      this.move(-1,  0);                break;
+                    case keyCode.RIGHT:     this.move( 1,  0);                break;
+                    case keyCode.UP:        this.move( 0, -1);                break;
                     case keyCode.DOWN:
                         this.move(0, curr ? curr.get("duration") / TKSWeb.duration_unit : 1);
                         break;
-                    case keyCode.TAB:    this.select_next_activity();   break;
-                    case keyCode.ENTER:  this.edit_activity();    break;
-                    case keyCode.DELETE: this.delete_activity();  break;
-                    case keyCode.PAGE_UP:   $('#week-prev').click();    break;
-                    case keyCode.PAGE_DOWN: $('#week-next').click();    break;
+                    case keyCode.TAB:       this.select_next_activity();      break;
+                    case keyCode.ENTER:     this.edit_activity();             break;
+                    case keyCode.DELETE:    this.delete_activity();           break;
+                    case keyCode.PAGE_UP:   $('#week-prev').click();          break;
+                    case keyCode.PAGE_DOWN: $('#week-next').click();          break;
                     default:
                         return;
                 }
             }
             else if(e.shiftKey && e.ctrlKey) {
                 switch(e.keyCode) {
-                    case keyCode.LEFT:   $('#week-prev').click();       break;
-                    case keyCode.RIGHT:  $('#week-next').click();       break;
+                    case keyCode.LEFT:      $('#week-prev').click();          break;
+                    case keyCode.RIGHT:     $('#week-next').click();          break;
                     default:
                         return;
                 }
             }
             else if(e.shiftKey) {
                 switch(e.keyCode) {
-                    case keyCode.LEFT:   this.move_activity(-1,  0);    break;
-                    case keyCode.RIGHT:  this.move_activity( 1,  0);    break;
-                    case keyCode.UP:     this.move_activity( 0, -1);    break;
-                    case keyCode.DOWN:   this.move_activity( 0,  1);    break;
-                    case keyCode.TAB:    this.select_previous_activity();   break;
+                    case keyCode.LEFT:      this.move_activity(-1,  0);       break;
+                    case keyCode.RIGHT:     this.move_activity( 1,  0);       break;
+                    case keyCode.UP:        this.move_activity( 0, -1);       break;
+                    case keyCode.DOWN:      this.move_activity( 0,  1);       break;
+                    case keyCode.TAB:       this.select_previous_activity();  break;
                     default:
                         return;
                 }
             }
             else if(e.ctrlKey) {
                 switch(e.keyCode) {
-                    case 67:  // Ctrl-C
+                    case 67:                        // Ctrl-C
                         this.copy_activity();
                         break;
-                    case 88:  // Ctrl-X
+                    case 88:                        // Ctrl-X
                         this.copy_activity();
                         this.delete_activity();
                         break;
-                    case 86:  // Ctrl-V
+                    case 86:                        // Ctrl-V
                         this.paste_activity();
                         break;
                     default:
