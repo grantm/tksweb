@@ -444,6 +444,16 @@
                     case keyCode.TAB:    this.select_next_activity();   break;
                     case keyCode.ENTER:  this.edit_activity();    break;
                     case keyCode.DELETE: this.delete_activity();  break;
+                    case keyCode.PAGE_UP:   $('#week-prev').click();    break;
+                    case keyCode.PAGE_DOWN: $('#week-next').click();    break;
+                    default:
+                        return;
+                }
+            }
+            else if(e.shiftKey && e.ctrlKey) {
+                switch(e.keyCode) {
+                    case keyCode.LEFT:   $('#week-prev').click();       break;
+                    case keyCode.RIGHT:  $('#week-next').click();       break;
                     default:
                         return;
                 }
