@@ -319,7 +319,7 @@
             var cursor = this;
             this.init_units();
             this.collection.on("selection_changed", this.selection_changed, cursor);
-            this.collection.on("selection_updated", this.select_activity_at_cursor, cursor);
+            this.collection.on("selection_updated add", this.select_activity_at_cursor, cursor);
             this.collection.on("view_replaced", this.view_replaced, cursor);
             this.$el.parent().mousedown( $.proxy(cursor.activities_mousedown, cursor) );
             $(window).keydown( $.proxy(cursor.key_handler, cursor) );
