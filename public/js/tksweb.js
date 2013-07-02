@@ -549,6 +549,7 @@
             if(data && data.duration) {
                 data.date = this.cursor_date();
                 data.start_time = this.cursor_time();
+                data.duration = Math.min(data.duration, this.max_duration());
                 this.collection.create_from_clipboard(data);
                 this.select_activity_at_cursor();
             }
