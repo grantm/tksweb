@@ -126,7 +126,7 @@ post '/activity' => sub {
         description   => $new->{description},
     });
     $activity->insert;
-    return to_json({ id => $activity->id });
+    return to_json({ id => $activity->id, sync_id => $new->{sync_id} });
 };
 
 
@@ -141,7 +141,7 @@ put '/activity/:id' => sub {
     $activity->wr_number($new->{wr_number});
     $activity->description($new->{description});
     $activity->update;
-    return to_json({ id => $activity->id });
+    return to_json({ id => $activity->id, sync_id => $new->{sync_id} });
 };
 
 
