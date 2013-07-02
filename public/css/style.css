@@ -45,7 +45,6 @@ noscript p {
 
 .week-view .hour-labels {
   position: absolute;
-  width: 50px;
   font-size: 14px;
   border-top: 26px solid #dddddd;
   overflow: hidden;
@@ -79,7 +78,6 @@ noscript p {
 .week-view .day-labels {
   position: absolute;
   font-size: 14px;
-  height: 26px;
   border-left: 50px solid #777777;
   overflow: hidden;
   z-index: 20;
@@ -191,11 +189,11 @@ noscript p {
   overflow: hidden;
 }
 
-.activity.dirty {
+.activities .activity.dirty {
   opacity: 0.5;
 }
 
-.activity.no-wr {
+.activities .activity.no-wr {
   background-color: #ffddcc;
 }
 
@@ -210,6 +208,29 @@ noscript p {
 
 .activity.cc0 { background-color: #ffffcc; }
 .activity.cc1 { background-color: #eeffe4; }
+
+
+/* ####################  Dimensions  ###################### */
+
+.day-labels {
+  height: 26px;
+  width: 1400px;
+}
+
+.hour-labels {
+  height: 1152px;
+  width: 50px;
+}
+
+.activities {
+  width: 1400px;
+  height: 1152px;
+}
+
+.activity {
+  width: 198px;
+}
+
 
 /* ###############  Activity Edit Dialog  ################# */
 

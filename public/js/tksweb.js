@@ -13,22 +13,12 @@
     'use strict';
 
     var TKSWeb = window.TKSWeb = {
-        hour_label_width  : 50,
-        hour_label_height : 48,
-        day_label_width   : 200,
-        day_label_height  : 28,
-        duration_unit     : 15
+        units_per_hour: 4
     };
+    var dim = {};
     var keyCode = $.ui.keyCode;
     var end_of_day = 24 * 60;
-    var wr_systems, week_dates, column_for_date, hours;
-
-    function init_hours() {
-        hours = [ '' ];
-        for(var i = 1; i < 24; i++) {
-            hours.push({ hour: pad2(i) + ':00' });
-        }
-    }
+    var wr_systems, week_dates, column_for_date;
 
     function init_week_dates(dates) {
         week_dates = dates;
@@ -98,7 +88,7 @@
             if(typeof(attr.duration) !== "number") {
                 return "Invalid duration - must be a number";
             }
-            if(attr.duration < TKSWeb.duration_unit) {
+            if(attr.duration < dim.duration_unit) {
                 return "Invalid duration - too short";
             }
             if(attr.duration > this.max_duration()) {
@@ -292,13 +282,13 @@
         position_element: function() {
             var activity = this.model;
             this.$el.css({
-                left: column_for_date[ activity.get('date') ] * 200,
-                top:  (activity.get('start_time') * TKSWeb.hour_label_height) / 60
+                left: column_for_date[ activity.get('date') ] * dim.column_width,
+                top:  (activity.get('start_time') * dim.hour_height) / 60
             });
         },
         size_element: function() {
             var activity = this.model;
-            this.$el.height(activity.get('duration') * TKSWeb.hour_label_height / 60 - 2);
+            this.$el.height(activity.get('duration') * dim.hour_height / 60 - 2);
         },
         week_view: function() {
             return this.collection.view;
@@ -350,9 +340,9 @@
             this.view_replaced();
         },
         init_units: function() {
-            this.x_scale = TKSWeb.day_label_width;
-            this.y_scale = TKSWeb.hour_label_height / (60 / TKSWeb.duration_unit);
-            this.units_per_hour = 60 / TKSWeb.duration_unit;
+            this.x_scale = dim.column_width;
+            this.y_scale = dim.hour_height / (60 / dim.duration_unit);
+            this.units_per_hour = 60 / dim.duration_unit;
             this.max_x = 6;
             this.max_y = 24 * this.units_per_hour - 1;
             this.$el.width(this.x_scale - 2);
@@ -386,7 +376,7 @@
                 return;
             }
             var date = week_dates[pos.x].ymd;
-            var time = pos.y * TKSWeb.duration_unit;
+            var time = pos.y * dim.duration_unit;
             if(activity.try_move_to(date, time)) {
                 this.move_to(pos.x, pos.y);
             }
@@ -411,7 +401,7 @@
             return week_dates[this.x].ymd;
         },
         cursor_time: function() {
-            return this.y * TKSWeb.duration_unit;
+            return this.y * dim.duration_unit;
         },
         default_duration: function() {
             return 60;
@@ -430,17 +420,17 @@
         },
         selection_changed: function(activity) {
             this.x = column_for_date[ activity.get("date") ];
-            this.y = activity.get("start_time") / TKSWeb.duration_unit;
+            this.y = activity.get("start_time") / dim.duration_unit;
             this.position_cursor();
-            this.size_cursor( activity.get("duration")  / TKSWeb.duration_unit );
+            this.size_cursor( activity.get("duration")  / dim.duration_unit );
         },
         activities_click: function(e) {
             if(!$(e.target).hasClass('activities')) {
                 return;
             }
             e = e.originalEvent;
-            var x = (e.layerX || e.offsetX) - TKSWeb.hour_label_width;
-            var y = (e.layerY || e.offsetY) - TKSWeb.day_label_height;
+            var x = (e.layerX || e.offsetX) - dim.hour_label_width;
+            var y = (e.layerY || e.offsetY) - dim.day_label_height;
             this.move_to(Math.floor(x / this.x_scale), Math.floor(y / this.y_scale));
         },
         key_handler: function(e) {
@@ -454,7 +444,7 @@
                     case keyCode.RIGHT:     this.move( 1,  0);                break;
                     case keyCode.UP:        this.move( 0, -1);                break;
                     case keyCode.DOWN:
-                        this.move(0, curr ? curr.get("duration") / TKSWeb.duration_unit : 1);
+                        this.move(0, curr ? curr.get("duration") / dim.duration_unit : 1);
                         break;
                     case keyCode.TAB:       this.select_next_activity();      break;
                     case keyCode.ENTER:     this.edit_activity();             break;
@@ -642,24 +632,37 @@
             "click  #week-next": "next_week"
         },
         initialize: function(options) {
-            this.monday = options.monday;
-            this.last_monday = options.last_monday;
-            this.next_monday = options.next_monday;
-            this.left = 0;
-            this.top = 0;
+            this.set_dates(options.dates);
             this.compile_templates();
+            this.initialise_units();
             this.initialise_ui();
             this.collection.on('add', this.add_activity, this);
             this.collection.on("cursor_move", this.scroll_to_show_cursor, this);
             $(window).resize( $.proxy(this.resize, this) );
         },
+        set_dates: function(dates) {
+            init_week_dates(dates.week_dates);
+            this.monday      = dates.week_dates[0].ymd;
+            this.last_monday = dates.last_monday;
+            this.next_monday = dates.next_monday;
+        },
         compile_templates: function() {
             this.menu_template = Handlebars.compile( $('#menu-template').html() );
             this.activity_template = Handlebars.compile( $('#activity-template').html() );
         },
+        initialise_units: function() {
+            this.top  = 0;
+            this.left = 0;
+            dim.duration_unit = 60 / TKSWeb.units_per_hour;
+            dim.column_width = this.$('.day-labels li:first').outerWidth();
+            dim.hour_height  = this.$('.hour-labels li:nth-child(2)').outerHeight();
+            dim.hour_label_width  = this.$('.hour-labels').outerWidth();
+            dim.day_label_height  = this.$('.day-labels').outerHeight();
+            this.activities_width  = dim.column_width * 7;
+            this.activities_height = dim.hour_height * 24;
+        },
         initialise_ui: function() {
             this.update_menu();
-            this.size_activities();
             this.enable_workspace_drag();
             this.resize();
             this.set_initial_scroll();
@@ -683,17 +686,6 @@
             }
             this.$('.menu ul').html( this.menu_template(context) );
         },
-        size_activities: function() {
-            this.activities_width  = TKSWeb.day_label_width * 7;
-            this.activities_height = TKSWeb.hour_label_height * 24;
-            this.$('.activities')
-                .width(this.activities_width)
-                .height(this.activities_height);
-            this.$('.day-labels')
-                .width(this.activities_width);
-            this.$('.hour-labels')
-                .height(this.activities_height);
-        },
         enable_workspace_drag: function() {
             var view = this;
             this.$('.activities').draggable({
@@ -708,11 +700,11 @@
             this.set_drag_constraints();
         },
         set_drag_constraints: function() {
-            this.min_y = this.app_height - this.activities_height - TKSWeb.day_label_height;
+            this.min_y = this.app_height - this.activities_height - dim.day_label_height;
             this.max_y = 0;
             this.$('.activities').draggable("option", {
                 containment: [
-                    this.app_width - this.activities_width - TKSWeb.hour_label_width,
+                    this.app_width - this.activities_width - dim.hour_label_width,
                     this.min_y,
                     1,
                     this.max_y + 1
@@ -736,8 +728,8 @@
             this.$('.day-labels ul').css('left', x);
         },
         set_initial_scroll: function() {
-            var day_height = (18 - 8) * TKSWeb.hour_label_height;
-            var y = -8 * TKSWeb.hour_label_height;
+            var day_height = (18 - 8) * dim.hour_height;
+            var y = -8 * dim.hour_height;
             if(day_height < this.app_height) {
                 y = y + (this.app_height - day_height) / 2
             }
@@ -771,11 +763,7 @@
             history.pushState(null, null, '/week/' + date);
         },
         update_week_view: function(data) {
-            var dates = data.dates;
-            this.monday = dates.week_dates[0].ymd;
-            this.last_monday = dates.last_monday;
-            this.next_monday = dates.next_monday;
-            init_week_dates(dates.week_dates);
+            this.set_dates(data.dates);
             this.$('.day-labels li').each(function(i, el) {
                 $(el).text(week_dates[i].fmt);
             });
@@ -797,9 +785,9 @@
         scroll_to_show_cursor: function(cursor) {
             var viewport = {
                 top: 0 - this.top,
-                bottom: this.app_height - this.top - TKSWeb.day_label_height,
+                bottom: this.app_height - this.top - dim.day_label_height,
                 left: 0 - this.left,
-                right: this.app_width - this.left - TKSWeb.hour_label_width
+                right: this.app_width - this.left - dim.hour_label_width
             };
             if(cursor.top < viewport.top) {
                 this.set_position_top(0 - cursor.top);
@@ -818,15 +806,11 @@
 
     TKSWeb.show_week = function (el, dates, wr_sys, activities_data) {
         wr_systems = wr_sys;
-        init_week_dates(dates.week_dates);
-        init_hours();
         var activities = new Activities();
         activities.view = new WeekView({
             el: el,
-            monday: dates.week_dates[0].ymd,
-            last_monday: dates.last_monday,
-            next_monday: dates.next_monday,
-            collection: activities
+            collection: activities,
+            dates: dates
         });
         activities.cursor = new ActivityCursor({ collection: activities, el: activities.view.cursor_el() });
         activities.editor = new ActivityEditor({ collection: activities });
