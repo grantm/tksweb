@@ -186,6 +186,22 @@
         trigger_view_replaced: function(pos) {
             this.trigger('view_replaced');
         },
+        select_next_activity: function(cursor_date, cursor_time) {
+            var next = this.current_activity
+                     ? this.at( this.indexOf(this.current_activity) + 1 )
+                     : this.find_at_or_after_date_time(cursor_date, cursor_time);
+            if(next) {
+                next.select();
+            }
+        },
+        select_previous_activity: function(cursor_date, cursor_time) {
+            var prev = this.current_activity
+                     ? this.at( this.indexOf(this.current_activity) - 1 )
+                     : null;
+            if(prev) {
+                prev.select();
+            }
+        },
         find_by_date_time: function(date, time) {
             return this.find(function(activity) {
                 if(activity.get("date") !== date) { return false; }
@@ -493,27 +509,10 @@
             e.preventDefault();
         },
         select_next_activity: function() {
-            var curr = this.collection.current_activity;
-            var next;
-            if(curr) {
-                next = this.collection.at( this.collection.indexOf(curr) + 1 );
-            }
-            else {
-                next = this.collection.find_at_or_after_date_time(this.cursor_date(), this.cursor_time());
-            }
-            if(next) {
-                next.select();
-            }
+            this.collection.select_next_activity(this.cursor_date(), this.cursor_time());
         },
         select_previous_activity: function() {
-            var curr = this.collection.current_activity;
-            var prev;
-            if(curr) {
-                prev = this.collection.at( this.collection.indexOf(curr) - 1 );
-            }
-            if(prev) {
-                prev.select();
-            }
+            this.collection.select_previous_activity(this.cursor_date(), this.cursor_time());
         },
         max_duration: function() {
             return this.collection.max_duration(this.cursor_date(), this.cursor_time());
