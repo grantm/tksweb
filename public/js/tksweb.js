@@ -90,7 +90,7 @@
             this.attributes.sync_id++;
         },
         clear_dirty: function(model, resp){
-            if(resp.sync_id === this.attributes.sync_id) {
+            if((resp.sync_id === 0) || (resp.sync_id === this.attributes.sync_id)) {
                 this.attributes.sync_id = 0;
             }
         },
