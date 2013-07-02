@@ -73,11 +73,29 @@
 
     var Activity = Backbone.Model.extend({
         defaults: {
+            sync_id       : 0,
             date          : '',
             start_time    : 0,
             duration      : 60,
             wr_number     : '',
             description   : ''
+        },
+        initialize: function() {
+            this.on("change", this.set_dirty);
+            this.on("sync", this.clear_dirty);
+        },
+        set_dirty: function(){
+            // Stored directly in attributes so that a) it doesn't trigger 'change'
+            // event and b) so it does get sent to the server
+            this.attributes.sync_id++;
+        },
+        clear_dirty: function(model, resp){
+            if(resp.sync_id === this.attributes.sync_id) {
+                this.attributes.sync_id = 0;
+            }
+        },
+        is_dirty: function(){
+            return this.attributes.sync_id > 0;
         },
         validate: function(attr) {
             if(!column_for_date.hasOwnProperty(attr.date)) {
@@ -269,6 +287,7 @@
             this.listenTo(this.model, "change:date change:start_time", this.position_element);
             this.listenTo(this.model, "change:duration", this.size_element);
             this.listenTo(this.model, "change:wr_number", this.apply_colour);
+            this.listenTo(this.model, "change sync", this.show_dirty);
             this.listenTo(this.model, "selection_changed", this.show_selection);
             this.listenTo(this.model, "remove", this.remove, this);
             this.listenTo(this.model, "destroy", this.destroy);
@@ -298,6 +317,9 @@
         },
         select_activity: function() {
             this.model.select();
+        },
+        show_dirty: function() {
+            this.$el.toggleClass('dirty', this.model.is_dirty());
         },
         apply_colour: function() {
             var view = this;
