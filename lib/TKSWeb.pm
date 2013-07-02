@@ -234,6 +234,7 @@ sub wr_system_list {
     );
     while(my $wr_system = $rs->next) {
         my %sys = $wr_system->get_columns;
+        delete $sys{app_user_id};
         push @wr_systems, \%sys;
     }
     return \@wr_systems;
