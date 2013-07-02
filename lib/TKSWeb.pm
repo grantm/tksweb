@@ -212,19 +212,12 @@ sub dates_for_weekview {
     return {
         next_monday => $monday->clone->add(days => 7)->ymd,
         last_monday => $monday->clone->add(days => -7)->ymd,
-        week_dates  => days_of_week( $monday->clone ),
+        week_dates  => [
+            map { { ymd => $_->ymd, fmt => $_->strftime('%a %b-%d') } }
+                map { $monday->clone->add(days => $_) }
+                    0..6
+        ]
     };
-}
-
-
-sub days_of_week {
-    my $dt = shift or die "Date needed";
-    my @days;
-    foreach (1..7) {
-        push @days, $dt->ymd;
-        $dt->add(days => 1);
-    }
-    return \@days;
 }
 
 

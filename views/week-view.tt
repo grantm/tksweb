@@ -23,7 +23,7 @@
   <div class="day-labels">
     <ul>
     {{#each week_days}}
-      <li>{{day_name}} {{month_name}}-{{day}}</li>
+      <li>{{fmt}}</li>
     {{/each}}
     </ul>
   </div>

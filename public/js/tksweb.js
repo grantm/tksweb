@@ -13,9 +13,6 @@
     'use strict';
 
     var TKSWeb = window.TKSWeb = {
-        day_name          : [ 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun' ],
-        month_name        : [ 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-                              'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec' ],
         hour_label_width  : 50,
         hour_label_height : 48,
         day_label_width   : 200,
@@ -24,7 +21,7 @@
     };
     var keyCode = $.ui.keyCode;
     var end_of_day = 24 * 60;
-    var wr_systems, week_days, hours, column_for_date;
+    var wr_systems, week_dates, column_for_date, hours;
 
     function init_hours() {
         hours = [ '' ];
@@ -33,20 +30,11 @@
         }
     }
 
-    function init_week_days(days) {
+    function init_week_dates(dates) {
+        week_dates = dates;
         column_for_date = {};
-        week_days       = [];
         for(var i = 0; i < 7; i++) {
-            column_for_date[ days[i] ] = i;
-            var part = days[i].split('-');
-            week_days.push({
-                date      : days[i],
-                day       : part[2],
-                month     : part[1],
-                year      : part[0],
-                day_name  : TKSWeb.day_name[ i ],
-                month_name: TKSWeb.month_name[ parseInt(part[1], 10) - 1 ],
-            });
+            column_for_date[ dates[i].ymd ] = i;
         }
     };
 
@@ -397,7 +385,7 @@
             if(!activity) {
                 return;
             }
-            var date = week_days[pos.x].date;
+            var date = week_dates[pos.x].ymd;
             var time = pos.y * TKSWeb.duration_unit;
             if(activity.try_move_to(date, time)) {
                 this.move_to(pos.x, pos.y);
@@ -420,7 +408,7 @@
             this.collection.trigger_cursor_move(pos);
         },
         cursor_date: function() {
-            return week_days[this.x].date;
+            return week_dates[this.x].ymd;
         },
         cursor_time: function() {
             return this.y * TKSWeb.duration_unit;
@@ -683,7 +671,7 @@
         },
         render: function() {
             var context = {
-                week_days: week_days,
+                week_days: week_dates,
                 hours: hours
             };
             this.$el.html( this.template(context) );
@@ -791,13 +779,12 @@
         },
         update_week_view: function(data) {
             var dates = data.dates;
-            this.monday = dates.week_dates[0];
+            this.monday = dates.week_dates[0].ymd;
             this.last_monday = dates.last_monday;
             this.next_monday = dates.next_monday;
-            init_week_days(dates.week_dates);
+            init_week_dates(dates.week_dates);
             this.$('.day-labels li').each(function(i, el) {
-                var day = week_days[i];
-                $(el).text(day.day_name + ' ' + day.month_name + '-' + day.day);
+                $(el).text(week_dates[i].fmt);
             });
             this.update_menu();
             this.collection.add( data.activities );
@@ -838,12 +825,12 @@
 
     TKSWeb.show_week = function (el, dates, wr_sys, activities_data) {
         wr_systems = wr_sys;
-        init_week_days(dates.week_dates);
+        init_week_dates(dates.week_dates);
         init_hours();
         var activities = new Activities();
         activities.view = new WeekView({
             el: el,
-            monday: dates.week_dates[0],
+            monday: dates.week_dates[0].ymd,
             last_monday: dates.last_monday,
             next_monday: dates.next_monday,
             collection: activities
