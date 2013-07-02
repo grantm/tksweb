@@ -293,6 +293,9 @@
         render: function() {
             var context = this.model.toJSON();
             this.$el.html( this.week_view.activity_template(context) );
+            if(document.contains(this.el)) {  // content has no height until added to DOM
+                this.check_overflow();
+            }
             return this;
         },
         position_element: function() {
@@ -305,6 +308,12 @@
         size_element: function() {
             var activity = this.model;
             this.$el.height(activity.get('duration') * dim.hour_height / 60 - 2);
+        },
+        check_overflow: function() {
+            var $p = this.$('p');
+            if( this.$el.innerHeight() < $p.outerHeight() ) {
+                $p.attr( 'title', this.model.get("description") );
+            }
         },
         week_view: function() {
             return this.collection.view;
@@ -776,11 +785,9 @@
             return this.$('.activities .cursor');
         },
         add_activity: function(activity) {
-            this.$('.activities').append(
-                new ActivityView({
-                    model: activity
-                }).render().el
-            );
+            var a_view = new ActivityView({ model: activity });
+            this.$('.activities').append( a_view.render().el );
+            a_view.check_overflow();
         },
         scroll_to_show_cursor: function(cursor) {
             var viewport = {
