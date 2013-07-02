@@ -191,6 +191,9 @@ noscript p {
   overflow: hidden;
 }
 
+.activity.dirty {
+  opacity: 0.5;
+}
 
 .activity.no-wr {
   background-color: #ffddcc;
