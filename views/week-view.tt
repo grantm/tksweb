@@ -40,10 +40,13 @@
   {{#each exports_by_sys }}
     <li><a href="/export/{{sys_name}}/{{period_start}}.tks"><span class="icon">&#9783;</span>Export TKS month file for {{sys_description}}</a></li>
   {{/each}}
+  <li><a href="/logout"><span class="icon">&#9746;</span>Log out</a></li>
 </script>
+
 <script id="activity-template" type="text/x-handlebars-template">
   <p>{{#if wr_number}}{{wr_number}}:{{else}}<em>?????:</em>{{/if}} {{description}}</p>
 </script>
+
 <script id="activity-dialog-template" type="text/x-handlebars-template">
 {{#if wr_systems}}
   {{#each wr_systems}}
