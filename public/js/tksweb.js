@@ -264,7 +264,7 @@
             this.listenTo(this.model, "change:wr_number change:description", this.render);
             this.listenTo(this.model, "change:date change:start_time", this.position_element);
             this.listenTo(this.model, "change:duration", this.size_element);
-            this.listenTo(this.model, "change:wr_number", this.apply_colour);
+            this.listenTo(this.model, "change:wr_number change:wr_system_id", this.apply_colour);
             this.listenTo(this.model, "change sync", this.show_dirty);
             this.listenTo(this.model, "selection_changed", this.show_selection);
             this.listenTo(this.model, "remove", this.remove, this);
@@ -307,7 +307,7 @@
             }
             this.$el.removeClass('no-wr');
             _.each(wr_systems, function(sys) {
-                var match = sys.wr_system_id === activity.get("wr_system_id");
+                var match = (sys.wr_system_id === activity.get("wr_system_id"));
                 view.$el.toggleClass('cc' + sys.colour_code, match);
             });
         },
