@@ -642,22 +642,27 @@
             "click  #week-next": "next_week"
         },
         initialize: function(options) {
-            var view = this;
             this.monday = options.monday;
             this.last_monday = options.last_monday;
             this.next_monday = options.next_monday;
             this.left = 0;
             this.top = 0;
             this.compile_templates();
-            this.render();
+            this.initialise_ui();
             this.collection.on('add', this.add_activity, this);
             this.collection.on("cursor_move", this.scroll_to_show_cursor, this);
-            $(window).resize( $.proxy(view.resize, view) );
+            $(window).resize( $.proxy(this.resize, this) );
         },
         compile_templates: function() {
-            this.template = Handlebars.compile( $('#week-view-template').html() );
             this.menu_template = Handlebars.compile( $('#menu-template').html() );
             this.activity_template = Handlebars.compile( $('#activity-template').html() );
+        },
+        initialise_ui: function() {
+            this.update_menu();
+            this.size_activities();
+            this.enable_workspace_drag();
+            this.resize();
+            this.set_initial_scroll();
         },
         wr_systems_for_exports: function() {
             var period_start = this.monday.replace(/\d\d$/, '01');
@@ -668,18 +673,6 @@
                     period_start: period_start
                 }
             });
-        },
-        render: function() {
-            var context = {
-                week_days: week_dates,
-                hours: hours
-            };
-            this.$el.html( this.template(context) );
-            this.update_menu();
-            this.size_activities();
-            this.enable_workspace_drag();
-            this.resize();
-            this.set_initial_scroll();
         },
         update_menu: function(dates) {
             var context = {

@@ -106,8 +106,10 @@ get qr{^/week/?(?<date>.*)$} => sub {
     my $date = captures->{date} // '';
     my $monday = monday_of_week( $date );
     return redirect "/week/$monday" if $date ne $monday;
+    my $dates = dates_for_weekview($monday);
     template 'week-view', {
-        dates       => to_json( dates_for_weekview($monday) ),
+        week_dates  => $dates->{week_dates},
+        dates       => to_json( $dates ),
         wr_systems  => to_json( wr_system_list() ),
         activities  => to_json( activities_for_week($monday) ),
     };
