@@ -103,11 +103,11 @@
             }
         },
         select: function() {
+            this.selected = true;
             this.trigger('selection_changed', this);
-            this.set('selected', true);
         },
         unselect: function() {
-            this.set('selected', false);
+            this.selected = false;
             this.trigger('clear_selection');
         },
         start_activity_edit: function() {
@@ -269,7 +269,7 @@
             this.listenTo(this.model, "change:date change:start_time", this.position_element);
             this.listenTo(this.model, "change:duration", this.size_element);
             this.listenTo(this.model, "change:wr_number", this.apply_colour);
-            this.listenTo(this.model, "change:selected", this.show_selection);
+            this.listenTo(this.model, "selection_changed", this.show_selection);
             this.listenTo(this.model, "remove", this.remove, this);
             this.listenTo(this.model, "destroy", this.destroy);
             this.position_element();
@@ -312,7 +312,7 @@
             });
         },
         show_selection: function() {
-            this.$el.toggleClass('selected', this.model.get('selected'));
+            this.$el.toggleClass('selected', this.model.selected);
         },
         remove: function() {
             // Should be this.remove() ?  Seems to cause hard looping
@@ -540,7 +540,6 @@
             if(curr) {
                 this.clipboard = curr.toJSON();
                 delete this.clipboard.id;
-                delete this.clipboard.selected;
             }
         },
         paste_activity: function() {
