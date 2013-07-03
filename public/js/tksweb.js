@@ -20,6 +20,11 @@
     var end_of_day = 24 * 60;
     var wr_systems, wr_system_by_id, week_dates, column_for_date;
 
+    var unsaved_edits_message =
+        "Warning: Some updates have not been saved.\n" +
+        "Press OK to discard changes,\n" +
+        "or Cancel if you want to try a manual sync.";
+
     function init_wr_systems(wr_sys) {
         wr_systems = wr_sys;
         wr_system_by_id = {};
@@ -228,6 +233,9 @@
         },
         dirty_models: function() {
             return this.filter(function(act) { return act.is_dirty() });
+        },
+        edits_are_unsaved: function() {
+            return this.dirty_models().length > 0;
         },
         select_next_activity: function(cursor_date, cursor_time) {
             var next = this.current_activity
@@ -796,16 +804,28 @@
             this.$('.hour-labels ul').css('top', y);
         },
         previous_week: function(e) {
-            this.load_new_week(this.last_monday);
             e.preventDefault();
+            if(this.pause_for_user_to_sync()) {
+                return;
+            }
+            this.load_new_week(this.last_monday);
         },
         next_week: function(e) {
-            this.load_new_week(this.next_monday);
             e.preventDefault();
+            if(this.pause_for_user_to_sync()) {
+                return;
+            }
+            this.load_new_week(this.next_monday);
         },
         sync_now: function(e) {
             this.collection.sync_now();
             e.preventDefault();
+        },
+        pause_for_user_to_sync: function() {
+            if(!this.collection.edits_are_unsaved()) {
+                return false;
+            }
+            return !confirm(unsaved_edits_message);
         },
         load_new_week: function(date) {
             if(this.collection.current_activity) { // ensure no hanging reference
