@@ -18,7 +18,15 @@
     var dim = {};
     var keyCode = $.ui.keyCode;
     var end_of_day = 24 * 60;
-    var wr_systems, week_dates, column_for_date;
+    var wr_systems, wr_system_by_id, week_dates, column_for_date;
+
+    function init_wr_systems(wr_sys) {
+        wr_systems = wr_sys;
+        wr_system_by_id = {};
+        _.each(wr_systems, function(sys) {
+            wr_system_by_id[ sys.wr_system_id ] = sys;
+        });
+    };
 
     function init_week_dates(dates) {
         week_dates = dates;
@@ -74,6 +82,22 @@
         },
         is_dirty: function(){
             return this.attributes.sync_id > 0;
+        },
+        for_template: function() {
+            var attr = this.toJSON();
+            attr.request_url = this.request_url();
+            return attr;
+        },
+        request_url: function() {
+            var sys = wr_system_by_id[ this.get("wr_system_id") ] || {};
+            if(sys.request_url && sys.request_url.length > 0) {
+                if( sys.request_url.match(/%s/) ) {
+                    return sys.request_url.replace(/%s/, this.get("wr_number"));
+                }
+                else {
+                    return sys.request_url + this.get("wr_number");
+                }
+            }
         },
         validate: function(attr) {
             if(!column_for_date.hasOwnProperty(attr.date)) {
@@ -291,7 +315,7 @@
         },
 
         render: function() {
-            var context = this.model.toJSON();
+            var context = this.model.for_template();
             this.$el.html( this.week_view.activity_template(context) );
             if(document.contains(this.el)) {  // content has no height until added to DOM
                 this.check_overflow();
@@ -811,8 +835,8 @@
         }
     });
 
-    TKSWeb.show_week = function (el, dates, wr_sys, activities_data) {
-        wr_systems = wr_sys;
+    TKSWeb.show_week = function (el, dates, wr_systems, activities_data) {
+        init_wr_systems(wr_systems);
         var activities = new Activities();
         activities.view = new WeekView({
             el: el,

@@ -202,6 +202,16 @@ noscript p {
   cursor: default;
 }
 
+.activity p a {
+  color: #000000;
+  text-decoration: none;
+}
+
+.activity:hover p a {
+  color: #0000ff;
+  text-decoration: underline;
+}
+
 .activity p em {
   color: #777777;
 }
