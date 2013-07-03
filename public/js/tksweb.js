@@ -67,6 +67,7 @@
             description   : ''
         },
         initialize: function() {
+            _.bindAll(this, 'run_deferred_save');
             this.on("change", this.set_dirty);
             this.on("sync", this.clear_dirty);
         },
@@ -82,6 +83,18 @@
         },
         is_dirty: function(){
             return this.attributes.sync_id > 0;
+        },
+        deferred_save: function() {
+            if(this.current_deferred_save) {
+                clearTimeout( this.current_deferred_save );
+            }
+            this.current_deferred_save = setTimeout(this.run_deferred_save, 3000);
+        },
+        run_deferred_save: function() {
+            delete this.current_deferred_save;
+            if( this.is_dirty() ) {
+                this.save();
+            }
         },
         for_template: function() {
             var attr = this.toJSON();
@@ -164,7 +177,7 @@
                 return false;
             }
             this.set({date: new_date, start_time: new_time});
-            this.save();
+            this.deferred_save();
             this.trigger('selection_updated', this);
             return true;
         },
