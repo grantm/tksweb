@@ -700,6 +700,7 @@
             this.collection.on('add', this.add_activity, this);
             this.collection.on("cursor_move", this.scroll_to_show_cursor, this);
             $(window).resize( $.proxy(this.resize, this) );
+            $(window).on("beforeunload", $.proxy(this.before_unload, this) );
         },
         set_dates: function(dates) {
             init_week_dates(dates.week_dates);
@@ -826,6 +827,13 @@
                 return false;
             }
             return !confirm(unsaved_edits_message);
+        },
+        before_unload: function(e) {
+            if(!this.collection.edits_are_unsaved()) {
+                return;
+            }
+            (e || window.event).returnValue = unsaved_edits_message;
+            return unsaved_edits_message;
         },
         load_new_week: function(date) {
             if(this.collection.current_activity) { // ensure no hanging reference
