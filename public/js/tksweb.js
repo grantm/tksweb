@@ -210,6 +210,12 @@
         trigger_view_replaced: function(pos) {
             this.trigger('view_replaced');
         },
+        sync_now: function() {
+            _.each(this.dirty_models(), function(act) { act.save(); });
+        },
+        dirty_models: function() {
+            return this.filter(function(act) { return act.is_dirty() });
+        },
         select_next_activity: function(cursor_date, cursor_time) {
             var next = this.current_activity
                      ? this.at( this.indexOf(this.current_activity) + 1 )
@@ -662,7 +668,8 @@
         events: {
             "mousewheel .activities": "mousewheel",
             "click  #week-prev": "previous_week",
-            "click  #week-next": "next_week"
+            "click  #week-next": "next_week",
+            "click  #sync-now": "sync_now"
         },
         initialize: function(options) {
             this.set_dates(options.dates);
@@ -781,6 +788,10 @@
         },
         next_week: function(e) {
             this.load_new_week(this.next_monday);
+            e.preventDefault();
+        },
+        sync_now: function(e) {
+            this.collection.sync_now();
             e.preventDefault();
         },
         load_new_week: function(date) {
