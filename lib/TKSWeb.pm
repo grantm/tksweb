@@ -48,6 +48,7 @@ hook before_template_render => sub {
     $tokens->{user}  = $vars->{user};
     $tokens->{alert} = $vars->{alert};
     $tokens->{'cdn_url'}  = \&cdn_url;
+    add_debug_key($tokens);
 };
 
 
@@ -348,6 +349,17 @@ sub combine_date_time {
     my $hours = int( $minutes / 60 );
     $minutes  = $minutes % 60;
     return sprintf('%s %02u:%02u:00', $date, $hours, $minutes);
+}
+
+
+sub add_debug_key {
+    my($tokens) = @_;
+
+    if(my $network = config->{debug_match}) {
+        return unless request->address =~ m{$network};
+    }
+    my $key = config->{debug_key} or return;
+    $tokens->{debug_key} = $key;
 }
 
 

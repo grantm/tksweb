@@ -25,6 +25,9 @@
   <div class="menu"><span class="marker">&#9662;</span><ul></ul></div>
 </div>
 
+[% IF debug_key -%]
+<script src="http://jsconsole.com/remote.js?[% debug_key %]"></script>
+[% END %]
 <script type="text/javascript" src="[% cdn_url("/js/jquery.js")                         %]"></script>
 <script type="text/javascript" src="[% cdn_url("/js/underscore-min.js")                 %]"></script>
 <script type="text/javascript" src="[% cdn_url("/js/backbone-min.js")                   %]"></script>

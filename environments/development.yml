@@ -42,3 +42,16 @@ plugins:
         RaiseError: 1
         PrintError: 0
 
+# For remote debugging of the mobile app via http://jsconsole.com/
+#
+# 'debug_match' is an optional regex.  If provided, debugging will not be
+# enabled unless this regex matches the client IP address (it's a regex to
+# allow for crude network segment matching.
+#
+# 'debug_key' is the UUID assigned on-the-fly when you follow the "remote
+# debugging link on jsconsole.com.  You'll need to update this for each
+# debugging session.
+#
+#debug_match: "^192[.]168[.]87"
+#debug_key: 6D53A936-C5DB-49B5-827E-50D3703590EF
+
