@@ -141,7 +141,7 @@
             return max(
                 Math.abs(e.px_start_x - e.px_current_x),
                 Math.abs(e.px_start_y - e.px_current_y)
-            ) > this.options.distance;
+            ) >= this.options.distance;
         }
 
         ,_mouseDelayMet: function(e) {
