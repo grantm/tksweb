@@ -323,7 +323,8 @@
         className: 'activity',
 
         events: {
-            "click": "select_activity"
+            "utap": "select_activity",
+            "uheld.uheld": "select_activity"
         },
 
         initialize: function() {
@@ -411,7 +412,7 @@
             this.collection.on("selection_changed", this.selection_changed, cursor);
             this.collection.on("selection_updated add", this.select_activity_at_cursor, cursor);
             this.collection.on("view_replaced", this.view_replaced, cursor);
-            this.$el.parent().click( $.proxy(cursor.activities_click, cursor) );
+            this.$el.parent().on( "utap", $.proxy(cursor.activities_click, cursor) );
             $(window).keydown( $.proxy(cursor.key_handler, cursor) );
             this.view_replaced();
         },
@@ -504,9 +505,8 @@
             if(!$(e.target).hasClass('activities')) {
                 return;
             }
-            e = e.originalEvent;
-            var x = (e.layerX || e.offsetX) - dim.hour_label_width;
-            var y = (e.layerY || e.offsetY) - dim.day_label_height;
+            var x = e.px_current_x - dim.hour_label_width - parseInt( $(e.target).css("left"), 10 ) || 0;
+            var y = e.px_current_y - dim.day_label_height - parseInt( $(e.target).css("top"), 10 ) || 0;
             this.move_to(Math.floor(x / this.x_scale), Math.floor(y / this.y_scale));
         },
         key_handler: function(e) {
@@ -750,7 +750,7 @@
         },
         enable_workspace_drag: function() {
             var view = this;
-            this.$('.activities').draggable({
+            this.$('.activities').udraggable({
                 distance: 5,
                 drag: function(event, ui) { view.drag( ui.position ); }
             });
@@ -764,12 +764,12 @@
         set_drag_constraints: function() {
             this.min_y = this.app_height - this.activities_height - dim.day_label_height;
             this.max_y = 0;
-            this.$('.activities').draggable("option", {
+            this.$('.activities').udraggable("option", {
                 containment: [
                     this.app_width - this.activities_width - dim.hour_label_width,
                     this.min_y,
-                    1,
-                    this.max_y + 1
+                    0,
+                    this.max_y
                 ]
             });
         },

@@ -33,7 +33,8 @@
 <script type="text/javascript" src="[% cdn_url("/js/backbone-min.js")                   %]"></script>
 <script type="text/javascript" src="[% cdn_url("/js/handlebars.js")                     %]"></script>
 <script type="text/javascript" src="[% cdn_url("/js/jquery-ui-1.10.3/ui/jquery-ui.js")  %]"></script>
-<script type="text/javascript" src="[% cdn_url("/js/jquery.ui.touch-punch.min.js")      %]"></script>
+<script type="text/javascript" src="[% cdn_url("/js/jquery.event.ue.js")                %]"></script>
+<script type="text/javascript" src="[% cdn_url("/js/jquery.udraggable.js")              %]"></script>
 <script type="text/javascript" src="[% cdn_url("/js/jquery.mousewheel.min.js")          %]"></script>
 <script type="text/javascript" src="[% cdn_url("/js/tksweb.js")                         %]"></script>
 
