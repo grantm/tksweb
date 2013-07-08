@@ -118,6 +118,10 @@ noscript p {
   z-index: 10;
 }
 
+.week-view .cursor.udraggable-dragging {
+  outline: 2px solid #888888;
+}
+
 .menu {
   position: absolute;
   top: 0;
