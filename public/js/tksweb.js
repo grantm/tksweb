@@ -434,6 +434,7 @@
             this.$el.udraggable({
                 long_press: true,
                 grid: [this.x_scale, this.y_scale],
+                containment: 'parent',
                 start: cursor.drag_start,
                 drag:  cursor.drag_move,
                 stop:  cursor.drag_stop
