@@ -148,6 +148,12 @@
             this.selected = false;
             this.trigger('clear_selection');
         },
+        trigger_drag_to: function(pos) {
+            this.trigger('drag_to', pos);
+        },
+        trigger_drag_failed: function() {
+            this.trigger('drag_failed');
+        },
         start_activity_edit: function() {
             this.trigger('start_activity_edit', this.for_edit_dialog());
         },
@@ -335,6 +341,8 @@
             this.listenTo(this.model, "change:wr_number change:wr_system_id", this.apply_colour);
             this.listenTo(this.model, "change sync", this.show_dirty);
             this.listenTo(this.model, "selection_changed clear_selection", this.show_selection);
+            this.listenTo(this.model, "drag_to", this.drag_to);
+            this.listenTo(this.model, "drag_failed", this.drag_failed);
             this.listenTo(this.model, "remove", this.remove, this);
             this.listenTo(this.model, "destroy", this.destroy);
             this.position_element();
@@ -351,11 +359,14 @@
             return this;
         },
         position_element: function() {
+            this.$el.css( this.css_pos() );
+        },
+        css_pos: function() {
             var activity = this.model;
-            this.$el.css({
+            return {
                 left: column_for_date[ activity.get('date') ] * dim.column_width,
                 top:  (activity.get('start_time') * dim.hour_height) / 60
-            });
+            }
         },
         size_element: function() {
             var activity = this.model;
@@ -391,6 +402,12 @@
         show_selection: function() {
             this.$el.toggleClass('selected', this.model.selected);
         },
+        drag_to: function(pos) {
+            this.$el.css(pos);
+        },
+        drag_failed: function() {
+            this.$el.animate( this.css_pos(), 150 );
+        },
         remove: function() {
             // Should be this.remove() ?  Seems to cause hard looping
             this.$el.remove();
@@ -408,10 +425,19 @@
 
         initialize: function() {
             var cursor = this;
+            _.bindAll(this, 'drag_start', 'drag_move', 'drag_stop', 'drag_failed');
             this.init_units();
             this.collection.on("selection_changed", this.selection_changed, cursor);
             this.collection.on("selection_updated add", this.select_activity_at_cursor, cursor);
             this.collection.on("view_replaced", this.view_replaced, cursor);
+            this.collection.on("drag_failed", this.drag_failed);
+            this.$el.udraggable({
+                long_press: true,
+                grid: [this.x_scale, this.y_scale],
+                start: cursor.drag_start,
+                drag:  cursor.drag_move,
+                stop:  cursor.drag_stop
+            });
             this.$el.parent().on( "utap", $.proxy(cursor.activities_click, cursor) );
             $(window).keydown( $.proxy(cursor.key_handler, cursor) );
             this.view_replaced();
@@ -430,6 +456,38 @@
         },
         size_cursor: function(h) {
             this.$el.height((h * this.y_scale) - 2);
+        },
+        drag_start: function(e, ui) {
+            var activity = this.collection.current_activity;
+            if(activity) {
+                this.drag_activity = activity;
+            }
+        },
+        drag_move: function(e, ui) {
+            var pos = ui.position;
+            if(pos && this.drag_activity) {
+                this.drag_activity.trigger_drag_to(pos);
+            }
+        },
+        drag_stop: function(e, ui) {
+            var pos = ui.position;
+            if(pos && this.drag_activity) {
+                var activity = this.drag_activity;
+                delete this.drag_activity;
+                var new_x = Math.floor(pos.left / this.x_scale);
+                var new_y = Math.floor(pos.top / this.y_scale);
+                var date = week_dates[new_x].ymd;
+                var time = new_y * dim.duration_unit;
+                if(activity.try_move_to(date, time)) {
+                    this.move_to(new_x, new_y);
+                }
+                else {
+                    activity.trigger_drag_failed();
+                }
+            }
+        },
+        drag_failed: function() {
+            this.$el.animate( this.css_pos(), 150 );
         },
         move_to: function(x, y) {
             this.x = x;
@@ -465,14 +523,17 @@
             return pos.x === this.x && pos.y === this.y ? null : pos;
         },
         position_cursor: function() {
-            var pos = {
-                left: this.x * this.x_scale,
-                right: this.x * this.x_scale + this.x_scale,
-                top: this.y * this.y_scale,
-                bottom: this.y * this.y_scale + this.y_scale
-            };
-            this.$el.css({ left: pos.left + 'px', top: pos.top + 'px' });
+            var pos = this.css_pos();
+            this.$el.css(pos);
+            pos.right  = this.x * this.x_scale + this.x_scale;
+            pos.bottom = this.y * this.y_scale + this.y_scale;
             this.collection.trigger_cursor_move(pos);
+        },
+        css_pos: function() {
+            return {
+                left: this.x * this.x_scale,
+                top: this.y * this.y_scale
+            }
         },
         cursor_date: function() {
             return week_dates[this.x].ymd;

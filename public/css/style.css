@@ -189,6 +189,10 @@ noscript p {
   overflow: hidden;
 }
 
+.activity.selected {
+  z-index: 5;
+}
+
 .activities .activity.dirty {
   opacity: 0.5;
 }
