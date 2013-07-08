@@ -344,7 +344,7 @@
         render: function() {
             var context = this.model.for_template();
             this.$el.html( this.week_view.activity_template(context) );
-            if(document.contains(this.el)) {  // content has no height until added to DOM
+            if( this.el.parentNode ) {  // content has no height until added to DOM
                 this.check_overflow();
             }
             return this;
