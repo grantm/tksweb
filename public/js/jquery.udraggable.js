@@ -181,10 +181,11 @@
         }
 
         ,_applyGrid: function(cur) {
-            var grid = this.options.grid;
-            if(grid) {
-                cur.left = floor( cur.left / grid[0] ) * grid[0];
-                cur.top  = floor( cur.top  / grid[1] ) * grid[1];
+            if(this.options.grid) {
+                var gx = this.options.grid[0];
+                var gy = this.options.grid[1];
+                cur.left = floor( (cur.left + gx / 2) / gx ) * gx;
+                cur.top  = floor( (cur.top  + gy / 2) / gy ) * gy;
             }
         }
 
