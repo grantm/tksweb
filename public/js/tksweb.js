@@ -333,7 +333,7 @@
             this.listenTo(this.model, "change:duration", this.size_element);
             this.listenTo(this.model, "change:wr_number change:wr_system_id", this.apply_colour);
             this.listenTo(this.model, "change sync", this.show_dirty);
-            this.listenTo(this.model, "selection_changed", this.show_selection);
+            this.listenTo(this.model, "selection_changed clear_selection", this.show_selection);
             this.listenTo(this.model, "remove", this.remove, this);
             this.listenTo(this.model, "destroy", this.destroy);
             this.position_element();
