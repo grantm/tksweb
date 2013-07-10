@@ -787,7 +787,7 @@
         },
         initialise_ui: function() {
             this.update_menu();
-            this.enable_workspace_drag();
+            this.enable_workspace_drags();
             this.resize();
             this.set_initial_scroll();
         },
@@ -810,11 +810,21 @@
             }
             this.$('.menu ul').html( this.menu_template(context) );
         },
-        enable_workspace_drag: function() {
+        enable_workspace_drags: function() {
             var view = this;
             this.$('.activities').udraggable({
                 distance: 5,
-                drag: function(event, ui) { view.drag( ui.position ); }
+                drag: function(event, ui) { view.workspace_drag( ui.position ); }
+            });
+            this.$('.hour-labels ul').udraggable({
+                axis: "y",
+                distance: 5,
+                drag: function(event, ui) { view.hour_labels_drag( ui.position ); }
+            });
+            this.$('.day-labels ul').udraggable({
+                axis: "x",
+                distance: 5,
+                drag: function(event, ui) { view.day_labels_drag( ui.position ); }
             });
         },
         resize: function() {
@@ -824,22 +834,33 @@
             this.set_drag_constraints();
         },
         set_drag_constraints: function() {
+            this.min_x = this.app_width  - this.activities_width  - dim.hour_label_width;
             this.min_y = this.app_height - this.activities_height - dim.day_label_height;
+            this.max_x = 0;
             this.max_y = 0;
             this.$('.activities').udraggable("option", {
-                containment: [
-                    this.app_width - this.activities_width - dim.hour_label_width,
-                    this.min_y,
-                    0,
-                    this.max_y
-                ]
+                containment: [ this.min_x, this.min_y, this.max_x, this.max_y ]
+            });
+            this.$('.hour-labels ul').udraggable("option", {
+                containment: [ 0, this.min_y, 1, this.max_y ]
+            });
+            this.$('.day-labels ul').udraggable("option", {
+                containment: [ this.min_x, 0, this.max_x, 1 ]
             });
         },
-        drag: function(pos) {
+        workspace_drag: function(pos) {
             this.left = pos.left;
             this.top = pos.top;
             this.$('.day-labels ul').css('left', pos.left);
             this.$('.hour-labels ul').css('top', pos.top);
+        },
+        hour_labels_drag: function(pos) {
+            this.top = pos.top;
+            this.$('.activities').css('top', pos.top);
+        },
+        day_labels_drag: function(pos) {
+            this.left = pos.left;
+            this.$('.activities').css('left', pos.left);
         },
         set_position_top: function(y) {
             this.top = y;
