@@ -122,6 +122,18 @@ noscript p {
   outline: 2px solid #888888;
 }
 
+.total-hours {
+  position: absolute;
+  right: 10px;
+  bottom: 4px;
+  color: #333333;
+  font-family: arial,sans-serif;
+  font-size: 36px;
+  font-weight: bold;
+  opacity: 0.2;
+  z-index: 50;
+}
+
 .menu {
   position: absolute;
   top: 0;

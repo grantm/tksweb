@@ -23,6 +23,7 @@
     </ul>
   </div>
   <div class="menu"><span class="marker">&#9662;</span><ul></ul></div>
+  <div class="total-hours"></div>
 </div>
 
 [% IF debug_key -%]

@@ -243,6 +243,13 @@
         edits_are_unsaved: function() {
             return this.dirty_models().length > 0;
         },
+        total_hours: function() {
+            var total = 0;
+            this.each(function(activity){
+                total += activity.get("duration");
+            });
+            return total / 60;
+        },
         select_next_activity: function(cursor_date, cursor_time) {
             var next = this.current_activity
                      ? this.at( this.indexOf(this.current_activity) + 1 )
@@ -761,6 +768,7 @@
             this.initialise_ui();
             this.collection.on('add', this.add_activity, this);
             this.collection.on("cursor_move", this.scroll_to_show_cursor, this);
+            this.listenTo(this.collection, "add remove change:duration", this.show_total_hours);
             $(window).resize( $.proxy(this.resize, this) );
             $(window).on("beforeunload", $.proxy(this.before_unload, this) );
         },
@@ -886,6 +894,19 @@
             y = Math.min( Math.max(y, this.min_y), this.max_y);
             $activities.css('top', y);
             this.$('.hour-labels ul').css('top', y);
+        },
+        show_total_hours: function() {
+            var hours = this.collection.total_hours();
+            if(hours === 0) {
+                return this.$('.total-hours').text("");
+            }
+            if( hours === Math.floor(hours) ) {
+                hours = hours + ".00";
+            }
+            else {
+                hours = (hours + "0").replace(/([.]\d\d)\d*$/, '$1');
+            }
+            this.$('.total-hours').text( hours );
         },
         previous_week: function(e) {
             e.preventDefault();
