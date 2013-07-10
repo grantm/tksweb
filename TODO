@@ -1,18 +1,17 @@
-* date picker to select week
-* initialise cursor to current time if today is in the target week
-* use click instead of mousedown(?)
-* put .activities and .cursor inside .content with 0,0 offsets
+* investigate https://github.com/mmikowski/jquery.event.ue
+* make hour and day labels draggable
+* profile page for changing password and displaying API key
 * add activity resize drag handles
-* drag activity
+* mobile support: long_press menu - edit, delete, copy, paste
 * reset drag position on window resize (eg: rotate)
-* disable zoom on mobile
-* remember original URL when redirecting to login and return there after
-* change bg colour if no WR number
+* disable zoom on mobile (but don't break login screen)
+* allow user to select alternate bg colour for an activity
+* fix next/previous when cursor is 'in space'
+* initialise cursor to current time if today is in the target week
+* date picker to select week
 * pop-up help for key-bindings
-* key bindings for increase/decrease activity duration
-* restrict drag from going outside configured hours
-* restrict resize from going outside configured hours
+* key bindings for increase/decrease activ36pxity duration
 * undo ?
-* nudge algorithm to avoid overlaps
+* handle public holidays
 * websockets channel to advise of updates from other clients
 
