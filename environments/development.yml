@@ -46,12 +46,13 @@ plugins:
 #
 # 'debug_match' is an optional regex.  If provided, debugging will not be
 # enabled unless this regex matches the client IP address (it's a regex to
-# allow for crude network segment matching.
+# allow for crude network segment matching).
 #
-# 'debug_key' is the UUID assigned on-the-fly when you follow the "remote
-# debugging link on jsconsole.com.  You'll need to update this for each
-# debugging session.
+# 'debug_key' is the UUID for the remote debugging session hosted on
+# jsconsole.com using the link below:
 #
-#debug_match: "^192[.]168[.]87"
-#debug_key: 6D53A936-C5DB-49B5-827E-50D3703590EF
+#  http://jsconsole.com/?%3Alisten%20F4EFFEAD-89AD-4C98-8D44-6F6585C7E1FE
+#
+debug_match: "^192[.]168[.]87"
+debug_key: F4EFFEAD-89AD-4C98-8D44-6F6585C7E1FE
 
