@@ -89,6 +89,13 @@
             }
             var delta_x = e.px_current_x - e.px_start_x;
             var delta_y = e.px_current_y - e.px_start_y;
+            var axis = this.options.axis;
+            if(axis  &&  axis === "x") {
+                delta_y = 0;
+            }
+            if(axis  &&  axis === "y") {
+                delta_x = 0;
+            }
             var cur = {
                 left: this.ui.originalPosition.left + delta_x,
                 top:  this.ui.originalPosition.top  + delta_y
@@ -223,7 +230,8 @@
     };
 
     $.fn.udraggable.defaults = {
-         delay:       0
+         axis:        null
+        ,delay:       0
         ,distance:    0
         ,long_press:  false
         // callbacks
