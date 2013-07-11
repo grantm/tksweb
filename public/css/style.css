@@ -126,12 +126,13 @@ noscript p {
   position: absolute;
   right: 10px;
   bottom: 4px;
-  color: #333333;
+  color: #eeeeee;
   font-family: arial,sans-serif;
   font-size: 36px;
   font-weight: bold;
-  opacity: 0.2;
+  opacity: 0.5;
   z-index: 50;
+  text-shadow: 0 0 6px #333333;
 }
 
 .menu {
