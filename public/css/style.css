@@ -203,6 +203,8 @@ noscript p {
   border: 1px solid #cccccc;
   background-color: #ffffcc;
   overflow: hidden;
+  background-image: -moz-linear-gradient(top, rgba(255,255,255,0.6) 0, rgba(255,255,255,0) 40px);
+  background-image: -webkit-linear-gradient(top, rgba(255,255,255,0.6) 0,rgba(255,255,255,0) 40px);
 }
 
 .activity.selected {
