@@ -16,6 +16,7 @@
   padding: 4px;
   margin-left: 10px;
   font-size: 14px;
+  line-height: 1.2;
   background-color: #ffffff;
   border: 1px solid #888888;
   border-radius: 4px;
@@ -67,3 +68,18 @@
     opacity: 0.3;
 }
 
+
+/* Media queries for different defaults on mobile devices */
+
+@media (max-width: 700px) {
+
+  .popup-menu {
+    font-size: 24px;
+    line-height: 1.6;
+  }
+
+  .popup-menu .accel {
+    display: none;
+  }
+
+}
