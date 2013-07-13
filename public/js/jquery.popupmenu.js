@@ -11,6 +11,11 @@
 (function($) {
     "use strict";
 
+    var keyCode = {
+        ESCAPE: 27
+    };
+
+
     // Constructor function
 
     var PopupMenu = function ($el, options) {
@@ -78,7 +83,7 @@
         }
 
         ,key_pressed: function(e) {
-            if(e.keyCode === 27) {
+            if(e.keyCode === keyCode.ESCAPE) {
                 this.destroy();
             }
         }
