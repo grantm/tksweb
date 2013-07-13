@@ -621,16 +621,9 @@
             }
             else if(e.ctrlKey) {
                 switch(e.keyCode) {
-                    case 67:                        // Ctrl-C
-                        this.copy_activity();
-                        break;
-                    case 88:                        // Ctrl-X
-                        this.copy_activity();
-                        this.delete_activity();
-                        break;
-                    case 86:                        // Ctrl-V
-                        this.paste_activity();
-                        break;
+                    case 67:                this.copy_activity();    break; // Ctrl-C
+                    case 88:                this.cut_activity();     break; // Ctrl-X
+                    case 86:                this.paste_activity();   break; // Ctrl-V
                     default:
                         return;
                 }
@@ -662,6 +655,10 @@
         delete_activity: function() {
             this.collection.delete_current_activity();
             this.select_activity_at_cursor();
+        },
+        cut_activity: function() {
+            this.copy_activity();
+            this.delete_activity();
         },
         copy_activity: function() {
             var curr = this.collection.current_activity;
