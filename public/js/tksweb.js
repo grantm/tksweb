@@ -691,7 +691,7 @@
             var cursor = this;
             e.stopPropagation();
             this.$el.popup_menu({
-                options: [
+                items: [
                     { name: "Edit",   accel: "Enter",  handler: this.edit_activity   },
                     { name: "Delete", accel: "Del",    handler: this.delete_activity },
                     { name: "Cut",    accel: "Ctrl-X", handler: this.cut_activity    },

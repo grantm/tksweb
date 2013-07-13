@@ -42,11 +42,11 @@
             var $div  = $('<div class="popup-menu" />');
             $div.append( $('<div class="arrow" />') );
             var $list = $('<ul />');
-            var opt = this.options.options || [];
-            for(var i = 0; i < opt.length; i++) {
-                var $item = $('<li>').text( opt[i].name );
-                if(opt[i].accel) {
-                    $item.prepend( $('<span class="accel" />').text(opt[i].accel) );
+            var items = this.options.items || [];
+            for(var i = 0; i < items.length; i++) {
+                var $item = $('<li>').text( items[i].name );
+                if(items[i].accel) {
+                    $item.prepend( $('<span class="accel" />').text(items[i].accel) );
                 }
                 $list.append( $item );
             }
@@ -75,7 +75,7 @@
                 el = el.parentNode;
             }
             var i = this.$menu.find('li').index(el);
-            var item = this.options.options[i];
+            var item = this.options.items[i];
             this.destroy();
             if(item && item.handler) {
                 item.handler();
