@@ -644,6 +644,9 @@
             return this.collection.max_duration(this.cursor_date(), this.cursor_time());
         },
         edit_activity: function() {
+            if( $('.popup-menu-overlay').length > 0 ) {
+                return;
+            }
             var curr = this.collection.current_activity;
             if(curr) {
                 curr.start_activity_edit();
