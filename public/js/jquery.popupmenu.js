@@ -31,6 +31,9 @@
         ,show_menu: function() {
             var that = this;
             this.$menu = this.build_menu();
+            if(this.options.force_touch_mode) {
+                this.$menu.addClass('touch-mode');
+            }
             this.add_overlay( this.$menu );
             this.position_menu();
             this.$menu.on('utap li', function(e) { that.activate_selection(e); });

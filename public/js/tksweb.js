@@ -25,6 +25,9 @@
         "Press OK to discard changes,\n" +
         "or Cancel if you want to try a manual sync.";
 
+    var touch_device = false;
+    $(window).one('touchstart', function() { touch_device = true });
+
     function init_wr_systems(wr_sys) {
         wr_systems = wr_sys;
         wr_system_by_id = {};
@@ -698,6 +701,7 @@
                     { name: "Copy",   accel: "Ctrl-C", handler: this.copy_activity   },
                     { name: "Paste",  accel: "Ctrl-V", handler: this.paste_activity  },
                 ],
+                force_touch_mode: touch_device
             });
         }
     });
