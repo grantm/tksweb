@@ -439,7 +439,7 @@
             this.collection.on("view_replaced", this.view_replaced, cursor);
             this.collection.on("drag_failed", this.drag_failed);
             this.$el.udraggable({
-                long_press: true,
+                distance: 5,
                 grid: [this.x_scale, this.y_scale],
                 containment: 'parent',
                 start: cursor.drag_start,
