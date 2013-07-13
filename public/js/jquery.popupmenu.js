@@ -30,6 +30,7 @@
             this.position_menu();
             this.$menu.on('utap li', function(e) { that.activate_selection(e); });
             this.$menu.on('click li', function(e) { that.activate_selection(e); });
+            $(document).on('keydown', function(e) { that.key_pressed(e); });
         }
 
         ,build_menu: function() {
@@ -73,6 +74,12 @@
             this.destroy();
             if(item && item.handler) {
                 item.handler();
+            }
+        }
+
+        ,key_pressed: function(e) {
+            if(e.keyCode === 27) {
+                this.destroy();
             }
         }
 
