@@ -6,6 +6,7 @@
   initial-scale=1.0,maximum-scale=1.0"/>
   <title>TKS-Web</title>
   <link rel="stylesheet" href="[% cdn_url("/css/style.css") %]">
+  <link rel="stylesheet" href="[% cdn_url("/css/jquery.popupmenu.css") %]">
   <link rel="stylesheet" href="/js/jquery-ui-1.10.3/themes/base/jquery-ui.css">
   [%- FOREACH path = js_files %]
   <script type="text/javascript" src="[% path %]"></script>

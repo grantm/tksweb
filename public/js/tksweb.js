@@ -428,11 +428,15 @@
     var ActivityCursor = Backbone.View.extend({
         events: {
             "dblclick": "edit_activity"
+            ,"uheld": "show_menu"
         },
 
         initialize: function() {
             var cursor = this;
-            _.bindAll(this, 'drag_start', 'drag_move', 'drag_stop', 'drag_failed');
+            _.bindAll(this,
+                'drag_start', 'drag_move', 'drag_stop', 'drag_failed',
+                "edit_activity", "delete_activity", "cut_activity", "copy_activity", "paste_activity"
+            );
             this.init_units();
             this.collection.on("selection_changed", this.selection_changed, cursor);
             this.collection.on("selection_updated add", this.select_activity_at_cursor, cursor);
@@ -679,6 +683,19 @@
                 this.collection.create_from_clipboard(data);
                 this.select_activity_at_cursor();
             }
+        },
+        show_menu: function(e) {
+            var cursor = this;
+            e.stopPropagation();
+            this.$el.popup_menu({
+                options: [
+                    { name: "Edit",   accel: "Enter",  handler: this.edit_activity   },
+                    { name: "Delete", accel: "Del",    handler: this.delete_activity },
+                    { name: "Cut",    accel: "Ctrl-X", handler: this.cut_activity    },
+                    { name: "Copy",   accel: "Ctrl-C", handler: this.copy_activity   },
+                    { name: "Paste",  accel: "Ctrl-V", handler: this.paste_activity  },
+                ],
+            });
         }
     });
 
