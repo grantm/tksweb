@@ -46,7 +46,7 @@
   color: #999999;
 }
 
-.popup-menu .disabled, .popup-menu .disabled .accel {
+.popup-menu .disabled {
   color: #bbbbbb;
   cursor: auto;
 }
