@@ -53,3 +53,16 @@
     top: 50%;
     margin-top: -11px;
 }
+
+.popup-menu .arrow:before {
+    border: 10px solid transparent;
+    border-right-color: #000000;
+    border-left-width: 1px;
+    content: "";
+    position: absolute;
+    left: -12px;
+    top: 50%;
+    margin-top: -11px;
+    opacity: 0.3;
+}
+
