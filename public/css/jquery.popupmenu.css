@@ -33,6 +33,7 @@
 .popup-menu li {
   margin: 0;
   padding: 4px 8px;
+  cursor: pointer;
 }
 
 .popup-menu li:hover {
@@ -41,8 +42,18 @@
 
 .popup-menu .accel {
   float: right;
-  padding-left: 1.4em;
+  padding-left: 1.6em;
   color: #999999;
+}
+
+.popup-menu .disabled, .popup-menu .disabled .accel {
+  color: #bbbbbb;
+  cursor: auto;
+}
+
+.popup-menu li.disabled:hover, .popup-menu li.disabled:hover .accel {
+  background-color: #dddddd;
+  color: #ffffff;
 }
 
 .popup-menu .arrow:after {

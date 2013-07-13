@@ -694,15 +694,43 @@
             var cursor = this;
             e.stopPropagation();
             this.$el.popup_menu({
-                items: [
-                    { name: "Edit",   accel: "Enter",  handler: this.edit_activity   },
-                    { name: "Delete", accel: "Del",    handler: this.delete_activity },
-                    { name: "Cut",    accel: "Ctrl-X", handler: this.cut_activity    },
-                    { name: "Copy",   accel: "Ctrl-C", handler: this.copy_activity   },
-                    { name: "Paste",  accel: "Ctrl-V", handler: this.paste_activity  },
-                ],
+                items: this.context_menu_items(),
                 force_touch_mode: touch_device
             });
+        },
+        context_menu_items: function() {
+            var have_activity = !!this.collection.current_activity;
+            return [
+                {
+                    name:     have_activity ? "Edit" : "New Activity",
+                    accel:    "Enter",
+                    handler:  this.edit_activity
+                },
+                {
+                    name:     "Delete",
+                    accel:    "Del",
+                    handler:  this.delete_activity,
+                    disabled: !have_activity
+                },
+                {
+                    name:     "Cut",
+                    accel:    "Ctrl-X",
+                    handler:  this.cut_activity,
+                    disabled: !have_activity
+                },
+                {
+                    name:     "Copy",
+                    accel:    "Ctrl-C",
+                    handler:  this.copy_activity,
+                    disabled: !have_activity
+                },
+                {
+                    name:     "Paste",
+                    accel:    "Ctrl-V",
+                    handler:  this.paste_activity,
+                    disabled: have_activity || !this.clipboard
+                }
+            ];
         }
     });
 

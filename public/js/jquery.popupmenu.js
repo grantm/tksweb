@@ -51,6 +51,9 @@
                 if(items[i].accel) {
                     $item.prepend( $('<span class="accel" />').text(items[i].accel) );
                 }
+                if(items[i].disabled) {
+                    $item.addClass("disabled");
+                }
                 $list.append( $item );
             }
             return $div.append( $list );
@@ -76,6 +79,9 @@
             var el = e.orig_target || e.target;
             if(el  &&  el.nodeName !== 'LI') {
                 el = el.parentNode;
+            }
+            if( $(el).hasClass("disabled") ) {
+                return;
             }
             var i = this.$menu.find('li').index(el);
             var item = this.options.items[i];
