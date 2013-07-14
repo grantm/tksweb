@@ -438,13 +438,14 @@
             var cursor = this;
             _.bindAll(this,
                 'drag_start', 'drag_move', 'drag_stop', 'drag_failed',
-                "edit_activity", "delete_activity", "cut_activity", "copy_activity", "paste_activity"
+                "edit_activity", "delete_activity", "cut_activity", "copy_activity", "paste_activity",
+                "selection_changed", "select_activity_at_cursor", "view_replaced", "drag_failed"
             );
             this.init_units();
             this.init_drag();
-            this.collection.on("selection_changed", this.selection_changed, cursor);
-            this.collection.on("selection_updated add", this.select_activity_at_cursor, cursor);
-            this.collection.on("view_replaced", this.view_replaced, cursor);
+            this.collection.on("selection_changed", this.selection_changed);
+            this.collection.on("selection_updated add", this.select_activity_at_cursor);
+            this.collection.on("view_replaced", this.view_replaced);
             this.collection.on("drag_failed", this.drag_failed);
             this.$el.parent().on( "utap", $.proxy(cursor.activities_click, cursor) );
             $(window).keydown( $.proxy(cursor.key_handler, cursor) );
