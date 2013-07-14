@@ -65,6 +65,9 @@
                     }
                 }
             }
+            if(this.options.containment) {
+                this._initContainment();
+            }
         }
 
         ,start: function(e) {
