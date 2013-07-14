@@ -441,18 +441,11 @@
                 "edit_activity", "delete_activity", "cut_activity", "copy_activity", "paste_activity"
             );
             this.init_units();
+            this.init_drag();
             this.collection.on("selection_changed", this.selection_changed, cursor);
             this.collection.on("selection_updated add", this.select_activity_at_cursor, cursor);
             this.collection.on("view_replaced", this.view_replaced, cursor);
             this.collection.on("drag_failed", this.drag_failed);
-            this.$el.udraggable({
-                distance: 5,
-                grid: [this.x_scale, this.y_scale],
-                containment: 'parent',
-                start: cursor.drag_start,
-                drag:  cursor.drag_move,
-                stop:  cursor.drag_stop
-            });
             this.$el.parent().on( "utap", $.proxy(cursor.activities_click, cursor) );
             $(window).keydown( $.proxy(cursor.key_handler, cursor) );
             this.view_replaced();
@@ -465,6 +458,17 @@
             this.max_y = 24 * this.units_per_hour - 1;
             this.$el.width(this.x_scale - 2);
             this.size_cursor(1);
+        },
+        init_drag: function() {
+            var cursor = this;
+            this.$el.udraggable({
+                distance: 5,
+                grid: [this.x_scale, this.y_scale],
+                containment: 'parent',
+                start: cursor.drag_start,
+                drag:  cursor.drag_move,
+                stop:  cursor.drag_stop
+            });
         },
         view_replaced: function() {
             this.move_to(0, 9 * this.units_per_hour);
