@@ -122,6 +122,23 @@ noscript p {
   box-shadow: 1px 1px 6px 4px rgba(100, 100, 100, 0.5);
 }
 
+.cursor .resize-handle {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: none;
+  width: 100%;
+  height: 12px;
+  width: 12px;
+  background-image: url(../images/resize-handle-bg.png);
+  background-repeat: no-repeat;
+  cursor: s-resize;
+}
+
+.cursor.selection .resize-handle {
+  display: block;
+}
+
 .total-hours {
   position: absolute;
   right: 10px;
@@ -314,6 +331,9 @@ input.save {
   border: none;
   padding: 0px;
 }
+
+
+/* ###############  Tweak jQueryUI Defaults ############### */
 
 body .ui-dialog .ui-dialog-buttonpane {
   padding: 0 6px 0 0;

@@ -148,11 +148,16 @@
             this.trigger('selection_changed', this);
         },
         unselect: function() {
-            this.selected = false;
-            this.trigger('clear_selection');
+            if(this.selected) {
+                this.selected = false;
+                this.trigger('clear_selection');
+            }
         },
         trigger_drag_to: function(pos) {
             this.trigger('drag_to', pos);
+        },
+        trigger_resize_drag_to: function(size) {
+            this.trigger('resize_drag_to', size);
         },
         trigger_drag_failed: function() {
             this.trigger('drag_failed');
@@ -353,6 +358,7 @@
             this.listenTo(this.model, "selection_changed clear_selection", this.show_selection);
             this.listenTo(this.model, "drag_to", this.drag_to);
             this.listenTo(this.model, "drag_failed", this.drag_failed);
+            this.listenTo(this.model, "resize_drag_to", this.resize_drag_to);
             this.listenTo(this.model, "remove", this.remove, this);
             this.listenTo(this.model, "destroy", this.destroy);
             this.position_element();
@@ -418,6 +424,9 @@
         drag_failed: function() {
             this.$el.animate( this.css_pos(), 150 );
         },
+        resize_drag_to: function(height) {
+            this.$el.css("height", height);
+        },
         remove: function() {
             // Should be this.remove() ?  Seems to cause hard looping
             this.$el.remove();
@@ -439,10 +448,13 @@
             _.bindAll(this,
                 'drag_start', 'drag_move', 'drag_stop', 'drag_failed',
                 "edit_activity", "delete_activity", "cut_activity", "copy_activity", "paste_activity",
-                "selection_changed", "select_activity_at_cursor", "view_replaced", "drag_failed"
+                "clear_selection", "selection_changed", "select_activity_at_cursor", "drag_failed",
+                "resize_start", "resize_drag", "resize_stop",
+                "view_replaced"
             );
             this.init_units();
-            this.init_drag();
+            this.init_drags();
+            this.collection.on("clear_selection", this.clear_selection);
             this.collection.on("selection_changed", this.selection_changed);
             this.collection.on("selection_updated add", this.select_activity_at_cursor);
             this.collection.on("view_replaced", this.view_replaced);
@@ -454,13 +466,18 @@
         init_units: function() {
             this.x_scale = dim.column_width;
             this.y_scale = dim.hour_height / (60 / dim.duration_unit);
-            this.units_per_hour = 60 / dim.duration_unit;
             this.max_x = 6;
-            this.max_y = 24 * this.units_per_hour - 1;
+            this.max_y = 24 * dim.units_per_hour - 1;
             this.$el.width(this.x_scale - 2);
             this.size_cursor(1);
         },
-        init_drag: function() {
+        minutes_to_px: function(minutes) {
+            return minutes * this.y_scale / dim.duration_unit;
+        },
+        px_to_minutes: function(pixels) {
+            return pixels * dim.duration_unit / this.y_scale;
+        },
+        init_drags: function() {
             var cursor = this;
             this.$el.udraggable({
                 distance: 5,
@@ -470,15 +487,28 @@
                 drag:  cursor.drag_move,
                 stop:  cursor.drag_stop
             });
+            this.$('.resize-handle').udraggable({
+                axis: "y",
+                distance: 5,
+                grid: [1, this.y_scale],
+                start: cursor.resize_start,
+                drag:  cursor.resize_drag,
+                stop:  cursor.resize_stop
+            });
         },
         view_replaced: function() {
-            this.move_to(0, 9 * this.units_per_hour);
+            this.move_to(0, 9 * dim.units_per_hour);
         },
         size_cursor: function(h) {
-            this.$el.height((h * this.y_scale) - 2);
+            var outer_height = h * this.y_scale;
+            this.$el.height(outer_height - 2);
+            this.$('.resize-handle').css("top", outer_height - this.y_scale);
+        },
+        current_activity: function() {
+            return this.collection.current_activity;
         },
         drag_start: function(e, ui) {
-            var activity = this.collection.current_activity;
+            var activity = this.current_activity();
             if(activity) {
                 this.drag_activity = activity;
             }
@@ -509,6 +539,31 @@
         drag_failed: function() {
             this.$el.animate( this.css_pos(), 150 );
         },
+        resize_start: function() {
+            var max_px = this.minutes_to_px( this.current_activity().max_duration() ) - this.y_scale;
+            this.$('.resize-handle').udraggable("option", {
+                containment: [ 0, 0, 0, max_px ]
+            });
+        },
+        resize_drag: function(e, ui) {
+            var pos = ui.position;
+            var activity = this.current_activity();
+            if(pos && activity) {
+                var inner_height = pos.top + this.y_scale - 2;
+                this.$el.height(inner_height);
+                activity.trigger_resize_drag_to(inner_height);
+            }
+        },
+        resize_stop: function(e, ui) {
+            var pos = ui.position;
+            var activity = this.current_activity();
+            var duration = this.px_to_minutes( pos.top + this.y_scale );
+            if(activity.get("duration") !== duration) {
+                activity.set("duration", duration);
+                this.selection_changed(activity);
+                activity.deferred_save();
+            }
+        },
         move_to: function(x, y) {
             this.x = x;
             this.y = y;
@@ -526,7 +581,7 @@
             if(!pos) {
                 return;
             }
-            var activity = this.collection.current_activity;
+            var activity = this.current_activity();
             if(!activity) {
                 return;
             }
@@ -570,17 +625,21 @@
                 activity.select();
             }
             else {
-                if(this.collection.current_activity){
-                    this.collection.current_activity.unselect();
+                if(this.current_activity()){
+                    this.current_activity().unselect();
                 }
                 this.size_cursor(1);
             }
+        },
+        clear_selection: function() {
+            this.$el.removeClass("selection");
         },
         selection_changed: function(activity) {
             this.x = column_for_date[ activity.get("date") ];
             this.y = activity.get("start_time") / dim.duration_unit;
             this.position_cursor();
             this.size_cursor( activity.get("duration")  / dim.duration_unit );
+            this.$el.addClass("selection");
         },
         activities_click: function(e) {
             if(!$(e.target).hasClass('activities')) {
@@ -594,7 +653,7 @@
             if(this.collection.editor_active()) {
                 return true;
             }
-            var curr = this.collection.current_activity;
+            var curr = this.current_activity();
             if(!e.shiftKey && !e.ctrlKey) {
                 switch(e.keyCode) {
                     case keyCode.LEFT:      this.move(-1,  0);                break;
@@ -655,7 +714,7 @@
             if( $('.popup-menu-overlay').length > 0 ) {
                 return;
             }
-            var curr = this.collection.current_activity;
+            var curr = this.current_activity();
             if(curr) {
                 curr.start_activity_edit();
             }
@@ -676,14 +735,14 @@
             this.delete_activity();
         },
         copy_activity: function() {
-            var curr = this.collection.current_activity;
+            var curr = this.current_activity();
             if(curr) {
                 this.clipboard = curr.toJSON();
                 delete this.clipboard.id;
             }
         },
         paste_activity: function() {
-            if(this.collection.current_activity) {
+            if(this.current_activity()) {
                 return;
             }
             var data = this.clipboard;
@@ -704,7 +763,7 @@
             });
         },
         context_menu_items: function() {
-            var have_activity = !!this.collection.current_activity;
+            var have_activity = !!this.current_activity();
             return [
                 {
                     name:     have_activity ? "Edit" : "New Activity",
@@ -839,7 +898,8 @@
         initialise_units: function() {
             this.top  = 0;
             this.left = 0;
-            dim.duration_unit = 60 / TKSWeb.units_per_hour;
+            dim.units_per_hour = TKSWeb.units_per_hour;
+            dim.duration_unit = 60 / dim.units_per_hour;
             dim.column_width = this.$('.day-labels li:first').outerWidth();
             dim.hour_height  = this.$('.hour-labels li:nth-child(2)').outerHeight();
             dim.hour_label_width  = this.$('.hour-labels').outerWidth();
@@ -994,7 +1054,7 @@
             return unsaved_edits_message;
         },
         load_new_week: function(date) {
-            if(this.collection.current_activity) { // ensure no hanging reference
+            if(this.collection.current_activity) { // ensure no dangling reference
                 this.collection.current_activity.unselect();
             }
             $.ajax({

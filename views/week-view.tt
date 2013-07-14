@@ -5,7 +5,7 @@
 
 <div class="week-view">
   <div class="activities">
-    <div class="cursor"></div>
+    <div class="cursor"><div class="resize-handle"></div></div>
   </div>
   <div class="hour-labels">
     <ul>
