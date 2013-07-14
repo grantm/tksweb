@@ -108,7 +108,12 @@
             var top_now  = parseInt(this.$el.css('top'),  10) || 0;
             var left_now = parseInt(this.$el.css('left'), 10) || 0;
             if( (cur.top !== top_now)  ||  (cur.left !== left_now) ) {
-                this.$el.css({left: cur.left, top: cur.top});
+                if( !axis  ||  (axis === "x") ) {
+                    this.$el.css("left", cur.left);
+                }
+                if( !axis  ||  (axis === "y") ) {
+                    this.$el.css("top",  cur.top);
+                }
                 this.ui.position.left = cur.left;
                 this.ui.position.top  = cur.top;
                 this.ui.offset.left   = cur.left;
