@@ -102,13 +102,17 @@
             };
             this._applyGrid(cur);
             this._applyContainment(cur);
-            this.$el.css({left: cur.left, top: cur.top});
-            this.ui.position.left = cur.left;
-            this.ui.position.top  = cur.top;
-            this.ui.offset.left   = cur.left;
-            this.ui.offset.top    = cur.top;
-            if(this.options.drag) {
-                this.options.drag.apply(this.el, [e, this.ui]);
+            var top_now  = parseInt(this.$el.css('top'),  10) || 0;
+            var left_now = parseInt(this.$el.css('left'), 10) || 0;
+            if( (cur.top !== top_now)  ||  (cur.left !== left_now) ) {
+                this.$el.css({left: cur.left, top: cur.top});
+                this.ui.position.left = cur.left;
+                this.ui.position.top  = cur.top;
+                this.ui.offset.left   = cur.left;
+                this.ui.offset.top    = cur.top;
+                if(this.options.drag) {
+                    this.options.drag.apply(this.el, [e, this.ui]);
+                }
             }
             return this._stopPropagation(e);
         }
