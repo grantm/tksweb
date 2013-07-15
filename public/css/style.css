@@ -127,8 +127,7 @@ noscript p {
   top: 0;
   right: 0;
   display: none;
-  width: 100%;
-  height: 12px;
+  height: 11px;
   width: 12px;
   background-image: url(../images/resize-handle-bg.png);
   background-repeat: no-repeat;
@@ -136,6 +135,22 @@ noscript p {
 }
 
 .cursor.selection .resize-handle {
+  display: block;
+}
+
+.touch .cursor .resize-handle {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: none;
+  width: 60px;
+  height: 56px;
+  background-image: url(../images/resize-handle-bg-touch.png);
+  background-repeat: no-repeat;
+  cursor: s-resize;
+}
+
+.touch .cursor.selection .resize-handle {
   display: block;
 }
 

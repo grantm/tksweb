@@ -26,7 +26,10 @@
         "or Cancel if you want to try a manual sync.";
 
     var touch_device = false;
-    $(window).one('touchstart', function() { touch_device = true });
+    $(window).one('touchstart', function() {
+        touch_device = true;
+        $('body').addClass('touch');
+    });
 
     function init_wr_systems(wr_sys) {
         wr_systems = wr_sys;
