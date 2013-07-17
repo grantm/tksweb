@@ -41,6 +41,9 @@ noscript p {
   border: 1px solid #eeeeee;
   position: relative;
   overflow: hidden;
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
 }
 
 .week-view .hour-labels {
