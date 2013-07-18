@@ -157,6 +157,23 @@ noscript p {
   display: block;
 }
 
+.cursor .duration {
+  position: absolute;
+  bottom: -8px;
+  left: -1px;
+  display: none;
+  border: none;
+  border-radius: 5px;
+  padding: 2px 6px;
+  background-color: #444444;
+  color: #eeeeee;
+  font-size: 12px;
+}
+
+.cursor.resizing .duration {
+  display: block;
+}
+
 .total-hours {
   position: absolute;
   right: 10px;

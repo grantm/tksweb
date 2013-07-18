@@ -547,12 +547,15 @@
             this.$('.resize-handle').udraggable("option", {
                 containment: [ 0, 0, 0, max_px ]
             });
+            this.$el.addClass('resizing');
         },
         resize_drag: function(e, ui) {
             var pos = ui.position;
             var activity = this.current_activity();
             if(pos && activity) {
-                var inner_height = pos.top + this.y_scale - 2;
+                var height = pos.top + this.y_scale;
+                this.update_duration_tooltip( this.px_to_minutes(height) );
+                var inner_height = height - 2;
                 this.$el.height(inner_height);
                 activity.trigger_resize_drag_to(inner_height);
             }
@@ -566,6 +569,12 @@
                 this.selection_changed(activity);
                 activity.deferred_save();
             }
+            this.$el.removeClass('resizing');
+        },
+        update_duration_tooltip: function(duration) {
+            var hours = Math.floor( duration / 60 );
+            var frac  = (duration % 60) * 100 / 60;
+            this.$('.duration').text( hours + '.' + (frac + '00').substr(0,2) );
         },
         move_to: function(x, y) {
             this.x = x;
