@@ -157,9 +157,9 @@ noscript p {
   display: block;
 }
 
+.cursor .duration,
 .cursor .start-time {
   position: absolute;
-  top: -8px;
   left: -1px;
   display: none;
   border: none;
@@ -170,24 +170,16 @@ noscript p {
   font-size: 12px;
 }
 
-.cursor.udraggable-dragging .start-time {
-  display: block;
+.cursor .start-time {
+  top: -8px;
 }
 
 .cursor .duration {
-  position: absolute;
   bottom: -8px;
-  left: -1px;
-  display: none;
-  border: none;
-  border-radius: 5px;
-  padding: 2px 6px;
-  background-color: #444444;
-  color: #eeeeee;
-  font-size: 12px;
 }
 
-.cursor.resizing .duration {
+.cursor.resizing .duration,
+.cursor.udraggable-dragging .start-time {
   display: block;
 }
 
