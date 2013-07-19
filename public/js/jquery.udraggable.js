@@ -6,6 +6,9 @@
  *   http://opensource.org/licenses/MIT
  *   http://opensource.org/licenses/GPL-2.0
  *
+ * This library requires Michael S. Mikowski's unified mouse and touch
+ * event plugin: https://github.com/mmikowski/jquery.event.ue
+ *
  */
 
 (function($) {
