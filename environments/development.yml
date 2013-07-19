@@ -53,6 +53,6 @@ plugins:
 #
 #  http://jsconsole.com/?%3Alisten%20F4EFFEAD-89AD-4C98-8D44-6F6585C7E1FE
 #
-debug_match: "^192[.]168[.]87"
-debug_key: F4EFFEAD-89AD-4C98-8D44-6F6585C7E1FE
+#debug_match: "^192[.]168[.]87"
+#debug_key: F4EFFEAD-89AD-4C98-8D44-6F6585C7E1FE
 
