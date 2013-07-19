@@ -5,7 +5,11 @@
 
 <div class="week-view">
   <div class="activities">
-    <div class="cursor"><div class="resize-handle"></div><div class="duration"></div></div>
+    <div class="cursor">
+      <div class="start-time"></div>
+      <div class="duration"></div>
+      <div class="resize-handle"></div>
+    </div>
   </div>
   <div class="hour-labels">
     <ul>

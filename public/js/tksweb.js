@@ -514,12 +514,14 @@
             var activity = this.current_activity();
             if(activity) {
                 this.drag_activity = activity;
+                this.update_start_time_tooltip( this.px_to_minutes(ui.position.top) );
             }
         },
         drag_move: function(e, ui) {
             var pos = ui.position;
             if(pos && this.drag_activity) {
                 this.drag_activity.trigger_drag_to(pos);
+                this.update_start_time_tooltip( this.px_to_minutes(pos.top) );
             }
         },
         drag_stop: function(e, ui) {
@@ -570,6 +572,10 @@
                 activity.deferred_save();
             }
             this.$el.removeClass('resizing');
+        },
+        update_start_time_tooltip: function(minutes) {
+            var time = pad2( Math.floor(minutes / 60) ) + ':' + pad2( minutes % 60 );
+            this.$('.start-time').text(time);
         },
         update_duration_tooltip: function(duration) {
             var hours = Math.floor( duration / 60 );
