@@ -498,6 +498,10 @@
                 drag:  cursor.resize_drag,
                 stop:  cursor.resize_stop
             });
+            var ue_opts = this.$el.data('ue_bound');
+            if(ue_opts) {
+                ue_opts.held_tap_time = 800;
+            }
         },
         view_replaced: function() {
             this.move_to(0, 9 * dim.units_per_hour);
