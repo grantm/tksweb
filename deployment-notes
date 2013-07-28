@@ -1,8 +1,38 @@
+This app uses a number of CPAN modules.  Not all modules are available via
+Debian packages, so for expediency (i.e.: laziness) I installed all the
+dependencies direct from CPAN into a subdirectory called 'local' using
+local::lib and cpanm.  These command should do the business:
 
-perl -Mlocal::lib=/home/grant/projects/tksweb/local
-eval $(perl -I/home/grant/projects/tksweb/local/lib -Mlocal::lib=/home/grant/projects/tksweb/local)
+  sudo apt-get install liblocal-lib-perl
+  perl -Mlocal::lib=$(pwd)/local
+  eval $(perl -I$(pwd)/local/lib -Mlocal::lib=$(pwd)/local)
 
-curl -L http://cpanmin.us | perl - App::cpanminus
+  curl -L http://cpanmin.us | perl - App::cpanminus
 
-cpanm < dependencies
+  cpanm < dependencies
+
+It's probably a good idea to repeat the last command until the output looks
+error-free.
+
+To spin up a local development instance listening on port 3000, simply run:
+
+  ./bin/app.pl
+
+This will use the 'dev' database - a SQLite database in the file:
+var/db/tksweb-dev.db.  If you don't have a database, you can create one with:
+
+  sqlite3 var/db/tksweb-dev.db < data/schema-lite.sql
+
+You'll need a user account record to log in.  Unfortunately the process for
+creating a hashed password value is not yet documented - you're smart, you'll
+work something out.
+
+The development instance may do everything you need.  I've chosen to run my
+'production' environment in the 'Starman' app server with Nginx in front to
+handle SSL and client connections, proxying back to Starman on port 5001.  The
+bin/exec_starman script is intended to be called from an init script (running
+as root) to launch the Starman process as the app user, with the appropriate
+local::lib environment settings.  The file bin/init-sample should work as an
+init script once you adjust the pathnames and username.  The production
+environment uses a database file called: var/db/tksweb-dev.db
 

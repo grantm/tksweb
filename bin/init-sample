@@ -1,0 +1,127 @@
+#!/bin/bash
+### BEGIN INIT INFO
+# Provides:          tksweb-starman
+# Required-Start:    $local_fs $network $syslog $named
+# Required-Stop:     $local_fs $network $syslog $named
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# X-Interactive:     true
+# Short-Description: Start/stop server for tksweb application
+### END INIT INFO
+
+set -e
+
+APP_USER="grant"
+APP_DIR="/home/grant/projects/tksweb"
+LOG_DIR="/var/log/tksweb"
+PID_DIR="${APP_DIR}/var/run"
+PIDFILE="${PID_DIR}/prod.pid"
+
+cd "${APP_DIR}"
+
+if [ ! -d "${LOG_DIR}" ]; then
+    mkdir "${LOG_DIR}"
+    chown "${APP_USER}:${APP_USER}" "${LOG_DIR}"
+fi
+
+. /lib/lsb/init-functions
+
+test -f /etc/default/rcS && . /etc/default/rcS
+
+
+pidof_tksweb_starman() {
+    # if there is actually a tksweb-starman process whose pid is in PIDFILE,
+    # print it and return 0.
+    if [ -e "$PIDFILE" ]; then
+        PID="$(cat $PIDFILE)"
+        if test -n "$PID" && grep -q '^starman' /proc/$PID/cmdline
+        then
+            echo $PID
+            return 0
+        fi
+    fi
+    return 1
+}
+
+tksweb_starman_start() {
+    START_COMMAND="${APP_DIR}/bin/exec_starman"
+    if [ "$(id -u)" = "0" ]; then
+        START_COMMAND="su ${APP_USER} -c ${START_COMMAND}"
+    fi
+    $START_COMMAND
+}
+
+tksweb_starman_stop() {
+    PID=$(pidof_tksweb_starman) || true
+    if [ "${PID}" ]; then
+        kill $PID
+    fi
+}
+
+tksweb_starman_reload() {
+    PID=$(pidof_tksweb_starman) || true
+    if [ "${PID}" ]; then
+        kill -HUP $PID
+    fi
+}
+
+tksweb_starman_wait_stop() {
+    # running ?
+    PIDTMP=$(pidof_tksweb_starman) || true
+    if kill -0 "${PIDTMP:-}" 2> /dev/null; then
+        PID=$PIDTMP
+    fi
+
+    tksweb_starman_stop
+
+    # wait until really stopped
+    if [ -n "${PID:-}" ]; then
+        i=0
+        while kill -0 "${PID:-}" 2> /dev/null;  do
+                if [ $i = '60' ]; then
+                    break;
+                 else
+                    if [ $i = '0' ]; then
+                            echo -n " ... waiting "
+                    else
+                                  echo -n "."
+                     fi
+                    i=$(($i+1))
+                    sleep 1
+                  fi
+         done
+    fi
+}
+
+case $1 in
+    start)
+        echo "Starting tksweb-starman"
+        tksweb_starman_start
+    ;;
+    stop)
+        tksweb_starman_wait_stop
+    ;;
+    reload | restart)
+        echo "Restarting tksweb-starman"
+        tksweb_starman_wait_stop
+        tksweb_starman_start
+    ;;
+    status)
+        PID=$(pidof_tksweb_starman) || true
+        if [ -n "$PID" ]; then
+            echo "tksweb-starman is running (pid $PID)."
+            exit 0
+        else
+            echo "tksweb-starman is NOT running."
+            if [ -e "$PIDFILE" ]; then
+                exit 1
+            else
+                exit 3
+            fi
+        fi
+    ;;
+    *)
+        echo "Usage: /etc/init.d/tksweb-starman {start|stop|restart|status}"
+        exit 1
+    ;;
+esac
