@@ -1,0 +1,15 @@
+JSON
+Starman
+Template
+DateTime
+DBIx::Class
+DBIx::Class::Schema::Loader
+DateTime::Format::SQLite
+Dancer
+Dancer::Plugin::DBIC
+Test::WWW::Mechanize::Dancer
+JAITKEN/Dancer-Plugin-Passphrase-1.0.0.tar.gz
+Dancer::Plugin::CDN
+HTTP::CDN
+CSS::Minifier::XS
+JavaScript::Minifier::XS

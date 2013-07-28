@@ -1,0 +1,8 @@
+
+perl -Mlocal::lib=/home/grant/projects/tksweb/local
+eval $(perl -I/home/grant/projects/tksweb/local/lib -Mlocal::lib=/home/grant/projects/tksweb/local)
+
+curl -L http://cpanmin.us | perl - App::cpanminus
+
+cpanm < dependencies
+
