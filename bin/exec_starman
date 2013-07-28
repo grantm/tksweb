@@ -1,0 +1,26 @@
+#!/bin/bash
+#
+# Commands for launching the tksweb starman app which should be run as the
+# app user rather than as root.  Called from the init script.
+#
+
+set -e
+
+APP_DIR="/home/grant/projects/tksweb"
+LOG_DIR="/var/log/tksweb"
+PID_DIR="${APP_DIR}/var/run"
+PIDFILE="${PID_DIR}/prod.pid"
+
+cd "${APP_DIR}"
+eval "$(perl -I$APP_DIR/local/lib -Mlocal::lib=$APP_DIR/local)"
+
+test -d "${PID_DIR}" || mkdir "${PID_DIR}"
+
+starman --daemonize --pid $PIDFILE --port 5001 \
+        --workers 3 --preload-app \
+        --error-log "$LOG_DIR/error.log" \
+        --access-log "$LOG_DIR/access.log" \
+        --disable-keepalive --env production \
+        bin/app.pl
+
+exit 0
