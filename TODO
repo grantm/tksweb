@@ -1,8 +1,8 @@
-* investigate https://github.com/mmikowski/jquery.event.ue
-* make hour and day labels draggable
+* use bigger units on small screens for readability and touchability
+* mobile support: edit dialog
+* add doubletap event on touch for edit
+* make long tap delay longer
 * profile page for changing password and displaying API key
-* add activity resize drag handles
-* mobile support: long_press menu - edit, delete, copy, paste
 * reset drag position on window resize (eg: rotate)
 * disable zoom on mobile (but don't break login screen)
 * allow user to select alternate bg colour for an activity
@@ -10,8 +10,12 @@
 * initialise cursor to current time if today is in the target week
 * date picker to select week
 * pop-up help for key-bindings
-* key bindings for increase/decrease activ36pxity duration
+* key bindings for increase/decrease activity duration
 * undo ?
 * handle public holidays
 * websockets channel to advise of updates from other clients
 
+Other stuff:
+Screen size as reported by S3 phone: 360 x 567
+https://github.com/dotmaster/Touchable-jQuery-Plugin
+https://github.com/mmikowski/jquery.event.ue
