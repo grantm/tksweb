@@ -13,18 +13,10 @@
   </div>
   <div class="hour-labels">
     <ul>
-      <li></li>
-[% FOREACH h IN [1 .. 23] -%]
-      <li>[% hour(h) %]</li>
-[% END -%]
-    </ul>
+      <li></li>[% FOREACH h IN [1 .. 23] %]<li>[% hour(h) %]</li>[% END %]</ul>
   </div>
   <div class="day-labels">
-    <ul>
-[% FOREACH date = week_dates -%]
-      <li>[% date.fmt %]</li>
-[% END -%]
-    </ul>
+    <ul>[% FOREACH date = week_dates %]<li>[% date.fmt %]</li>[% END %]</ul>
   </div>
   <div class="menu"><span class="marker">&#9662;</span><ul></ul></div>
   <div class="total-hours"></div>
