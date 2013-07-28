@@ -2,6 +2,7 @@
 /Makefile.old
 /pm_to_blib
 /blib
+/local
 /tks-data
 /var
 /logs/*.log
