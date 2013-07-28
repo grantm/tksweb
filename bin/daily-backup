@@ -1,0 +1,18 @@
+#!/bin/bash
+
+set -e
+
+DB_DIR="/home/grant/projects/tksweb/var/db"
+ARCHIVE_DIR="${DB_DIR}/archive"
+DB_FILE="tksweb-prod.db";
+
+if [ ! -d "${ARCHIVE_DIR}" ]; then
+    mkdir "${ARCHIVE_DIR}"
+fi
+
+TODAY="$(date +%F)"
+
+cp "${DB_DIR}/${DB_FILE}" "${ARCHIVE_DIR}/${DB_FILE%.db}-${TODAY}.db"
+
+find "${ARCHIVE_DIR}" -type f -mtime +6 -delete
+
