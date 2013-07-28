@@ -144,7 +144,7 @@ noscript p {
 .touch .cursor .resize-handle {
   position: absolute;
   top: 0;
-  right: 0;
+  right: -1px;
   display: none;
   width: 60px;
   height: 56px;
