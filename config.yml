@@ -27,3 +27,4 @@ engines:
     start_tag: '[%'
     end_tag:   '%]'
 
+timezone: "Pacific/Auckland"

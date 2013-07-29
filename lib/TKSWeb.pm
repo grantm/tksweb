@@ -12,6 +12,7 @@ use DateTime;
 
 our $VERSION = '0.1';
 
+my $time_zone;
 
 sub User      { schema->resultset('AppUser'); }
 sub Activity  { schema->resultset('Activity'); }
@@ -94,6 +95,12 @@ get '/' => sub {
 };
 
 
+get '/server-time' => sub {
+    content_type 'text/plain';
+    return '' . _now();
+};
+
+
 get qr{^/week/?(?<date>\d\d\d\d-\d\d-\d\d)[.]json$} => sub {
     my $monday = monday_of_week( captures->{date} );
     return to_json({
@@ -172,6 +179,12 @@ any ['get', 'post'] =>
 ############################  Support Routines  ##############################
 
 
+sub _now {
+    $time_zone //= config->{timezone} || 'Pacific/Auckland';
+    return DateTime->now(time_zone => $time_zone);
+}
+
+
 sub get_user_from_login {
     my($email, $password) = @_;
 
@@ -203,7 +216,7 @@ sub user_by_api_key {
 
 
 sub monday_of_week {
-    my $dt = parse_date(shift) || DateTime->now;
+    my $dt = parse_date(shift) || _now();
     my $dow = $dt->dow;
     $dt->add( days => -1 * $dow + 1 ) if $dow != 1;
     return $dt->ymd;
