@@ -127,6 +127,33 @@ get '/server-time' => sub {
 };
 
 
+get '/password' => sub {
+    template 'password';
+};
+
+
+post '/password' => sub {
+    my $user = var 'user';
+
+    if( not passphrase( param('old_password') )->matches($user->password) ) {
+        alert "Current password not valid";
+        return template 'password';
+    }
+
+    my $new_password = param('new_password');
+    if( $new_password ne param('new_password_confirm') ) {
+        alert "New passwords don't match";
+        return template 'password';
+    }
+
+    my $pwhash = passphrase( $new_password )->generate_hash;
+    $user->password("$pwhash");  # obj overloads stringification
+    $user->update;
+    flash "Password updated";
+    redirect '/password';
+};
+
+
 get qr{^/week/?(?<date>\d\d\d\d-\d\d-\d\d)[.]json$} => sub {
     my $monday = monday_of_week( captures->{date} );
     return to_json({

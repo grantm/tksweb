@@ -43,6 +43,7 @@
     <li><a href="/export/{{sys_name}}/{{period_start}}.tks"><span class="icon">&#9783;</span>Export TKS month file for {{sys_description}}</a></li>
   {{/each}}
   <li><a id="sync-now"><span class="icon">&#8635;</span>Sync now</a></li>
+  <li><a href="/password"><span class="icon">&#9786;</span>Change password</a></li>
   <li><a href="/logout"><span class="icon">&#9746;</span>Log out</a></li>
 </script>
 
