@@ -5,7 +5,7 @@
   <link rel="shortcut icon" href="/images/tks-logo.ico">
   <link rel="apple-touch-icon image_src" href="/images/tks-logo.png">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-  <title>TKS-Web</title>
+  <title>[% title | html %]</title>
   <link rel="stylesheet" href="[% cdn_url("/css/style.css") %]">
   <link rel="stylesheet" href="[% cdn_url("/css/jquery.popupmenu.css") %]">
   <link rel="stylesheet" href="/js/jquery-ui-1.10.3/themes/base/jquery-ui.css">

@@ -23,6 +23,7 @@ sub Activity  { schema->resultset('Activity'); }
 hook before => sub {
     my $path = request->path;
     return if $path =~ m{^/cdn/};
+    var title => setting('appname');
     if( my $user = user_by_email( session('email') ) ) {
         var user => $user;
         return;
@@ -48,7 +49,9 @@ hook before_template_render => sub {
     my $vars = vars;
     $tokens->{user}  = $vars->{user};
     $tokens->{alert} = $vars->{alert};
-    $tokens->{'cdn_url'}  = \&cdn_url;
+    $tokens->{'cdn_url'}    = \&cdn_url;
+    $tokens->{'title'}      = \&get_title;
+    $tokens->{'set_title'}  = \&set_title;
     add_debug_key($tokens);
 };
 
@@ -58,6 +61,18 @@ hook before_template_render => sub {
 sub alert {
     my($message) = @_;
     var alert => $message;
+}
+
+
+sub get_title {
+    my($message) = @_;
+    return var 'title';
+}
+
+
+sub set_title {
+    my($new_title) = @_;
+    var title => $new_title;
 }
 
 
