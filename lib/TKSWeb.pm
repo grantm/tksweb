@@ -46,6 +46,11 @@ hook before => sub {
 hook before_template_render => sub {
     my $tokens = shift;
 
+    if( my $message = session('flash') ) {
+        $tokens->{flash} = $message;
+        session flash => undef;
+    }
+
     my $vars = vars;
     $tokens->{user}  = $vars->{user};
     $tokens->{alert} = $vars->{alert};
@@ -61,6 +66,12 @@ hook before_template_render => sub {
 sub alert {
     my($message) = @_;
     var alert => $message;
+}
+
+
+sub flash {
+    my($message) = @_;
+    session flash => $message;
 }
 
 

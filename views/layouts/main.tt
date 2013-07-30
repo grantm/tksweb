@@ -14,10 +14,11 @@
   [%- END -%]
 </head>
 <body>
+[% IF flash %]
+<div class="flash">[% flash | html %]</div>
+[% END %]
 [% IF alert %]
-<div class="alert">
-  [% alert %]
-</div>
+<div class="alert">[% alert | html %]</div>
 [% END %]
 [% content %]
 
