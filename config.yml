@@ -28,3 +28,5 @@ engines:
     end_tag:   '%]'
 
 timezone: "Pacific/Auckland"
+
+email_sender: "no-reply+tksweb@mclean.net.nz"
