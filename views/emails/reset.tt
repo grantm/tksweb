@@ -1,0 +1,9 @@
+Someone (possibly you) has requested a reset of your password on the
+TKS-Web application.  If you wish to proceed, simply click the link
+below:
+
+    [% reset_url %]
+
+If you did not request a password reset, simply ignore this message
+and your password will remain unchanged.
+

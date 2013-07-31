@@ -8,6 +8,7 @@ use Dancer::Plugin::CDN;
 use TKSWeb::Schema;
 
 use DateTime;
+use MIME::Lite;
 
 
 our $VERSION = '0.1';
@@ -28,7 +29,8 @@ hook before => sub {
         var user => $user;
         return;
     }
-    if( request->method eq 'POST'  and  my $api_user = user_by_api_key() ) {
+    my $method = request->method;
+    if( $method eq 'POST'  and  my $api_user = user_by_api_key() ) {
         var user => $api_user;
         return;
     }
@@ -36,7 +38,10 @@ hook before => sub {
         status 401;
         halt "Unauthorized";
     }
-    if( $path !~ m{^/(login|logout)$} ) {
+    if( $method eq 'POST'  and  $path eq '/password' ) {
+        return if session('reset_key')
+    }
+    if( $path !~ m{^/(login|logout|reset(?:/\w+)?)$} ) {
         session original_url => $path;
         return redirect '/login';
     }
@@ -87,6 +92,13 @@ sub set_title {
 }
 
 
+sub email {
+    my $args = shift;
+    my $msg = MIME::Lite->new( %$args );
+    $msg->send;
+}
+
+
 ################################  Routes  ####################################
 
 get '/login' => sub {
@@ -115,6 +127,46 @@ get '/logout' => sub {
 };
 
 
+get '/reset' => sub {
+    template 'reset';
+};
+
+
+post '/reset' => sub {
+    my $email = param('email');
+    if(not $email) {
+        alert "You must enter an email address";
+        return template 'reset';
+    }
+    if(my $user = user_by_email( $email )) {
+        my $reset_url = request->uri_base . '/reset/' . $user->set_or_get_reset_key;
+        email {
+            To      => $user->email,
+            From    => config->{email_sender},
+            Subject => "Password reset",
+            Data    => template(
+                "emails/reset",
+                { reset_url => $reset_url },
+                { layout => undef }
+            ),
+        };
+    }
+    template 'reset-confirm', { email => $email };
+};
+
+
+get '/reset/:reset_key' => sub {
+    my $reset_key = param('reset_key');
+    my $user = user_by_reset_key( $reset_key );
+    if(not $user) {
+        alert "Invalid password reset link";
+        return template "/login";
+    }
+    session reset_key => $reset_key;
+    template 'password', { reset_mode => 1 };
+};
+
+
 get '/' => sub {
     my $monday = monday_of_week();
     return redirect "/week/$monday";
@@ -135,7 +187,11 @@ get '/password' => sub {
 post '/password' => sub {
     my $user = var 'user';
 
-    if( not passphrase( param('old_password') )->matches($user->password) ) {
+    my $reset_key = session('reset_key');
+    if( $reset_key ) {
+        $user = user_by_reset_key( $reset_key );
+    }
+    elsif( not passphrase( param('old_password') )->matches($user->password) ) {
         alert "Current password not valid";
         return template 'password';
     }
@@ -143,12 +199,18 @@ post '/password' => sub {
     my $new_password = param('new_password');
     if( $new_password ne param('new_password_confirm') ) {
         alert "New passwords don't match";
-        return template 'password';
+        return template 'password', { reset_mode => $reset_key ? 1 : 0 };
+    }
+
+    if( $reset_key ) {
+        session email => $user->email;
+        session reset_key => undef;
     }
 
     my $pwhash = passphrase( $new_password )->generate_hash;
     $user->password("$pwhash");  # obj overloads stringification
     $user->update;
+
     flash "Password updated";
     redirect '/password';
 };
@@ -255,6 +317,15 @@ sub user_by_email {
     return User->search({
         email   => lc( $email ),
         status  => 'active',
+    })->first;
+}
+
+
+sub user_by_reset_key {
+    my $reset_key = shift or return;
+    return User->search({
+        reset_key => $reset_key,
+        status    => 'active',
     })->first;
 }
 

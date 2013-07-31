@@ -1,0 +1,16 @@
+[% CALL set_title('Password Reset') %]
+
+<form action="/reset" method="post">
+
+  <div class="form-input">
+    <label for="email">Email address</label>
+    <input type="text" id="email" name="email" value="[% email | html %]">
+  </div>
+
+  <div class="form-input">
+    <input type="submit" value="Continue">
+  </div>
+
+<form>
+
+<p>[ <a href="/">Home</a> ]</p>
