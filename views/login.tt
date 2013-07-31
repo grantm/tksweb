@@ -1,4 +1,4 @@
-<form method="POST">
+<form method="POST" action="/login">
 
 <label for="email">Email Address</label>
 <input type="text" class="text" id="email" name="email" value="[% email |html %]">
