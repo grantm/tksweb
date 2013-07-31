@@ -13,3 +13,4 @@ Dancer::Plugin::CDN
 HTTP::CDN
 CSS::Minifier::XS
 JavaScript::Minifier::XS
+MIME::Lite
