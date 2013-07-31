@@ -205,6 +205,7 @@ post '/password' => sub {
     if( $reset_key ) {
         session email => $user->email;
         session reset_key => undef;
+        $user->reset_key(undef);  # discard key after use
     }
 
     my $pwhash = passphrase( $new_password )->generate_hash;
