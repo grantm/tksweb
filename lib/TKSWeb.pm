@@ -99,6 +99,11 @@ sub email {
 }
 
 
+sub base_url {
+    return config->{frontend_base} || request->uri_base;
+}
+
+
 ################################  Routes  ####################################
 
 get '/login' => sub {
@@ -139,7 +144,7 @@ post '/reset' => sub {
         return template 'reset';
     }
     if(my $user = user_by_email( $email )) {
-        my $reset_url = request->uri_base . '/reset/' . $user->set_or_get_reset_key;
+        my $reset_url = base_url . '/reset/' . $user->set_or_get_reset_key;
         email {
             To      => $user->email,
             From    => config->{email_sender},

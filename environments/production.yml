@@ -1,5 +1,8 @@
 # configuration file for production environment
 
+# what URL does the front-end web server expose to the world
+frontend_base: "https://tksweb.apps.mclean.net.nz"
+
 # only log warning and error messsages
 log: "warning"
 
