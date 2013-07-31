@@ -5,8 +5,8 @@ CREATE TABLE app_user (
     email           TEXT    NOT NULL UNIQUE,
     full_name       TEXT    NOT NULL,
     password        TEXT    NOT NULL,
-    reset_key       TEXT,
-    api_key         TEXT,
+    reset_key       TEXT    NULL UNIQUE,
+    api_key         TEXT    NULL UNIQUE,
     status          TEXT    NOT NULL DEFAULT 'active',
     admin           BOOLEAN NOT NULL DEFAULT '0'
 );
