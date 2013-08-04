@@ -16,7 +16,7 @@ eval "$(perl -I$APP_DIR/local/lib -Mlocal::lib=$APP_DIR/local)"
 
 test -d "${PID_DIR}" || mkdir "${PID_DIR}"
 
-starman --daemonize --pid $PIDFILE --port 5001 \
+starman --daemonize --pid $PIDFILE --host 127.0.0.1 --port 5001 \
         --workers 3 --preload-app \
         --error-log "$LOG_DIR/error.log" \
         --access-log "$LOG_DIR/access.log" \
