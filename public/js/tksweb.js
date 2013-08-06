@@ -875,8 +875,11 @@
             this.save_activity();
         },
         save_activity: function() {
+            var wr_system_id = this.$('input[name=wr_system_id]').length > 1
+                             ? this.$('input[name=wr_system_id]:checked').val()
+                             : this.$('input[name=wr_system_id]').val();
             var success = this.collection.save_from_editor({
-                wr_system_id  : parseInt(this.$('input[name=wr_system_id]:checked').val(), 10),
+                wr_system_id  : parseInt(wr_system_id, 10),
                 wr_number   : this.$('.activity-wr input').val().trim(),
                 duration    : parseFloat(this.$('.activity-hr input').val().trim()),
                 description : this.$('.activity-dc input').val().trim()
