@@ -288,7 +288,7 @@ any ['get', 'post'] =>
     qr{^/export/(?<sys_name>\w+)/(?<date>\d\d\d\d-\d\d-\d\d)[.]tks$} => sub {
     my $sys_name  = captures->{sys_name};
     my $date      = captures->{date};
-    my $filename  = substr($date, 7) . '-' . $sys_name . '.tks';
+    my $filename  = substr($date, 0, 7) . '-' . $sys_name . '.tks';
     my $period_detail = activities_for_month_by_day($sys_name, $date)
         or return status "not_found";
     content_type 'text/plain';
