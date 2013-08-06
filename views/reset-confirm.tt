@@ -1,5 +1,5 @@
 [% CALL set_title('Password reset email sent') %]
 
-<p>An email with a password reset link has been set to: [% email | html %]</p>
+<p>An email with a password reset link has been sent to: [% email | html %]</p>
 
 <p>[ <a href="/">Home</a> ]</p>
