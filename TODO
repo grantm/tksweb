@@ -1,10 +1,11 @@
-* use bigger units on small screens for readability and touchability
-* mobile support: edit dialog
+* mobile support: better edit dialog
 * add doubletap event on touch for edit
 * make long tap delay longer
-* profile page for changing password and displaying API key
+* profile page
+  * link to change password
+  * display API key
+  * regenerate API key
 * reset drag position on window resize (eg: rotate)
-* disable zoom on mobile (but don't break login screen)
 * allow user to select alternate bg colour for an activity
 * fix next/previous when cursor is 'in space'
 * initialise cursor to current time if today is in the target week
