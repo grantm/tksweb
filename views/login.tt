@@ -1,11 +1,14 @@
-<form method="POST" action="/login">
+<form class="login" method="POST" action="/login">
 
-<label for="email">Email Address</label>
-<input type="text" class="text" id="email" name="email" value="[% email |html %]">
-<label for="password">Password</label>
-<input type="password" class="password" id="password" name="password">
-<input type="submit" value="Log In">
+  <h1>Log in to TKS-Web</h1>
+
+  <label for="email">Email Address</label>
+  <input type="text" class="text" id="email" name="email" value="[% email |html %]">
+  <label for="password">Password</label>
+  <input type="password" class="password" id="password" name="password">
+  <input type="submit" class="submit" value="Log In">
+
+  <p class="pw-reset"><a href="/reset">Forgot password?</a></p>
 
 </form>
 
-<p><a href="/reset">Forgot password?</a></p>

@@ -2,7 +2,6 @@ body {
   font-family: sans-serif;
   margin: 0;
   padding: 0;
-  overflow: hidden;
 }
 
 body * {
@@ -13,24 +12,56 @@ body * {
   list-style: none;
 }
 
-noscript {
-  display: block;
-  font-size: 130%;
-  width: 20em;
-  margin: 1.6em;
-  border: 3px solid #880000;
+a {
+  text-decoration: none;
 }
 
-noscript h1 {
+a:hover {
+  text-decoration: underline;
+}
+
+form.login {
+  width: 16em;
+  padding: 20px;
+  margin: 130px auto 50px auto;
+  color: #444444;
+  border-radius: 3px;
+  box-shadow: 1px 1px 6px 4px rgba(100, 100, 100, 0.5);
+}
+
+form.login h1 {
   font-size: 130%;
-  background-color: #880000;
-  color: #ffffff;
+  font-weight: bold;
   text-align: center;
-  padding: 4px;
+  margin: 0 0 1.5em 0;
 }
 
-noscript p {
-  margin: 1em;
+form.login label {
+  display: block;
+  width: 100%;
+  margin: 0.6em 0 0.2em 0;
+}
+
+form.login input.text,
+form.login input.password {
+  display: block;
+  width: 90%;
+  font-size: 110%;
+  padding: 4px 6px;
+}
+
+form.login input.submit {
+  font-size: 110%;
+  margin: 1em 30%;
+  padding: 0.2em 1em;
+}
+
+form.login p {
+  text-align: center;
+}
+
+p.pw-reset {
+  font-size: 90%;
 }
 
 /* ######################################################## */
@@ -288,7 +319,6 @@ noscript p {
 
 .activity p a {
   color: #000000;
-  text-decoration: none;
 }
 
 .activity:hover p a {
