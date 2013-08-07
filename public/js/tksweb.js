@@ -933,6 +933,7 @@
             this.activities_height = dim.hour_height * 24;
         },
         initialise_ui: function() {
+            $('body').css({overflow: 'hidden'});
             this.update_menu();
             this.enable_workspace_drags();
             this.resize();
