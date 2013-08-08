@@ -132,6 +132,14 @@ post '/login' => sub {
 };
 
 
+get '/help' => sub {
+    my $user = var 'user';
+    my $date = _now()->strftime('%Y-%m-01');
+    my $sample_url = base_url . "/reset/export/catalyst/$date.tks";
+    template 'help', { api_key => $user->api_key, export_url => $sample_url };
+};
+
+
 get '/logout' => sub {
     session->destroy;
     return redirect "/login";

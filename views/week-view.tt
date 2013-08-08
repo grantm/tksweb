@@ -37,6 +37,7 @@
 <script type="text/javascript" src="[% cdn_url("/js/tksweb.js")                         %]"></script>
 
 <script id="menu-template" type="text/x-handlebars-template">
+  <li><a href="/help"><span class="icon">?</span>Help</a></li>
   <li><a href="{{last_monday}}" id="week-prev"><span class="hot-key">PgUp</span><span class="icon">&#9664;</span>Previous Week</a></li>
   <li><a href="{{next_monday}}" id="week-next"><span class="hot-key">PgDn</span><span class="icon">&#9654;</span>Next Week</a></li>
   {{#each exports_by_sys }}

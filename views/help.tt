@@ -1,0 +1,127 @@
+[% CALL set_title('A quick (and ugly) guide to TKS-Web') %]
+
+<div class="help-content">
+
+  <h1>A quick (and ugly) guide to TKS-Web</h1>
+
+  <p>This web application allows you to make timekeeping entries and have them
+  saved in a database.  You can export data from the database in TKS format
+  to upload to a system such as WRMS.<p>
+
+  <p>The application is designed to work with both a desktop browser and a
+  touch-input mobile browser.  When using a desktop browser, a number of
+  keyboard shortcuts are available to speed data-entry.</p>
+
+  <h2>Cursor positioning</h2>
+
+  <p>You can move the cursor (dotted red outline) to a particular date and
+  time by:</p>
+
+  <ul>
+    <li>Clicking with the mouse</li>
+    <li>Tapping the touchscreen</li>
+    <li>Using the left, right, up and down arrow keys</li>
+  </ul>
+
+  <p>If there is already an activity at that date/time, the activity will be
+  selected.</p>
+
+  <h2>Entering &amp; editing activities</h2>
+
+  <p>You can double-click with the mouse or press the enter key to bring up the
+  dialog to either add a new activity or to edit the currently selected
+  activity.</p>
+
+  <p>On a touchscreen, press and hold the cursor until a menu appears, then
+  select the first item - either "New Activity" or "Edit Activity".</p>
+
+  <p>Support for double-tap to bring up the dialog on a touch device is planned
+  but not yet implemented.</p>
+
+  <p>Edits are saved immediately to the server (see also 'Syncing' below).</p>
+
+  <h2>Cut, copy, paste, delete</h2>
+
+  <p>Use the normal keyboard shortcuts:</p>
+
+  <ul>
+  <li>Cut &mdash; Ctrl-X</li>
+  <li>Copy &mdash; Ctrl-C</li>
+  <li>Paste &mdash; Ctrl-V</li>
+  <li>Delete &mdash; Del</li>
+  </ul>
+
+  <p>There is currently no 'Undo' operation so take care when deleting.</p>
+
+  <p>On a touchscreen, press and hold the cursor for a menu which contains all
+  of these options (desktop users can also click and hold with the mouse to get
+  the menu).</p>
+
+  <p>Note: when you paste an activity into a gap, the pasted activity may have
+  its duration shortened to allow it to fit.</p>
+
+  <h2>Moving/resizing activities</h2>
+
+  <p>Once you have selected an activity, you can drag it to a new date or time
+  (note you must click or tap to select and then click/tap a second time to
+  start the drag. A tool-tip in the top left corner of the activity will tell
+  you the start time at the current location.</p>
+
+  <p>When you release an activity at the end of a drag operation, if it
+  overlaps any other existing activity, the drag will fail and the dragged item
+  will return to its original position.</p>
+
+  <p>You can drag the lower right corner of an activity up or down to make the
+  duration shorter or longer.  A tool-tip in the lower right of the activity
+  will display the new duration as you drag.  On touch devices, the drag handle
+  is larger which makes it easier to use with your finger.</p>
+
+  <p>Normally changes are saved immediately, but when an activity is moved or
+  resized, the save is deferred a couple of seconds.</p>
+
+  <h2>Changing weeks</h2>
+
+  <p>You can use the main menu to select the next or previous week.  Or you can
+  use the following key bindings:</p>
+
+  <ul>
+  <li>Prev week &mdash; PgUp (or Ctrl-Shift-LeftArrow)</li>
+  <li>Next week &mdash; PgDn (or Ctrl-Shift-RightArrow)</li>
+  </ul>
+
+  <p>You can use Cut/Copy to grab an activity from one week, switch to another
+  week and paste a copy.</p>
+
+  <h2>Main menu</h2>
+
+  <p>A number of functions are available on the main menu in the top left
+  corner of the screen - hover with the mouse or tap on a touchscreen.
+
+  <h2>Syncing</h2>
+
+  <p>Normally, all your changes are saved immediately and you don't need to
+  worry.  However sometimes the save might fail (for example when you are using
+  your mobile browser on the train in a tunnel).  The application tracks which
+  changes have not been saved and will warn you if data would be lost by
+  navigating away from the application page.  If this happens, wait until your
+  network connectivity is restored and then select 'Sync now' from the main
+  menu.</p>
+
+  <h2>Exporting TKS files</h2>
+
+  <p>You can extract your timesheet data in TKS format using the option export
+  option on the main menu.  Since this is something you are likely to want to
+  automate, you can also request an export from a script using your personal
+  API-key to authenticate the request.</p>
+
+  <p>Here's an example (and yes, that is your actual API key):</p>
+
+  <pre>
+  wget --post-data='api-key=[% api_key %]' -O - [% export_url %]
+  </pre>
+
+  <p>Currently the export is a whole month or nothing.  This will be modified
+  soon to allow downloading a single day or a date range.  The format of the
+  export URL will change at that time.</p>
+
+</div>
