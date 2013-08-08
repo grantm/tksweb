@@ -1,8 +1,8 @@
-[% CALL set_title('A quick (and ugly) guide to TKS-Web') %]
+[% CALL set_title('A quick guide to TKS-Web') %]
 
 <div class="help-content">
 
-  <h1>A quick (and ugly) guide to TKS-Web</h1>
+  <h1>A quick guide to TKS-Web</h1>
 
   <p>This web application allows you to make timekeeping entries and have them
   saved in a database.  You can export data from the database in TKS format

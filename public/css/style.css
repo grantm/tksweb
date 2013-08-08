@@ -407,6 +407,51 @@ input.save {
 }
 
 
+/* ###############  Help page ############### */
+
+.help-content {
+  width: 700px;
+  padding: 1em;
+  margin: 1.8em auto;
+  line-height: 1.3;
+  color: #333333;
+  overflow: auto;
+}
+
+@media all and (max-width: 699px) {
+  .help-content {
+    width: 90%;
+  }
+}
+
+.help-content h1 {
+  text-align: center;
+  font-size: 150%;
+  color: #777777;
+  margin: 0.2em 0 0.6em 0;
+}
+
+.help-content h2 {
+  font-size: 120%;
+  color: #777777;
+  margin: 1em 0 0 0;
+}
+
+.help-content p {
+  margin: 0 0 1.4em 0;
+}
+
+.help-content ul {
+  margin: 1.0em;
+  list-style: disc;
+}
+
+.help-content li {
+  padding: 0 0 0 0.8em;
+  margin: 0.3em 1em;
+}
+
+
 /* ###############  Tweak jQueryUI Defaults ############### */
 
 body .ui-dialog .ui-dialog-buttonpane {
