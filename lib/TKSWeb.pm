@@ -27,6 +27,12 @@ hook before => sub {
     var title => setting('appname');
     if( my $user = user_by_email( session('email') ) ) {
         var user => $user;
+        if( $path =~ m{^/admin\b} ) {
+            if( not $user->admin ) {
+                status 401;
+                halt "Unauthorized";
+            }
+        }
         return;
     }
     my $method = request->method;
