@@ -452,6 +452,10 @@ input.save {
   list-style: disc;
 }
 
+.help-content .api-key {
+  color: #cc1717;
+}
+
 
 /* ###############  Tweak jQueryUI Defaults ############### */
 

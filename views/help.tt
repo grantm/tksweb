@@ -114,10 +114,10 @@
   automate, you can also request an export from a script using your personal
   API-key to authenticate the request.</p>
 
-  <p>Here's an example (and yes, that is your actual API key):</p>
+  <p>Here's an example (and yes, that is <em>your</em> actual API key in red):</p>
 
   <pre>
-  wget -O - --post-data='api-key=[% api_key %]' \
+  wget -O - --post-data='api-key=<span class="api-key">[% api_key %]</span>' \
       [% export_url %]
   </pre>
 
