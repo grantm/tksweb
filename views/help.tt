@@ -117,7 +117,8 @@
   <p>Here's an example (and yes, that is your actual API key):</p>
 
   <pre>
-  wget --post-data='api-key=[% api_key %]' -O - [% export_url %]
+  wget -O - --post-data='api-key=[% api_key %]' \
+      [% export_url %]
   </pre>
 
   <p>Currently the export is a whole month or nothing.  This will be modified
