@@ -459,6 +459,10 @@ input.save {
 
 /* ###############  Tweak jQueryUI Defaults ############### */
 
+body .ui-dialog {
+  box-shadow: 0 0 20px 4px #555555;
+}
+
 body .ui-dialog .ui-dialog-buttonpane {
   padding: 0 6px 0 0;
 }
