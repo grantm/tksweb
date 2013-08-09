@@ -7,6 +7,8 @@ and can be exported in [TKS](https://github.com/shoptime/tks) format.  The
 web interface is designed to be used from either a desktop or a mobile
 browser.
 
+[<img src="https://github.com/grantm/tksweb/raw/master/screenshots/tks-web-screenshot-small.png">](https://github.com/grantm/tksweb/raw/master/screenshots/tks-web-screenshot.png)
+
 Each activity will have the following attributes
 
  * start time (date + time)
@@ -33,3 +35,4 @@ The backend is implemented in Perl using the
 The TKS-Web application itself is copyright (c) 2011-2013 Grant McLean and
 released under the [AGPL3](http://opensource.org/licenses/AGPL-3.0) license.
 The libraries used are individually licensed.
+
