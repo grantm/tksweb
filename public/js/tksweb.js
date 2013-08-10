@@ -529,12 +529,14 @@
             this.update_start_time_tooltip( this.px_to_minutes(pos.top) );
         },
         drag_stop: function(e, ui) {
-            var pos = ui.position;
-            if(pos && this.drag_activity) {
+            if(! ui.position) {
+                return;
+            }
+            var new_x = Math.floor(ui.position.left / this.x_scale);
+            var new_y = Math.floor(ui.position.top  / this.y_scale);
+            if(this.drag_activity) {
                 var activity = this.drag_activity;
                 delete this.drag_activity;
-                var new_x = Math.floor(pos.left / this.x_scale);
-                var new_y = Math.floor(pos.top / this.y_scale);
                 var date = week_dates[new_x].ymd;
                 var time = new_y * dim.duration_unit;
                 if(activity.try_move_to(date, time)) {
@@ -543,6 +545,9 @@
                 else {
                     activity.trigger_drag_failed();
                 }
+            }
+            else {
+                this.move_to(new_x, new_y); // will select activity if rqd
             }
         },
         drag_failed: function() {
