@@ -35,10 +35,10 @@
   <p>On a touchscreen, press and hold the cursor until a menu appears, then
   select the first item - either "New Activity" or "Edit Activity".</p>
 
-  <p>Support for double-tap to bring up the dialog on a touch device is planned
-  but not yet implemented.</p>
-
   <p>Edits are saved immediately to the server (see also 'Syncing' below).</p>
+
+  <p class="info"><strong>Note:</strong> Support for double-tap to bring up the
+  dialog on a touch device is planned but not yet implemented.</p>
 
   <h2>Cut, copy, paste, delete</h2>
 
@@ -51,21 +51,24 @@
   <li>Delete &mdash; Del</li>
   </ul>
 
-  <p>There is currently no 'Undo' operation so take care when deleting.</p>
+  <p class="warning"><strong>Warning:</strong> There is currently no 'Undo'
+  feature, so take care when deleting.</p>
 
   <p>On a touchscreen, press and hold the cursor for a menu which contains all
   of these options (desktop users can also click and hold with the mouse to get
   the menu).</p>
 
-  <p>Note: when you paste an activity into a gap, the pasted activity may have
-  its duration shortened to allow it to fit.</p>
+  <p class="info"><strong>Note:</strong> when you paste an activity into a gap,
+  the pasted activity may have its duration shortened to allow it to fit.</p>
 
   <h2>Moving/resizing activities</h2>
 
   <p>Once you have selected an activity, you can drag it to a new date or time
-  (note you must click or tap to select and then click/tap a second time to
-  start the drag. A tool-tip in the top left corner of the activity will tell
-  you the start time at the current location.</p>
+  A tool-tip in the top left corner of the activity will tell you the start
+  time at the current location.</p>
+
+  <p class="info"><strong>Note:</strong> you must click or tap to select and
+  then click/tap a second time to start the drag.</p>
 
   <p>When you release an activity at the end of a drag operation, if it
   overlaps any other existing activity, the drag will fail and the dragged item
