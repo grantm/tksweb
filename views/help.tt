@@ -112,20 +112,21 @@
 
   <h2>Exporting TKS files</h2>
 
-  <p>You can extract your timesheet data in TKS format using the option export
-  option on the main menu.  Since this is something you are likely to want to
+  <p>You can extract your timesheet data in TKS format using the export option
+  on the main menu.  Since this is something you are likely to want to
   automate, you can also request an export from a script using your personal
   API-key to authenticate the request.</p>
 
-  <p>Here's an example (and yes, that is <em>your</em> actual API key in red):</p>
+  <p>Here's an example (and yes, that is <em>your actual API key</em> in red):</p>
 
   <pre>
   wget -O - --post-data='api-key=<span class="api-key">[% api_key %]</span>' \
       [% export_url %]
   </pre>
 
-  <p>Currently the export is a whole month or nothing.  This will be modified
-  soon to allow downloading a single day or a date range.  The format of the
-  export URL will change at that time.</p>
+  <p>The above example requests one month of activity data using a date
+  specifier of <code>/YYYY-MM.tks</code>.  You can also request a single
+  day using <code>/YYYY-MM-DD.tks</code>, or a range of days using
+  <code>/YYYY-MM-DD/YYYY-MM-DD.tks</code>.</p>
 
 </div>

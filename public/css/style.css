@@ -478,6 +478,15 @@ strong {
   font-weight: bold;
 }
 
+p code {
+  font-family: monospace;
+  font-size: 114%;
+  background-color: #eeeeee;
+  border: 1px solid #cccccc;
+  border-radius: 3px;
+  padding: 0px 3px;
+}
+
 /* ###############  Tweak jQueryUI Defaults ############### */
 
 body .ui-dialog {

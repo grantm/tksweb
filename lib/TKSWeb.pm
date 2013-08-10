@@ -135,7 +135,8 @@ post '/login' => sub {
 get '/help' => sub {
     my $user = var 'user';
     my $date = _now()->strftime('%Y-%m');
-    my $sample_url = base_url . "/export/catalyst/$date.tks";
+    my $sysname = first_wr_system()->name;
+    my $sample_url = base_url . "/export/$sysname/$date.tks";
     template 'help', { api_key => $user->api_key, export_url => $sample_url };
 };
 
@@ -423,6 +424,15 @@ sub wr_system_by_name {
     return $user->wr_systems->search({
         name => $system_name,
     })->first;
+}
+
+
+sub first_wr_system {
+    my $user = var 'user';
+    return $user->wr_systems->search(
+        {},
+        { order_by => 'wr_system_id' }
+    )->first;
 }
 
 
