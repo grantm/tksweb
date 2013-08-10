@@ -3,7 +3,7 @@
     wr_num = format('%-7u');
     wr_dur = format('%5.2f');
 -%]
-# Export from TKSWeb for [% wr_system %], month starting: [% month_start %]
+# Export from TKSWeb for [% wr_system %], for [% period_title %]
 
 [% FOREACH day = days -%]
 [% day.date %] # [% day.dow %]
