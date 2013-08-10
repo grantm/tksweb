@@ -525,8 +525,8 @@
             var pos = ui.position;
             if(pos && this.drag_activity) {
                 this.drag_activity.trigger_drag_to(pos);
-                this.update_start_time_tooltip( this.px_to_minutes(pos.top) );
             }
+            this.update_start_time_tooltip( this.px_to_minutes(pos.top) );
         },
         drag_stop: function(e, ui) {
             var pos = ui.position;
