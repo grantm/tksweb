@@ -940,12 +940,12 @@
             this.set_initial_scroll();
         },
         wr_systems_for_exports: function() {
-            var period_start = this.monday.replace(/\d\d$/, '01');
+            var month = this.monday.replace(/-\d\d$/, '');
             return _.map(wr_systems, function(sys) {
                 return {
                     sys_name: sys.name,
                     sys_description: sys.description,
-                    period_start: period_start
+                    month: month
                 }
             });
         },
