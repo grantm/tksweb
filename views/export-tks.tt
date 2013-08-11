@@ -8,6 +8,6 @@
 [% FOREACH day = days -%]
 [% day.date %] # [% day.dow %]
 [%   FOREACH act = day.activities -%]
-[%-     wr_num(act.wr_number) %] [% wr_dur(act.duration) %]  [% act.description %]
+[%-     IF act.wr_number %][% wr_num(act.wr_number) %][% ELSE %]#????? [% END%] [% wr_dur(act.duration) %]  [% act.description %]
 [%   END %]
 [% END %]
