@@ -3,7 +3,7 @@ Debian packages, so for expediency (i.e.: laziness) I installed all the
 dependencies direct from CPAN into a subdirectory called 'local' using
 local::lib and cpanm.  These command should do the business:
 
-  sudo apt-get install liblocal-lib-perl
+  sudo apt-get install liblocal-lib-perl sqlite3
   perl -Mlocal::lib=$(pwd)/local
   eval $(perl -I$(pwd)/local/lib -Mlocal::lib=$(pwd)/local)
 
@@ -14,18 +14,37 @@ local::lib and cpanm.  These command should do the business:
 It's probably a good idea to repeat the last command until the output looks
 error-free.
 
+Create some directories:
+
+  mkdir -p var/db
+  mkdir -p var/dev-sessions
+
+Create an initial development database:
+
+  sqlite3 var/db/tksweb-dev.db < data/schema-lite.sql
+
+You'll need a user account record to log in.  Edit data/add_user.sql to add
+an account with your email address, full name and a random hex string in the
+api_key column.  Then run it with:
+
+  sqlite3 var/db/tksweb-dev.db < data/add_user.sql
+
 To spin up a local development instance listening on port 3000, simply run:
 
   ./bin/app.pl
 
-This will use the 'dev' database - a SQLite database in the file:
-var/db/tksweb-dev.db.  If you don't have a database, you can create one with:
+And browse to it on http://localhost:3000/
 
-  sqlite3 var/db/tksweb-dev.db < data/schema-lite.sql
+Use the password reset link to set up a new password.  If for some reason email
+delivery is not set up on your host, the password reset email will not be
+delivered, but you can fake it by browsing to:
 
-You'll need a user account record to log in.  Unfortunately the process for
-creating a hashed password value is not yet documented - you're smart, you'll
-work something out.
+  http://localhost:3000/reset/XXXXX
+
+Where XXXXX is the random hex string that the app put in the 'reset_key' column
+in the database which you can read with this command:
+
+  echo "SELECT reset_key FROM app_user;" | sqlite3 var/db/tksweb-dev.db
 
 The development instance may do everything you need.  I've chosen to run my
 'production' environment in the 'Starman' app server with Nginx in front to
