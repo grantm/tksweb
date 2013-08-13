@@ -360,6 +360,7 @@
         },
 
         initialize: function() {
+            this.model.view = this;
             this.week_view = this.model.collection.view;
             this.listenTo(this.model, "change:wr_number change:description", this.render);
             this.listenTo(this.model, "change:date change:start_time", this.position_element);
@@ -440,9 +441,11 @@
         },
         remove: function() {
             this.$el.remove();
+            delete this.model.view;
         },
         destroy: function() {
             this.$el.remove();
+            delete this.model.view;
         }
     });
 
