@@ -431,7 +431,6 @@
             this.$el.css("height", height);
         },
         remove: function() {
-            // Should be this.remove() ?  Seems to cause hard looping
             this.$el.remove();
         },
         destroy: function() {
