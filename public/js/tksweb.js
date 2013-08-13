@@ -681,7 +681,16 @@
             this.position_cursor();
             this.size_cursor( activity.get("duration")  / dim.duration_unit );
             this.$el.addClass("selection");
-            this.$('.activity-shadow').html( activity.view.activity_html() );
+            this.$('.activity-shadow').html( this.activity_view_html() );
+        },
+        activity_view_html: function() {
+            if(this.current_activity()) {
+                var activity = this.current_activity();
+                if(activity.view) {
+                    return activity.view.activity_html();
+                }
+            }
+            return '';
         },
         activities_click: function(e) {
             if(!$(e.target).hasClass('activities')) {
