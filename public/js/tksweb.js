@@ -7,6 +7,14 @@
  *   http://www.opensource.org/licenses/mit-license.php
  *   http://www.gnu.org/licenses/gpl.html
  *
+ * Table of contents for classes defined in this file
+ *
+ *    Activity
+ *    Activities
+ *    ActivityView
+ *    ActivityCursor
+ *    ActivityEditor
+ *    WeekView
  */
 
 (function($) {
