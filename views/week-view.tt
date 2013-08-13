@@ -6,6 +6,7 @@
 <div class="week-view">
   <div class="activities">
     <div class="cursor">
+      <div class="activity-shadow"></div>
       <div class="start-time"></div>
       <div class="duration"></div>
       <div class="resize-handle"></div>

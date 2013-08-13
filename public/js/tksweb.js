@@ -409,6 +409,9 @@
         week_view: function() {
             return this.collection.view;
         },
+        activity_html: function() {
+            return this.$el.html();
+        },
         select_activity: function() {
             this.model.select();
         },
@@ -670,6 +673,7 @@
         },
         clear_selection: function() {
             this.$el.removeClass("selection");
+            this.$('.activity-shadow').html('');
         },
         selection_changed: function(activity) {
             this.x = column_for_date[ activity.get("date") ];
@@ -677,6 +681,7 @@
             this.position_cursor();
             this.size_cursor( activity.get("duration")  / dim.duration_unit );
             this.$el.addClass("selection");
+            this.$('.activity-shadow').html( activity.view.activity_html() );
         },
         activities_click: function(e) {
             if(!$(e.target).hasClass('activities')) {

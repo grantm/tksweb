@@ -293,16 +293,24 @@ p.pw-reset {
 .activity {
   position: absolute;
   width: 198px;
-  font-size: 13.5px;
   border: 1px solid #cccccc;
   background-color: #ffffcc;
-  overflow: hidden;
   background-image: -moz-linear-gradient(top, rgba(255,255,255,0.6) 0, rgba(255,255,255,0) 40px);
   background-image: -webkit-linear-gradient(top, rgba(255,255,255,0.6) 0,rgba(255,255,255,0) 40px);
 }
 
+.activity,
+.cursor {
+  font-size: 13.5px;
+  overflow: hidden;
+}
+
 .activity.selected {
   z-index: 5;
+}
+
+.activity.selected * {
+  visibility: hidden;
 }
 
 .activities .activity.dirty {
@@ -313,21 +321,25 @@ p.pw-reset {
   background-color: #ffddcc;
 }
 
-.activity p {
+.activity p,
+.activity-shadow p {
   padding: 2px 4px;
   cursor: default;
 }
 
-.activity p a {
+.activity p a,
+.activity-shadow p a {
   color: #000000;
 }
 
-.activity:hover p a {
+.activity:hover p a,
+.cursor:hover p a {
   color: #0000ff;
   text-decoration: underline;
 }
 
-.activity p em {
+.activity p em,
+.activity-shadow p em {
   color: #777777;
 }
 
