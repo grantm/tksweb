@@ -300,9 +300,13 @@ p.pw-reset {
 }
 
 .activity,
-.cursor {
+.activity-shadow {
   font-size: 13.5px;
   overflow: hidden;
+}
+
+.activity-shadow {
+  height: 100%;
 }
 
 .activity.selected {
