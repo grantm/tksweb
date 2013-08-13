@@ -9,7 +9,7 @@ local::lib and cpanm.  These command should do the business:
 
   curl -L http://cpanmin.us | perl - App::cpanminus
 
-  cpanm < dependencies
+  cpanm --installdeps .
 
 It's probably a good idea to repeat the last command until the output looks
 error-free.
