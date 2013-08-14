@@ -155,7 +155,7 @@
             }
         },
         select: function() {
-            var curr = this.collection.current_activity;
+            var curr = this.collection && this.collection.current_activity;
             if(curr && curr !== this) {
                 curr.unselect();
             }
