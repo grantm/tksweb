@@ -155,8 +155,14 @@
             }
         },
         select: function() {
-            this.selected = true;
-            this.trigger('selection_changed', this);
+            var curr = this.collection.current_activity;
+            if(curr && curr !== this) {
+                curr.unselect();
+            }
+            if(!this.selected) {
+                this.selected = true;
+                this.trigger('selection_changed', this);
+            }
         },
         unselect: function() {
             if(this.selected) {
@@ -239,9 +245,6 @@
             this.last_validation_error = activity.validationError;
         },
         selection_changed: function(new_selection) {
-            if(this.current_activity && this.current_activity!== new_selection) {
-                this.current_activity.unselect();
-            }
             this.current_activity = new_selection;
         },
         clear_selection: function() {
