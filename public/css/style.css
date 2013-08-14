@@ -317,6 +317,7 @@ p.pw-reset {
   visibility: hidden;
 }
 
+.activity-shadow.dirty,
 .activities .activity.dirty {
   opacity: 0.5;
 }
