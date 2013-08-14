@@ -367,6 +367,7 @@
             this.listenTo(this.model, "change:duration", this.size_element);
             this.listenTo(this.model, "change:wr_number change:wr_system_id", this.apply_colour);
             this.listenTo(this.model, "change sync", this.show_dirty);
+            this.listenTo(this.model, "change sync selection_changed", this.shadow_render);
             this.listenTo(this.model, "selection_changed clear_selection", this.show_selection);
             this.listenTo(this.model, "drag_to", this.drag_to);
             this.listenTo(this.model, "drag_failed", this.drag_failed);
@@ -379,12 +380,23 @@
         },
 
         render: function() {
+            this.render_activity_body( this.$el );
+            return this;
+        },
+        render_activity_body: function($target) {
             var context = this.model.for_template();
-            this.$el.html( this.week_view.activity_template(context) );
-            if( this.el.parentNode ) {  // content has no height until added to DOM
+            $target.html( this.week_view.activity_template(context) );
+            if( $target[0].parentNode ) {  // content has no height until added to DOM
                 this.check_overflow();
             }
-            return this;
+        },
+        shadow_render: function() {
+            if(!this.model.selected) {
+                return;
+            }
+            var $target = $('.cursor .activity-shadow');
+            this.render_activity_body( $target );
+            $target.toggleClass('dirty', this.model.is_dirty());
         },
         position_element: function() {
             this.$el.css( this.css_pos() );
@@ -681,7 +693,6 @@
             this.position_cursor();
             this.size_cursor( activity.get("duration")  / dim.duration_unit );
             this.$el.addClass("selection");
-            this.$('.activity-shadow').html( this.activity_view_html() );
         },
         activity_view_html: function() {
             if(this.current_activity()) {
