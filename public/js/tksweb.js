@@ -1019,8 +1019,8 @@
             });
         },
         resize: function() {
-            this.app_width  = Math.min(this.activities_width, window.innerWidth);
-            this.app_height = Math.min(this.activities_height, window.innerHeight);
+            this.app_width  = Math.min(this.activities_width + dim.hour_label_width, window.innerWidth);
+            this.app_height = Math.min(this.activities_height + dim.day_label_height, window.innerHeight);
             this.$el.width( this.app_width ).height( this.app_height );
             this.set_drag_constraints();
         },
