@@ -383,22 +383,19 @@
         },
 
         render: function() {
-            this.render_activity_body( this.$el );
-            return this;
-        },
-        render_activity_body: function($target) {
             var context = this.model.for_template();
-            $target.html( this.week_view.activity_template(context) );
-            if( $target[0].parentNode ) {  // content has no height until added to DOM
+            this.$el.html( this.week_view.activity_template(context) );
+            if( this.el.parentNode ) {  // content has no height until added to DOM
                 this.check_overflow();
             }
+            return this;
         },
         shadow_render: function() {
             if(!this.model.selected) {
                 return;
             }
             var $target = $('.cursor .activity-shadow');
-            this.render_activity_body( $target );
+            $target.html( this.$el.html() );
             $target.toggleClass('dirty', this.model.is_dirty());
         },
         position_element: function() {
@@ -414,6 +411,8 @@
         size_element: function() {
             var activity = this.model;
             this.$el.height(activity.get('duration') * dim.hour_height / 60 - 2);
+            this.render();
+            this.shadow_render();
         },
         check_overflow: function() {
             var $p = this.$('p');
