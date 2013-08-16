@@ -6,7 +6,7 @@ requires 'DBIx::Class::Schema::Loader';
 requires 'DateTime::Format::SQLite';
 requires 'Dancer';
 requires 'Dancer::Plugin::DBIC';
-requires 'Dancer::Plugin::Passphrase', '>= 1.00';
+requires 'Dancer::Plugin::Passphrase', '<= 1.00';
 requires 'Dancer::Plugin::CDN';
 requires 'CSS::Minifier::XS';
 requires 'JavaScript::Minifier::XS';
