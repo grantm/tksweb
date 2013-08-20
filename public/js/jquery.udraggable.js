@@ -2,6 +2,8 @@
  * jQuery udraggable plugin v0.1.0
  * Copyright (c) 2013 Grant McLean (grant@mclean.net.nz)
  *
+ * Homepage: https://github.com/grantm/jquery-udraggable
+ *
  * Dual licensed under the MIT and GPL (v2.0 or later) licenses:
  *   http://opensource.org/licenses/MIT
  *   http://opensource.org/licenses/GPL-2.0
