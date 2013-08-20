@@ -9,6 +9,7 @@
 
 body {
   font-family: sans-serif;
+  font-size: 16px;
   margin: 0;
   padding: 0;
 }
@@ -233,6 +234,10 @@ p.pw-reset {
   top: 0;
   left: 0;
   z-index: 30;
+}
+
+.touch .menu {
+  font-size: 20px;
 }
 
 .menu .marker {
