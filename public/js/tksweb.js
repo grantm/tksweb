@@ -615,8 +615,8 @@
         },
         update_duration_tooltip: function(duration) {
             var hours = Math.floor( duration / 60 );
-            var frac  = (duration % 60) * 100 / 60;
-            this.$('.duration').text( hours + '.' + (frac + '00').substr(0,2) );
+            var frac  = Math.floor( (duration % 60) * 100 / 60 );
+            this.$('.duration').text( hours + '.' + ('0' + frac).substr(-2,2) );
         },
         move_to: function(x, y) {
             this.x = x;
