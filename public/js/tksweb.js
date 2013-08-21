@@ -141,7 +141,7 @@
             if(attr.start_time < 0  ||  attr.start_time >= end_of_day) {
                 return "Invalid start time - expected minutes value in range 0-" + end_of_day;
             }
-            if(typeof(attr.duration) !== "number") {
+            if(isNaN(attr.duration)  ||  typeof(attr.duration) !== "number") {
                 return "Invalid duration - must be a number";
             }
             if(attr.duration < dim.duration_unit) {
