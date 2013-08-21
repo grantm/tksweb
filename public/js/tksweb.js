@@ -71,6 +71,10 @@
         }
     };
 
+    function duration_as_hmm(minutes) {
+        return '' + Math.floor( minutes / 60 ) + ':' + pad2(minutes % 60);
+    }
+
     function pad2(num) {
         return num < 10 ? '0' + num : '' + num;
     }
@@ -614,9 +618,7 @@
             this.$('.start-time').text(time);
         },
         update_duration_tooltip: function(duration) {
-            var hours = Math.floor( duration / 60 );
-            var frac  = Math.floor( (duration % 60) * 100 / 60 );
-            this.$('.duration').text( hours + '.' + ('0' + frac).substr(-2,2) );
+            this.$('.duration').text( duration_as_hmm(duration) );
         },
         move_to: function(x, y) {
             this.x = x;
