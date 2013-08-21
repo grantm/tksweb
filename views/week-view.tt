@@ -62,7 +62,7 @@
   <input type="hidden" name="wr_system_id" value="{{wr_system_id}}">
 {{/if}}
   <div class="activity-wr"><label>WR Number</label><input type="number" value="{{wr_number}}"></div>
-  <div class="activity-hr"><label>Hours</label><input type="number" value="{{duration}}" min="0.25" max="24" step="0.25" required></div>
+  <div class="activity-hr"><label>Hours</label><input type="text" value="{{duration}}" min="0.25" max="24" step="0.25" required></div>
   <div class="activity-dc"><label>Activity Description</label><input type="text" value="{{description}}" required></div>
   <input type="submit" class="save" name="save" value="Save" hidefocus="true" tabindex="-1">
 </script>
