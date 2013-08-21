@@ -35,6 +35,10 @@
   <p>On a touchscreen, press and hold the cursor until a menu appears, then
   select the first item - either "New Activity" or "Edit Activity".</p>
 
+  <p>You must enter a duration (H:MM or decimal format) and a description,
+  but you can omit the WR Number initially and then come back and add it
+  later.</p>
+
   <p>Edits are saved immediately to the server (see also 'Syncing' below).</p>
 
   <p class="info"><strong>Note:</strong> Support for double-tap to bring up the
@@ -63,7 +67,7 @@
 
   <h2>Moving/resizing activities</h2>
 
-  <p>Once you have selected an activity, you can drag it to a new date or time
+  <p>Once you have selected an activity, you can drag it to a new date or time.
   A tool-tip in the top left corner of the activity will tell you the start
   time at the current location.</p>
 
