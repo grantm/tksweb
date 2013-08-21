@@ -188,7 +188,7 @@
         },
         for_edit_dialog: function() {
             var data = this.toJSON();
-            data.duration = data.duration / 60;
+            data.duration = duration_as_hmm( data.duration ).replace(/:00$/, '');
             add_wr_systems(data);
             return data;
         },
@@ -330,7 +330,6 @@
         },
         save_from_editor: function(data) {
             var activity = this.current_activity;
-            data.duration = Math.floor(4 * data.duration) * 15;
             if(!activity) {
                 data.date = this.new_activity.date;
                 data.start_time = this.new_activity.start_time;
@@ -922,16 +921,41 @@
             var wr_system_id = this.$('input[name=wr_system_id]').length > 1
                              ? this.$('input[name=wr_system_id]:checked').val()
                              : this.$('input[name=wr_system_id]').val();
+            var duration = this.parse_duration( this.$('.activity-hr input').val().trim() );
+            if( isNaN(duration) ) {
+                return;
+            };
             var success = this.collection.save_from_editor({
                 wr_system_id  : parseInt(wr_system_id, 10),
                 wr_number   : this.$('.activity-wr input').val().trim(),
-                duration    : parseFloat(this.$('.activity-hr input').val().trim()),
+                duration    : this.quantise_duration( duration ),
                 description : this.$('.activity-dc input').val().trim()
             });
             if(success) {
                 return this.close();
             }
             alert(this.collection.last_validation_error);
+        },
+        parse_duration: function(str) {
+            if( str.match(/^([012]?\d):(\d\d)$/) ) {
+                var hours   = parseInt( RegExp.$1, 10);
+                var minutes = parseInt( RegExp.$2, 10);
+                if(minutes > 59) {
+                    alert('Minutes must be 0-59');
+                    return NaN;
+                }
+                return hours * 60 + minutes;
+            }
+            var duration = parseFloat( str );
+            if( isNaN(duration) ) {
+                alert("Duration must be hours (e.g.: 1.5)\nor H:MM (e.g.: 1:30)");
+                return NaN;
+            }
+            return duration * 60;
+        },
+        quantise_duration: function(minutes) {
+            var units = Math.floor( minutes / dim.duration_unit + 0.5 );
+            return units * dim.duration_unit;
         }
     });
 
