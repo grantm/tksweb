@@ -21,7 +21,7 @@
     'use strict';
 
     var TKSWeb = window.TKSWeb = {
-        units_per_hour: 4
+        interval_size_minutes: 15
     };
     var dim = {};
     var keyCode = $.ui.keyCode;
@@ -965,8 +965,8 @@
         initialise_units: function() {
             this.top  = 0;
             this.left = 0;
-            dim.units_per_hour = TKSWeb.units_per_hour;
-            dim.duration_unit = 60 / dim.units_per_hour;
+            dim.duration_unit = TKSWeb.interval_size_minutes;
+            dim.units_per_hour = 60 / dim.duration_unit;
             dim.column_width = this.$('.day-labels li:first').outerWidth();
             dim.hour_height  = this.$('.hour-labels li:nth-child(2)').outerHeight();
             dim.hour_label_width  = this.$('.hour-labels').outerWidth();
