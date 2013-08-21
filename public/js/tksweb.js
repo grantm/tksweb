@@ -485,7 +485,7 @@
             this.init_units();
             this.init_drags();
             this.collection.on("clear_selection", this.clear_selection);
-            this.collection.on("selection_changed", this.selection_changed);
+            this.collection.on("selection_changed change:duration", this.selection_changed);
             this.collection.on("selection_updated add", this.select_activity_at_cursor);
             this.collection.on("view_replaced", this.view_replaced);
             this.collection.on("drag_failed", this.drag_failed);
