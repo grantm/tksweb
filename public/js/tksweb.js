@@ -968,6 +968,7 @@
             "click  #sync-now": "sync_now"
         },
         initialize: function(options) {
+            _.bindAll(this, 'resize', 'before_unload', 'update_week_view');
             this.set_dates(options.dates);
             this.compile_templates();
             this.initialise_units();
@@ -975,8 +976,8 @@
             this.collection.on('add', this.add_activity, this);
             this.collection.on("cursor_move", this.scroll_to_show_cursor, this);
             this.listenTo(this.collection, "add remove change:duration", this.show_total_hours);
-            $(window).resize( $.proxy(this.resize, this) );
-            $(window).on("beforeunload", $.proxy(this.before_unload, this) );
+            $(window).on("resize", this.resize);
+            $(window).on("beforeunload", this.before_unload);
         },
         set_dates: function(dates) {
             init_week_dates(dates.week_dates);
@@ -1155,7 +1156,7 @@
             $.ajax({
                 url: "/week/" + date + ".json",
                 dataType: 'json',
-                success: $.proxy(this.update_week_view, this)
+                success: this.update_week_view
             });
             this.collection.remove( this.collection.toArray() );
             history.pushState(null, null, '/week/' + date);
