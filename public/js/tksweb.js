@@ -97,12 +97,17 @@
             });
         },
         set_dirty: function(){
+            // Don't mark dirty when ajax response for initial save sets ID
+            var names = Object.keys(this.changed).join(',');
+            if(names === 'id') {
+                return;
+            }
             // Stored directly in attributes so that a) it doesn't trigger 'change'
             // event and b) so it does get sent to the server
             this.attributes.sync_id++;
         },
         clear_dirty: function(model, resp){
-            if((resp.sync_id === 0) || (resp.sync_id === this.attributes.sync_id)) {
+            if(resp.sync_id === this.attributes.sync_id) {
                 this.attributes.sync_id = 0;
             }
         },
