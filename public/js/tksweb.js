@@ -91,8 +91,10 @@
         },
         initialize: function() {
             _.bindAll(this, 'run_deferred_save');
-            this.on("change", this.set_dirty);
-            this.on("sync", this.clear_dirty);
+            this.on({
+                'change'  : this.set_dirty
+               ,'sync'    : this.clear_dirty
+            });
         },
         set_dirty: function(){
             // Stored directly in attributes so that a) it doesn't trigger 'change'
@@ -237,9 +239,11 @@
         url: '/activity',
 
         initialize: function() {
-            this.on("invalid", this.validation_failed);
-            this.on("selection_changed", this.selection_changed);
-            this.on("clear_selection", this.clear_selection);
+            this.on({
+                'invalid'           : this.validation_failed
+               ,'selection_changed' : this.selection_changed
+               ,'clear_selection'   : this.clear_selection
+            });
         },
         comparator: function(activity) {
             return activity.get("date") + ' ' +
@@ -361,25 +365,32 @@
         className: 'activity',
 
         events: {
-            "utap": "select_activity",
-            "uheld.uheld": "select_activity"
+            'utap'        : 'select_activity'
+           ,'uheld.uheld' : 'select_activity'
         },
 
         initialize: function() {
             this.model.view = this;
             this.week_view = this.model.collection.view;
-            this.listenTo(this.model, "change:wr_number change:description", this.render);
-            this.listenTo(this.model, "change:date change:start_time", this.position_element);
-            this.listenTo(this.model, "change:duration", this.size_element);
-            this.listenTo(this.model, "change:wr_number change:wr_system_id", this.apply_colour);
-            this.listenTo(this.model, "change sync", this.show_dirty);
-            this.listenTo(this.model, "change sync selection_changed", this.shadow_render);
-            this.listenTo(this.model, "selection_changed clear_selection", this.show_selection);
-            this.listenTo(this.model, "drag_to", this.drag_to);
-            this.listenTo(this.model, "drag_failed", this.drag_failed);
-            this.listenTo(this.model, "resize_drag_to", this.resize_drag_to);
-            this.listenTo(this.model, "remove", this.remove);
-            this.listenTo(this.model, "destroy", this.destroy);
+            _.bindAll(this,
+                'render', 'position_element', 'size_element', 'apply_colour',
+                'show_dirty', 'shadow_render', 'show_selection', 'drag_to',
+                'drag_failed', 'resize_drag_to', 'remove', 'destroy'
+            );
+            this.model.on({
+                'change:wr_number change:description'   : this.render
+               ,'change:date change:start_time'         : this.position_element
+               ,'change:duration'                       : this.size_element
+               ,'change:wr_number change:wr_system_id'  : this.apply_colour
+               ,'change sync'                           : this.show_dirty
+               ,'change sync selection_changed'         : this.shadow_render
+               ,'selection_changed clear_selection'     : this.show_selection
+               ,'drag_to'                               : this.drag_to
+               ,'drag_failed'                           : this.drag_failed
+               ,'resize_drag_to'                        : this.resize_drag_to
+               ,'remove'                                : this.remove
+               ,'destroy'                               : this.destroy
+            });
             this.position_element();
             this.size_element();
             this.apply_colour();
@@ -472,27 +483,29 @@
 
     var ActivityCursor = Backbone.View.extend({
         events: {
-            "dblclick": "edit_activity"
-            ,"uheld": "show_menu"
+            'dblclick'  : 'edit_activity'
+           ,'uheld'     : 'show_menu'
         },
 
         initialize: function() {
             var cursor = this;
             _.bindAll(this,
                 'drag_start', 'drag_move', 'drag_stop', 'drag_failed',
-                "edit_activity", "delete_activity", "cut_activity", "copy_activity", "paste_activity",
-                "clear_selection", "selection_changed", "select_activity_at_cursor", "drag_failed",
-                "key_handler", "resize_start", "resize_drag", "resize_stop", "activities_click",
-                "view_replaced"
+                'edit_activity', 'delete_activity', 'cut_activity', 'copy_activity', 'paste_activity',
+                'clear_selection', 'selection_changed', 'select_activity_at_cursor', 'drag_failed',
+                'key_handler', 'resize_start', 'resize_drag', 'resize_stop', 'activities_click',
+                'view_replaced'
             );
             this.init_units();
             this.init_drags();
-            this.collection.on("clear_selection", this.clear_selection);
-            this.collection.on("selection_changed change:duration", this.selection_changed);
-            this.collection.on("selection_updated add", this.select_activity_at_cursor);
-            this.collection.on("view_replaced", this.view_replaced);
-            this.collection.on("drag_failed", this.drag_failed);
-            this.$el.parent().on("utap", cursor.activities_click);
+            this.collection.on({
+                'clear_selection'                   : this.clear_selection
+               ,'selection_changed change:duration' : this.selection_changed
+               ,'selection_updated add'             : this.select_activity_at_cursor
+               ,'view_replaced'                     : this.view_replaced
+               ,'drag_failed'                       : this.drag_failed
+            });
+            this.$el.parent().on('utap', cursor.activities_click);
             $(window).keydown(cursor.key_handler);
             this.view_replaced();
         },
@@ -963,25 +976,29 @@
 
     var WeekView = Backbone.View.extend({
         events: {
-            "mousewheel .activities": "mousewheel",
-            "click  #week-prev": "previous_week",
-            "click  #week-next": "next_week",
-            "click  #sync-now": "sync_now"
+            'mousewheel .activities'  : 'mousewheel'
+           ,'click      #week-prev'   : 'previous_week'
+           ,'click      #week-next'   : 'next_week'
+           ,'click      #sync-now'    : 'sync_now'
         },
         initialize: function(options) {
             _.bindAll(this,
-                'add_activity', 'scroll_to_show_cursor',
-                'resize', 'before_unload', 'update_week_view'
+                'add_activity', 'scroll_to_show_cursor', 'resize', 'show_total_hours',
+                'before_unload', 'update_week_view'
             );
             this.set_dates(options.dates);
             this.compile_templates();
             this.initialise_units();
             this.initialise_ui();
-            this.collection.on('add', this.add_activity);
-            this.collection.on("cursor_move", this.scroll_to_show_cursor);
-            this.listenTo(this.collection, "add remove change:duration", this.show_total_hours);
-            $(window).on("resize", this.resize);
-            $(window).on("beforeunload", this.before_unload);
+            this.collection.on({
+                'add'                         : this.add_activity
+               ,'cursor_move'                 : this.scroll_to_show_cursor
+               ,'add remove change:duration'  : this.show_total_hours
+            });
+            $(window).on({
+                'resize'        : this.resize
+               ,'beforeunload'  : this.before_unload
+            });
         },
         set_dates: function(dates) {
             init_week_dates(dates.week_dates);
