@@ -1106,6 +1106,7 @@
             var $activities = this.$('.activities');
             var y = parseInt($activities.css('top'), 10) + delta * 12;
             y = Math.min( Math.max(y, this.min_y), this.max_y);
+            this.top = y;
             $activities.css('top', y);
             this.$('.hour-labels ul').css('top', y);
         },
