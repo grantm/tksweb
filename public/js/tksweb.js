@@ -482,7 +482,7 @@
                 'drag_start', 'drag_move', 'drag_stop', 'drag_failed',
                 "edit_activity", "delete_activity", "cut_activity", "copy_activity", "paste_activity",
                 "clear_selection", "selection_changed", "select_activity_at_cursor", "drag_failed",
-                "key_handler", "resize_start", "resize_drag", "resize_stop",
+                "key_handler", "resize_start", "resize_drag", "resize_stop", "activities_click",
                 "view_replaced"
             );
             this.init_units();
@@ -492,7 +492,7 @@
             this.collection.on("selection_updated add", this.select_activity_at_cursor);
             this.collection.on("view_replaced", this.view_replaced);
             this.collection.on("drag_failed", this.drag_failed);
-            this.$el.parent().on( "utap", $.proxy(cursor.activities_click, cursor) );
+            this.$el.parent().on("utap", cursor.activities_click);
             $(window).keydown(cursor.key_handler);
             this.view_replaced();
         },
