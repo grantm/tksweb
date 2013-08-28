@@ -6,7 +6,13 @@
 
 set -e
 
-APP_DIR="/home/grant/projects/tksweb"
+BIN_DIR="$(dirname $0)";
+if [ -n "$BIN_DIR" ]
+then
+    cd "$BIN_DIR"
+    BIN_DIR="$(pwd)"
+fi
+APP_DIR="$(dirname $BIN_DIR)";
 LOG_DIR="/var/log/tksweb"
 PID_DIR="${APP_DIR}/var/run"
 PIDFILE="${PID_DIR}/prod.pid"
