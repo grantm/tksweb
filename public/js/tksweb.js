@@ -126,6 +126,12 @@
                 this.save();
             }
         },
+        for_clipboard: function() {
+            var attr = this.toJSON();
+            delete attr.id;
+            delete attr.sync_id;
+            return attr;
+        },
         for_template: function() {
             var attr = this.toJSON();
             attr.request_url = this.request_url();
@@ -820,8 +826,7 @@
         copy_activity: function() {
             var curr = this.current_activity();
             if(curr) {
-                this.clipboard = curr.toJSON();
-                delete this.clipboard.id;
+                this.clipboard = curr.for_clipboard();
             }
         },
         paste_activity: function() {
