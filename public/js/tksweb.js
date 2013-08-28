@@ -378,7 +378,7 @@
             this.listenTo(this.model, "drag_to", this.drag_to);
             this.listenTo(this.model, "drag_failed", this.drag_failed);
             this.listenTo(this.model, "resize_drag_to", this.resize_drag_to);
-            this.listenTo(this.model, "remove", this.remove, this);
+            this.listenTo(this.model, "remove", this.remove);
             this.listenTo(this.model, "destroy", this.destroy);
             this.position_element();
             this.size_element();
@@ -873,9 +873,10 @@
         },
 
         initialize: function() {
+            _.bindAll(this, 'start_activity_edit');
             this.create_edit_dialog();
             this.activity_dialog_template = Handlebars.compile( $('#activity-dialog-template').html() );
-            this.collection.on('start_activity_edit', this.start_activity_edit, this);
+            this.collection.on('start_activity_edit', this.start_activity_edit);
         },
         create_edit_dialog: function() {
             var editor = this;
@@ -968,13 +969,16 @@
             "click  #sync-now": "sync_now"
         },
         initialize: function(options) {
-            _.bindAll(this, 'resize', 'before_unload', 'update_week_view');
+            _.bindAll(this,
+                'add_activity', 'scroll_to_show_cursor',
+                'resize', 'before_unload', 'update_week_view'
+            );
             this.set_dates(options.dates);
             this.compile_templates();
             this.initialise_units();
             this.initialise_ui();
-            this.collection.on('add', this.add_activity, this);
-            this.collection.on("cursor_move", this.scroll_to_show_cursor, this);
+            this.collection.on('add', this.add_activity);
+            this.collection.on("cursor_move", this.scroll_to_show_cursor);
             this.listenTo(this.collection, "add remove change:duration", this.show_total_hours);
             $(window).on("resize", this.resize);
             $(window).on("beforeunload", this.before_unload);
