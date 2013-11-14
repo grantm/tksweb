@@ -2,6 +2,9 @@ package TKSWeb::Schema::Result::WRSystem;
 
 use parent 'DBIx::Class::Core';
 
+use strict;
+use warnings;
+
 __PACKAGE__->table('wr_system');
 __PACKAGE__->add_columns(
     wr_system_id => {

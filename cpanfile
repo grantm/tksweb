@@ -12,6 +12,7 @@ requires 'CSS::Minifier::XS';
 requires 'JavaScript::Minifier::XS';
 requires 'MIME::Lite';
 requires 'YAML';
+requires 'HTML::FillInForm';
 
 recommends 'Starman';
 

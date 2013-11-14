@@ -20,9 +20,7 @@
 (function($) {
     'use strict';
 
-    var TKSWeb = window.TKSWeb = {
-        interval_size_minutes: 15
-    };
+    var TKSWeb = window.TKSWeb = {};
     var dim = {};
     var keyCode = $.ui.keyCode;
     var end_of_day = 24 * 60;

@@ -2,6 +2,9 @@ package TKSWeb::Schema::Result::Activity;
 
 use parent 'DBIx::Class::Core';
 
+use strict;
+use warnings;
+
 __PACKAGE__->table('activity');
 __PACKAGE__->add_columns(
     activity_id  => {

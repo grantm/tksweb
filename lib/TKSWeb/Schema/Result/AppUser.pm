@@ -2,6 +2,9 @@ package TKSWeb::Schema::Result::AppUser;
 
 use parent 'DBIx::Class::Core';
 
+use strict;
+use warnings;
+
 require Digest::MD5;
 
 __PACKAGE__->table('app_user');
@@ -45,6 +48,7 @@ __PACKAGE__->set_primary_key('app_user_id');
 
 __PACKAGE__->has_many( activities => 'Activity' => { 'foreign.app_user_id' => 'self.app_user_id' } );
 __PACKAGE__->has_many( wr_systems => 'WRSystem' => { 'foreign.app_user_id' => 'self.app_user_id' } );
+__PACKAGE__->has_many( preferences => 'UserPreference' => { 'foreign.app_user_id' => 'self.app_user_id' } );
 
 
 sub set_or_get_reset_key {
@@ -73,6 +77,63 @@ sub _random_hash {
     my $self = shift;
     my $plain_text = join '-', $self->email, rand, time, $$, $self, @_;
     return Digest::MD5::md5_hex($plain_text);
+}
+
+sub preference {
+    my $self = shift;
+    my $pref_name = shift;
+    
+    my $preference = $self->find_related('preferences',
+        {
+            preference => $pref_name,
+        }
+    );
+    
+    if (! $preference) {
+        my %defaults = TKSWeb::Schema::Result::UserPreference->preference_defaults;
+        return $defaults{$pref_name};
+    }
+    else {    
+        return $preference->value;
+    }
+}
+
+# Get all the user's preferences as a hash
+sub all_preferences {
+    my $self = shift;
+    
+    my %prefs = TKSWeb::Schema::Result::UserPreference->preference_defaults;
+    
+    foreach my $pref_rec ($self->preferences) {
+        $prefs{$pref_rec->preference} = $pref_rec->value; 
+    }
+    
+    return %prefs;    
+}
+
+sub set_preference {
+    my $self = shift;
+    my $preference = shift;
+    my $value = shift;
+    
+    my $pref = $self->find_related('preferences',
+        {
+            preference => $preference,
+        }
+    );
+    
+    if ($pref) {    
+        $pref->value($value);
+        $pref->update;
+    }
+    else {
+        $self->add_to_preferences(
+            {            
+                preference => $preference,
+                value => $value,
+            },            
+        );
+    }
 }
 
 

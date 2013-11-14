@@ -1,0 +1,23 @@
+[% CALL set_title('User Preferences') %]
+
+<form action="/preferences" method="post">
+  <div class="form-input">
+    <label for="interval-size">Interval Size</label>
+    <select id="interval-size" name="interval_size">
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="10">10</option>
+        <option value="12">12</option>
+        <option value="15">15</option>
+        <option value="30">30</option>
+    </select>
+    (Minimum activity size)
+  </div>
+
+  <div class="form-input">
+    <input type="submit" value="Update">
+  </div>
+
+</form>
+
+<p>[ <a href="/">Home</a> ]</p>

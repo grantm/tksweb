@@ -9,6 +9,7 @@ use TKSWeb::Schema;
 
 use DateTime;
 use MIME::Lite;
+use HTML::FillInForm;
 
 
 our $VERSION = '0.1';
@@ -237,6 +238,27 @@ post '/password' => sub {
 };
 
 
+get '/preferences' => sub {
+    my $user = var 'user';
+    
+    my $html = template 'preferences';
+    
+    return HTML::FillInForm->fill( \$html, { $user->all_preferences } );
+};
+
+
+post '/preferences' => sub {
+    my $user = var 'user';
+    
+    my %params = params;
+    foreach my $preference (keys %params) {
+        $user->set_preference($preference, $params{$preference});
+    }
+
+    flash "Preferences updated";
+    redirect '/preferences';
+};
+
 get qr{^/week/?(?<date>\d\d\d\d-\d\d-\d\d)[.]json$} => sub {
     my $monday = monday_of_week( captures->{date} );
     return to_json({
@@ -247,6 +269,7 @@ get qr{^/week/?(?<date>\d\d\d\d-\d\d-\d\d)[.]json$} => sub {
 
 
 get qr{^/week/?(?<date>.*)$} => sub {
+    my $user = var 'user';
     my $date = captures->{date} // '';
     my $monday = monday_of_week( $date );
     return redirect "/week/$monday" if $date ne $monday;
@@ -256,6 +279,7 @@ get qr{^/week/?(?<date>.*)$} => sub {
         dates       => to_json( $dates ),
         wr_systems  => to_json( wr_system_list() ),
         activities  => to_json( activities_for_week($monday) ),
+        interval_size => $user->preference('interval_size'),
     };
 };
 
