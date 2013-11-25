@@ -10,6 +10,7 @@ use TKSWeb::Schema;
 use DateTime;
 use MIME::Lite;
 use HTML::FillInForm;
+use Net::LDAP; # TODO: load conditionally
 
 
 our $VERSION = '0.1';
@@ -120,6 +121,11 @@ get '/login' => sub {
 
 post '/login' => sub {
     my $user = get_user_from_login( param('email'), param('password') );
+    
+    if ( ! $user && config->{ldap_host} ) {
+        $user = ldap_auth( param('email'), param('password') );
+    }
+    
     if( $user ) {
         session email => $user->email;
         if( my $url = session('original_url') ) {
@@ -128,6 +134,7 @@ post '/login' => sub {
         }
         return redirect '/';
     }
+    
     alert 'Invalid username or password';
     template 'login', { email => param('email') };
 };
@@ -430,7 +437,7 @@ sub wr_system_list {
     my $rs = $user->wr_systems->search(
         {},
         {
-            order_by => 'wr_system_id'
+            order_by => 'wr_system.wr_system_id'
         }
     );
     while(my $wr_system = $rs->next) {
@@ -611,6 +618,76 @@ sub add_debug_key {
     $tokens->{debug_key} = $key;
 }
 
+sub ldap_auth {
+    my $user_name = shift;
+    my $password = shift;
+    
+    my $user_dn = "uid=$user_name," . config->{ldap_base};
+    my $ldap = Net::LDAP->new(config->{ldap_host}, version => 3);
+    
+    if(!$ldap) {
+        info "LDAP Error: Unable to connect to LDAP server";
+        return;
+    }
+
+    my $mesg = $ldap->start_tls(verify => 'none');
+    if($mesg->code != 0) {
+        info "LDAP Error: " . $mesg->error;
+        return;
+    }
+
+    $mesg = $ldap->bind($user_dn, password => $password);
+    if($mesg->code != 0) {
+        info "LDAP Error: " . $mesg->error;
+        return;
+    }
+    
+    $mesg = $ldap->search( # perform a search
+        base   => $user_dn,
+        filter => "(objectClass=person)",
+        scope  => 'base',
+        attrs  => [ 'cn', 'mail' ],
+    );
+    if($mesg->code != 0) {
+        info "LDAP Error: " . $mesg->error;
+        return;
+    }
+    
+    my ($entry) = $mesg->entries;
+    
+    # We're logged in. See if we already have a user
+    my $user = user_by_email( $entry->get_value('mail') );
+    
+    return $user if $user;
+    
+    # No user, create one.
+    my $user_rec = User->create(
+        {
+            email => $entry->get_value('mail'),
+            full_name => $entry->get_value('cn'),
+            password => 'pass',
+            status => 'active',
+            admin => 0,
+        },
+    );
+    
+    my $default_wr_system = schema->resultset('WRSystem')->find(
+        {
+            is_default => 'true',
+        }
+    );
+    
+    if ($default_wr_system) {
+        schema->resultset('UserWRSystem')->create(
+            {
+                app_user_id => $user_rec->id,
+                wr_system_id => $default_wr_system->id,
+            }
+        );    
+    }
+    
+    return $user_rec;
+}
 
 1;
 

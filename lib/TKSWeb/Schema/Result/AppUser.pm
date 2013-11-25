@@ -47,8 +47,10 @@ __PACKAGE__->add_columns(
 __PACKAGE__->set_primary_key('app_user_id');
 
 __PACKAGE__->has_many( activities => 'Activity' => { 'foreign.app_user_id' => 'self.app_user_id' } );
-__PACKAGE__->has_many( wr_systems => 'WRSystem' => { 'foreign.app_user_id' => 'self.app_user_id' } );
 __PACKAGE__->has_many( preferences => 'UserPreference' => { 'foreign.app_user_id' => 'self.app_user_id' } );
+
+__PACKAGE__->has_many( user_wr_systems => 'UserWRSystem' => { 'foreign.app_user_id' => 'self.app_user_id' } );
+__PACKAGE__->many_to_many( wr_systems => 'user_wr_systems', 'wr_system' );
 
 
 sub set_or_get_reset_key {

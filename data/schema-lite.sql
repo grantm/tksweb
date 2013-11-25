@@ -13,14 +13,11 @@ CREATE TABLE app_user (
 
 CREATE TABLE wr_system (
     wr_system_id    INTEGER CONSTRAINT PK_WR_SYSTEM PRIMARY KEY AUTOINCREMENT,
-    app_user_id     INTEGER NOT NULL,
     name            TEXT    NOT NULL,
     description     TEXT    NOT NULL,
     request_url     TEXT    NOT NULL DEFAULT '',
     colour_code     INTEGER NOT NULL DEFAULT '0',
-
-    CONSTRAINT FK_WR_SYSTEM_USER
-        FOREIGN KEY (app_user_id) REFERENCES app_user (app_user_id)
+    is_default      BOOLEAN NOT NULL DEFAULT false
 );
 
 CREATE TABLE activity (
@@ -36,6 +33,18 @@ CREATE TABLE activity (
         FOREIGN KEY (app_user_id) REFERENCES app_user (app_user_id),
 
     CONSTRAINT FK_ACTIVITY_WR_SYSTEM
+        FOREIGN KEY (wr_system_id) REFERENCES wr_system (wr_system_id)
+);
+
+CREATE TABLE "main"."user_wr_system" (
+    "wr_system_id" INTEGER NOT NULL,
+    "app_user_id" INTEGER NOT NULL,
+    PRIMARY KEY (wr_system_id, app_user_id),
+
+    CONSTRAINT FK_USER_M2M
+        FOREIGN KEY (app_user_id) REFERENCES app_user (app_user_id),
+
+    CONSTRAINT FK_WR_SYSTEM_M2M
         FOREIGN KEY (wr_system_id) REFERENCES wr_system (wr_system_id)
 );
 
