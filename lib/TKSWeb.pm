@@ -375,7 +375,7 @@ sub get_user_from_login {
 
     return unless $email;
     my $user = user_by_email( $email );
-    if( $user  and  passphrase($password)->matches($user->password) ) {
+    if( $user  and  $user->password  and  passphrase($password)->matches($user->password) ) {
         return $user;
     }
     return;
@@ -665,7 +665,6 @@ sub ldap_auth {
         {
             email => $entry->get_value('mail'),
             full_name => $entry->get_value('cn'),
-            password => 'pass',
             status => 'active',
             admin => 0,
         },

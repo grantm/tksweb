@@ -37,5 +37,26 @@ UPDATE wr_system SET is_default = 'true' WHERE wr_system_id = (select MIN(wr_sys
 
 DROP TABLE old_wr_system;
 
+ALTER TABLE app_user RENAME TO old_app_user;
+
+CREATE TABLE app_user (
+    app_user_id     INTEGER CONSTRAINT PK_APP_USER PRIMARY KEY AUTOINCREMENT,
+    email           TEXT    NOT NULL UNIQUE,
+    full_name       TEXT    NOT NULL,
+    password        TEXT,
+    reset_key       TEXT    NULL UNIQUE,
+    api_key         TEXT    NULL UNIQUE,
+    status          TEXT    NOT NULL DEFAULT 'active',
+    admin           BOOLEAN NOT NULL DEFAULT '0'
+);
+
+INSERT INTO app_user
+    SELECT
+        *
+    FROM old_app_user
+    ORDER BY app_user_id;
+
+DROP TABLE old_app_user;
+
 COMMIT;
 

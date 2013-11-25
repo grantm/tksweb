@@ -23,7 +23,7 @@ __PACKAGE__->add_columns(
                     },
     password     => {
                         data_type     => 'text',
-                        is_nullable   => 0,
+                        is_nullable   => 1,
                     },
     reset_key    => {
                         data_type     => 'text',
