@@ -52,6 +52,15 @@ __PACKAGE__->has_many( preferences => 'UserPreference' => { 'foreign.app_user_id
 __PACKAGE__->has_many( user_wr_systems => 'UserWRSystem' => { 'foreign.app_user_id' => 'self.app_user_id' } );
 __PACKAGE__->many_to_many( wr_systems => 'user_wr_systems', 'wr_system' );
 
+sub new {
+    my ( $class, $attrs ) = @_;
+
+    $attrs->{api_key} = $class->_random_hash unless defined $attrs->{api_key};
+
+    my $new = $class->next::method($attrs);
+
+    return $new;
+}
 
 sub set_or_get_reset_key {
     my $self = shift;
@@ -59,7 +68,7 @@ sub set_or_get_reset_key {
     my $reset_key = $self->reset_key;
     return $reset_key if $reset_key;
     foreach my $i (1 .. 5) {
-        $reset_key = $self->_random_hash('RESET', $i);
+        $reset_key = $self->_random_hash('RESET', $i, $self->email);
         eval {
             $self->set_column(reset_key => $reset_key);
             $self->update;
@@ -77,7 +86,7 @@ sub set_or_get_reset_key {
 
 sub _random_hash {
     my $self = shift;
-    my $plain_text = join '-', $self->email, rand, time, $$, $self, @_;
+    my $plain_text = join '-', rand, time, $$, $self, @_;
     return Digest::MD5::md5_hex($plain_text);
 }
 
