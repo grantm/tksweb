@@ -214,6 +214,10 @@ get '/password' => sub {
 
 post '/password' => sub {
     my $user = var 'user';
+    
+    if ($user->is_ldap_user) {
+        die "Can't change password for an LDAP user\n";
+    }
 
     my $reset_key = session('reset_key');
     if( $reset_key ) {
@@ -282,11 +286,12 @@ get qr{^/week/?(?<date>.*)$} => sub {
     return redirect "/week/$monday" if $date ne $monday;
     my $dates = dates_for_weekview($monday);
     template 'week-view', {
-        week_dates  => $dates->{week_dates},
-        dates       => to_json( $dates ),
-        wr_systems  => to_json( wr_system_list() ),
-        activities  => to_json( activities_for_week($monday) ),
+        week_dates    => $dates->{week_dates},
+        dates         => to_json( $dates ),
+        wr_systems    => to_json( wr_system_list() ),
+        activities    => to_json( activities_for_week($monday) ),
         interval_size => $user->preference('interval_size'),
+        user          => $user,
     };
 };
 

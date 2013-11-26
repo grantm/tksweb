@@ -46,7 +46,7 @@
   {{/each}}
   <li><a id="sync-now"><span class="icon">&#8635;</span>Sync now</a></li>
   <li><a href="/preferences"><span class="icon">&#10020;</span>Preferences</a></li>
-  <li><a href="/password"><span class="icon">&#9786;</span>Change password</a></li>
+  [% IF ! user.is_ldap_user %]<li><a href="/password"><span class="icon">&#9786;</span>Change password</a></li>[% END %]
   <li><a href="/logout"><span class="icon">&#9746;</span>Log out</a></li>
 </script>
 

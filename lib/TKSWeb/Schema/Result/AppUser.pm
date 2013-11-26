@@ -62,6 +62,12 @@ sub new {
     return $new;
 }
 
+sub is_ldap_user {
+    my $self = shift;
+
+    return defined $self->password ? 0 : 1;
+}
+
 sub set_or_get_reset_key {
     my $self = shift;
 
