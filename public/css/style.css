@@ -75,6 +75,18 @@ p.pw-reset {
   box-shadow: 1px 1px 6px 4px rgba(100, 100, 100, 0.5);
 }
 
+.prefs h1 {
+  font-size: 130%;
+  font-weight: bold;
+  margin: 0 0 1.5em 0;
+}
+
+.prefs h3 {
+  font-weight: bold;
+  margin: 1em 0 1em 0;
+}
+
+
 .prefs input.submit {
   font-size: 110%;
   margin: 1em 40%;
@@ -83,7 +95,8 @@ p.pw-reset {
 
 .prefs input.text,
 .prefs input.password,
-.prefs input.select {
+.prefs input.select,
+.prefs input.checkbox {
   display: block;
   width: 30%;
   font-size: 110%;

@@ -252,9 +252,13 @@ post '/password' => sub {
 get '/preferences' => sub {
     my $user = var 'user';
     
-    my $html = template 'preferences';
+    my @wr_systems = schema->resultset('WRSystem')->search();
     
-    return HTML::FillInForm->fill( \$html, { $user->all_preferences } );
+    my $html = template 'preferences', { wr_systems => \@wr_systems };
+
+    my @user_wr_systems = map { $_->wr_system_id } $user->user_wr_systems;
+
+    return HTML::FillInForm->fill( \$html, { $user->all_preferences, wr_systems => \@user_wr_systems } );
 };
 
 
@@ -262,6 +266,25 @@ post '/preferences' => sub {
     my $user = var 'user';
     
     my %params = params;
+
+    my $wr_systems = delete $params{wr_systems};
+    $wr_systems = [$wr_systems] unless ref $wr_systems eq 'ARRAY';
+    if (! $wr_systems || ! @$wr_systems) {
+        flash "At least one WR system must be selected";
+        redirect '/preferences';
+        return;
+    }
+
+    $user->user_wr_systems->delete;
+    foreach my $wr_system (@$wr_systems) {
+        schema->resultset('UserWRSystem')->create(
+            {
+                app_user_id => $user->id,
+                wr_system_id => $wr_system,
+            }
+        );
+    }
+
     foreach my $preference (keys %params) {
         $user->set_preference($preference, $params{$preference});
     }
@@ -447,7 +470,6 @@ sub wr_system_list {
     );
     while(my $wr_system = $rs->next) {
         my %sys = $wr_system->get_columns;
-        delete $sys{app_user_id};
         push @wr_systems, \%sys;
     }
     return \@wr_systems;

@@ -12,7 +12,13 @@
         <option value="15">15</option>
         <option value="30">30</option>
     </select>
-    (Minimum activity size)
+    (Minimum activity size in minutes)
+
+    <h3>WR Systems Used</h3>
+    [% FOREACH wr_system IN wr_systems %]
+    <input type="checkbox" name="wr_systems" value="[% wr_system.id %]">&nbsp;[% wr_system.description %]<br>
+    [% END %]
+    </p>
 
     <input type="submit" class="submit" value="Update">
   </form>
