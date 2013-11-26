@@ -30,6 +30,3 @@ engines:
 timezone: "Pacific/Auckland"
 
 email_sender: "no-reply+tksweb@mclean.net.nz"
-
-ldap_host: "ldap.wgtn.cat-it.co.nz"
-ldap_base: "ou=Staff,ou=People,dc=catalyst,dc=net,dc=nz"
