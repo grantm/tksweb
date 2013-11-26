@@ -1,7 +1,8 @@
 [% CALL set_title('User Preferences') %]
-
-<form class="prefs" action="/preferences" method="post">
   <div class="form-input">
+    <form class="prefs" action="/preferences" method="post">
+    <h1>TKS-Web Preferences</h1>
+
     <label for="interval-size">Interval Size</label>
     <select class="input" id="interval-size" name="interval_size">
         <option value="5">5</option>
@@ -12,14 +13,17 @@
         <option value="30">30</option>
     </select>
     (Minimum activity size)
-  </div>
 
-  <div class="form-input">
     <input type="submit" class="submit" value="Update">
+  </form>
   </div>
 
+  <div class="prefs">
+    <h1>TKS-Web Info</h1>
 
-    <p>[ <a href="/">Home</a> ]</p>
-</form>
+    <label for="api-key">API Key</label>
+    <div id="api-key">[% user.api_key %]</div>
+    (Use this to fetch TKS files - see <a href="/help">Help</a> for more)
+  </div>
 
-
+<p>[ <a href="/">Home</a> ]</p>

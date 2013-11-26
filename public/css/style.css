@@ -66,7 +66,7 @@ p.pw-reset {
   font-size: 90%;
 }
 
-form.prefs {
+.prefs {
   width: 70%;
   padding: 20px;
   margin: 130px auto 50px auto;
@@ -75,25 +75,32 @@ form.prefs {
   box-shadow: 1px 1px 6px 4px rgba(100, 100, 100, 0.5);
 }
 
-form.prefs input.submit {
+.prefs input.submit {
   font-size: 110%;
   margin: 1em 40%;
   padding: 0.2em 1em;
 }
 
-form.prefs input.text,
-form.prefs input.password,
-form.prefs input.select {
+.prefs input.text,
+.prefs input.password,
+.prefs input.select {
   display: block;
   width: 30%;
   font-size: 110%;
   padding: 4px 6px;
 }
 
-form.prefs label {
+.prefs label {
   display: block;
   width: 100%;
   margin: 0.6em 0 0.2em 0;
+  font-weight: bold;
+}
+
+.prefs #api-key {
+  background: black;
+  color: white;
+  font-family: Courier, monospace;
 }
 
 /* ######################################################## */
