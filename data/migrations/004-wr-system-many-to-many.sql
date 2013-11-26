@@ -29,7 +29,8 @@ INSERT INTO wr_system
         ,name
         ,description
         ,request_url
-        ,colour_code
+        ,colour_code,
+        'true'
     FROM old_wr_system
     ORDER BY wr_system_id;
 
