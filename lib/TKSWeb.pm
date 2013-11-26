@@ -462,7 +462,7 @@ sub first_wr_system {
     my $user = var 'user';
     return $user->wr_systems->search(
         {},
-        { order_by => 'wr_system_id' }
+        { order_by => 'wr_system.wr_system_id' }
     )->first;
 }
 
