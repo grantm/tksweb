@@ -658,19 +658,19 @@ sub ldap_auth {
     my $ldap = Net::LDAP->new(config->{ldap_host}, version => 3);
     
     if(!$ldap) {
-        info "LDAP Error: Unable to connect to LDAP server";
+        error "LDAP Error: Unable to connect to LDAP server ($@)";
         return;
     }
 
     my $mesg = $ldap->start_tls(verify => 'none');
     if($mesg->code != 0) {
-        info "LDAP Error: " . $mesg->error;
+        error "LDAP Error: " . $mesg->error;
         return;
     }
 
     $mesg = $ldap->bind($user_dn, password => $password);
     if($mesg->code != 0) {
-        info "LDAP Error: " . $mesg->error;
+        error "LDAP Error: " . $mesg->error;
         return;
     }
     
@@ -681,7 +681,7 @@ sub ldap_auth {
         attrs  => [ 'cn', 'mail' ],
     );
     if($mesg->code != 0) {
-        info "LDAP Error: " . $mesg->error;
+        error "LDAP Error: " . $mesg->error;
         return;
     }
     
