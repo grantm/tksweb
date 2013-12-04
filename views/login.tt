@@ -2,13 +2,13 @@
 
   <h1>Log in to TKS-Web</h1>
 
-  <label for="email">Email Address</label>
+  <label for="email">[% IF ldap_only %]LDAP User Name[% ELSE %]Email Address[% END %]</label>
   <input type="text" class="text" id="email" name="email" value="[% email |html %]">
   <label for="password">Password</label>
   <input type="password" class="password" id="password" name="password">
   <input type="submit" class="submit" value="Log In">
 
-  <p class="pw-reset"><a href="/reset">Forgot password?</a></p>
+  [% IF ! ldap_only %]<p class="pw-reset"><a href="/reset">Forgot password?</a></p>[% END %]
 
 </form>
 

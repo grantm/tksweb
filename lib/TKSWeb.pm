@@ -115,13 +115,17 @@ sub base_url {
 ################################  Routes  ####################################
 
 get '/login' => sub {
-    template 'login';
+    template 'login', { ldap_only => config->{ldap_only} };
 };
 
 
 post '/login' => sub {
-    my $user = get_user_from_login( param('email'), param('password') );
+    my $user;
     
+    if (! config->{ldap_only}) {
+        $user = get_user_from_login( param('email'), param('password') );
+    }
+
     if ( ! $user && config->{ldap_host} ) {
         $user = ldap_auth( param('email'), param('password') );
     }
@@ -514,6 +518,7 @@ sub activities_for_week {
         my %act = $activity->get_columns;
         delete $act{app_user_id};
         $act{id} = delete $act{activity_id};
+
         my($date, $hours, $minutes)
             = (delete $act{date_time}) =~ m{(\d\d\d\d-\d\d-\d\d) (\d\d):(\d\d)};
         $act{date} = $date;
