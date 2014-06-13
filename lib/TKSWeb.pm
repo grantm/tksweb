@@ -10,7 +10,12 @@ use TKSWeb::Schema;
 use DateTime;
 use MIME::Lite;
 use HTML::FillInForm;
-use Net::LDAP; # TODO: load conditionally
+
+BEGIN {
+    if (config->{ldap_host}) {
+        require Net::LDAP;
+    }
+};
 
 
 our $VERSION = '0.1';
