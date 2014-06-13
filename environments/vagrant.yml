@@ -1,0 +1,59 @@
+# configuration file for development environment
+
+# the logger engine to use
+# console: log messages to STDOUT (your console where you started the
+#          application server)
+# file:    log message to a file in log/
+logger: "console"
+
+# the log level for this environement
+# core is the lowest, it shows Dancer's core log messages as well as yours
+# (debug, warning and error)
+log: "core"
+
+# should Dancer consider warnings as critical errors?
+warnings: 1
+
+# should Dancer show a stacktrace when an error is caught?
+show_errors: 1
+
+# auto_reload is a development and experimental feature
+# you should enable it by yourself if you want it
+# Module::Refresh is needed
+#
+# Be aware it's unstable and may cause a memory leak.
+# DO NOT EVER USE THAT FEATURE IN PRODUCTION
+# OR TINY KITTENS SHALL DIE WITH LOTS OF SUFFERING
+auto_reload: 1
+
+session: "YAML"
+session_dir: "var/dev-sessions"
+session_name: "dev_session"
+
+plugins:
+  Passphrase:
+    default: 'bcrypt'
+    bcrypt:
+      cost: 8
+  DBIC:
+    default:
+      dsn: dbi:Pg:dbname=tksweb-vagrant
+      schema_class: TKSWeb::Schema
+      options:
+        RaiseError: 1
+        PrintError: 0
+
+# For remote debugging of the mobile app via http://jsconsole.com/
+#
+# 'debug_match' is an optional regex.  If provided, debugging will not be
+# enabled unless this regex matches the client IP address (it's a regex to
+# allow for crude network segment matching).
+#
+# 'debug_key' is the UUID for the remote debugging session hosted on
+# jsconsole.com using the link below:
+#
+#  http://jsconsole.com/?%3Alisten%20F4EFFEAD-89AD-4C98-8D44-6F6585C7E1FE
+#
+#debug_match: "^192[.]168[.]87"
+#debug_key: F4EFFEAD-89AD-4C98-8D44-6F6585C7E1FE
+
