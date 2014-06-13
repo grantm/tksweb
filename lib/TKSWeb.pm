@@ -121,7 +121,7 @@ get '/login' => sub {
 
 post '/login' => sub {
     my $user;
-    
+
     if (! config->{ldap_only}) {
         $user = get_user_from_login( param('email'), param('password') );
     }
@@ -129,7 +129,7 @@ post '/login' => sub {
     if ( ! $user && config->{ldap_host} ) {
         $user = ldap_auth( param('email'), param('password') );
     }
-    
+
     if( $user ) {
         session email => $user->email;
         if( my $url = session('original_url') ) {
@@ -138,7 +138,7 @@ post '/login' => sub {
         }
         return redirect '/';
     }
-    
+
     alert 'Invalid username or password';
     template 'login', { email => param('email') };
 };
@@ -218,8 +218,8 @@ get '/password' => sub {
 
 post '/password' => sub {
     my $user = var 'user';
-    
-    if ($user->is_ldap_user) {
+
+    if ($user && $user->is_ldap_user) {
         die "Can't change password for an LDAP user\n";
     }
 
@@ -255,9 +255,9 @@ post '/password' => sub {
 
 get '/preferences' => sub {
     my $user = var 'user';
-    
+
     my @wr_systems = schema->resultset('WRSystem')->search();
-    
+
     my $html = template 'preferences', { wr_systems => \@wr_systems };
 
     my @user_wr_systems = map { $_->wr_system_id } $user->user_wr_systems;
@@ -268,7 +268,7 @@ get '/preferences' => sub {
 
 post '/preferences' => sub {
     my $user = var 'user';
-    
+
     my %params = params;
 
     my $wr_systems = delete $params{wr_systems};
@@ -653,10 +653,10 @@ sub add_debug_key {
 sub ldap_auth {
     my $user_name = shift;
     my $password = shift;
-    
+
     my $user_dn = "uid=$user_name," . config->{ldap_base};
     my $ldap = Net::LDAP->new(config->{ldap_host}, version => 3);
-    
+
     if(!$ldap) {
         error "LDAP Error: Unable to connect to LDAP server ($@)";
         return;
@@ -673,7 +673,7 @@ sub ldap_auth {
         error "LDAP Error: " . $mesg->error;
         return;
     }
-    
+
     $mesg = $ldap->search( # perform a search
         base   => $user_dn,
         filter => "(objectClass=person)",
@@ -684,14 +684,14 @@ sub ldap_auth {
         error "LDAP Error: " . $mesg->error;
         return;
     }
-    
+
     my ($entry) = $mesg->entries;
-    
+
     # We're logged in. See if we already have a user
     my $user = user_by_email( $entry->get_value('mail') );
-    
+
     return $user if $user;
-    
+
     # No user, create one.
     my $user_rec = User->create(
         {
@@ -701,22 +701,22 @@ sub ldap_auth {
             admin => 0,
         },
     );
-    
+
     my $default_wr_system = schema->resultset('WRSystem')->find(
         {
             is_default => 'true',
         }
     );
-    
+
     if ($default_wr_system) {
         schema->resultset('UserWRSystem')->create(
             {
                 app_user_id => $user_rec->id,
                 wr_system_id => $default_wr_system->id,
             }
-        );    
+        );
     }
-    
+
     return $user_rec;
 }
 
