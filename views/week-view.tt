@@ -11,6 +11,10 @@
       <div class="duration"></div>
       <div class="resize-handle"></div>
     </div>
+
+    [% FOREACH day IN [0 .. 6] %]
+    <div id="day-[% day %]-total" class="hours-total"></div>
+    [% END %]
   </div>
   <div class="hour-labels">
     <ul>
@@ -20,7 +24,8 @@
     <ul>[% FOREACH date = week_dates %]<li>[% date.fmt %]</li>[% END %]</ul>
   </div>
   <div class="menu"><span class="marker">&#9662;</span><ul></ul></div>
-  <div class="total-hours"></div>
+
+  <div id="total-hours" class="hours-total"></div>
 </div>
 
 [% IF debug_key -%]

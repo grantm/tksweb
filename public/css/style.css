@@ -266,10 +266,7 @@ p.pw-reset {
   display: block;
 }
 
-.total-hours {
-  position: absolute;
-  right: 10px;
-  bottom: 4px;
+.hours-total {
   color: #eeeeee;
   font-family: arial,sans-serif;
   font-size: 36px;
@@ -277,6 +274,41 @@ p.pw-reset {
   opacity: 0.5;
   z-index: 50;
   text-shadow: 0 0 6px #333333;
+  bottom: 4px;
+  position: fixed;
+}
+
+#total-hours {
+  position: absolute;
+  right: 10px;
+}
+
+#day-1-total {
+  left: 60px;
+}
+
+#day-2-total {
+  left: 260px;
+}
+
+#day-3-total {
+  left: 460px;
+}
+
+#day-4-total {
+  left: 660px;
+}
+
+#day-5-total {
+  left: 860px;
+}
+
+#day-6-total {
+  left: 1060px;
+}
+
+#day-0-total {
+  left: 1260px;
 }
 
 .menu {
