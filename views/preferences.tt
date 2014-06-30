@@ -14,6 +14,8 @@
     </select>
     (Minimum activity size in minutes)
 
+    <label for="daily-totals"><input type="checkbox" name="daily_totals" value="1" id="daily-totals">&nbsp;Display hours spent each day</label><br>
+
     <h3>WR Systems Used</h3>
     [% FOREACH wr_system IN wr_systems %]
     <input type="checkbox" name="wr_systems" value="[% wr_system.id %]">&nbsp;[% wr_system.description %]<br>

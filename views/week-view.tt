@@ -13,7 +13,7 @@
     </div>
 
     [% FOREACH day IN [0 .. 6] %]
-    <div id="day-[% day %]-total" class="hours-total"></div>
+    <div id="day-[% day %]-total" class="hours-total" [% IF ! daily_totals %]style="display: none"[% END %]></div>
     [% END %]
   </div>
   <div class="hour-labels">

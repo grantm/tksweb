@@ -294,8 +294,10 @@ post '/preferences' => sub {
         );
     }
 
-    foreach my $preference (keys %params) {
-        $user->set_preference($preference, $params{$preference});
+    my %preferences = $user->all_preferences;
+
+    foreach my $preference (keys %preferences) {
+        $user->set_preference($preference, $params{$preference} // '');
     }
 
     flash "Preferences updated";
@@ -323,6 +325,7 @@ get qr{^/week/?(?<date>.*)$} => sub {
         wr_systems    => to_json( wr_system_list() ),
         activities    => to_json( activities_for_week($monday) ),
         interval_size => $user->preference('interval_size'),
+        daily_totals  => $user->preference('daily_totals') ? 1 : 0,
         user          => $user,
     };
 };
