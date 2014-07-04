@@ -145,7 +145,7 @@ post '/login' => sub {
     }
 
     alert 'Invalid username or password';
-    template 'login', { email => param('email') };
+    template 'login', { email => param('email'), ldap_only => config->{ldap_only} };
 };
 
 
