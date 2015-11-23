@@ -27,7 +27,7 @@ show_errors: 1
 auto_reload: 1
 
 session: "YAML"
-session_dir: "var/dev-sessions"
+session_dir: "/tmp/dev-sessions"
 session_name: "dev_session"
 
 plugins:
