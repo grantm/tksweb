@@ -670,15 +670,17 @@ sub ldap_auth {
         return;
     }
 
+    my $remote_ip = request->headers->{'x-forwarded-for'} || request->address;
+
     my $mesg = $ldap->start_tls(verify => 'none');
     if($mesg->code != 0) {
-        error "LDAP Error: [" . request->address . "]" . $mesg->error;
+        error "LDAP Error: [$remote_ip] " . $mesg->error;
         return;
     }
 
     $mesg = $ldap->bind($user_dn, password => $password);
     if($mesg->code != 0) {
-        error "LDAP Error: [" . request->address . "]" . $mesg->error;
+        error "LDAP Error: [$remote_ip] " . $mesg->error;
         return;
     }
 
@@ -689,7 +691,7 @@ sub ldap_auth {
         attrs  => [ 'cn', 'mail' ],
     );
     if($mesg->code != 0) {
-        error "LDAP Error: [" . request->address . "]" . $mesg->error;
+        error "LDAP Error: [$remote_ip] " . $mesg->error;
         return;
     }
 
