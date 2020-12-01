@@ -397,11 +397,11 @@ body .ui-widget {
 
 .tksweb-activity-dialog div.activity-wr {
   float: left;
+  margin-right: 60px;
 }
 
 .tksweb-activity-dialog div.activity-hr {
   float: left;
-  margin-left: 60px;
 }
 
 .tksweb-activity-dialog div.activity-dc {
@@ -419,6 +419,7 @@ body .ui-widget {
 
 .tksweb-activity-dialog div.activity-dc input {
   width: 100%;
+  box-sizing: border-box;
 }
 
 input.save {

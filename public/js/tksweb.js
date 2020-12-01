@@ -905,7 +905,7 @@
             var editor = this;
             this.$el.dialog({
                 autoOpen:      false,
-                resizable:     false,
+                resizable:     true,
                 closeOnEscape: true,
                 width:         360,
                 height:        290,
@@ -951,7 +951,7 @@
             };
             var success = this.collection.save_from_editor({
                 wr_system_id  : parseInt(wr_system_id, 10),
-                wr_number   : this.$('.activity-wr input').val().trim(),
+                wr_number   : this.$('.activity-wr input').val().trim().replace(/[^0-9]/g, ''),
                 duration    : this.quantise_duration( duration ),
                 description : this.$('.activity-dc input').val().trim()
             });
