@@ -11,6 +11,10 @@
       <div class="duration"></div>
       <div class="resize-handle"></div>
     </div>
+
+    [% FOREACH day IN [0 .. 6] %]
+    <div id="day-[% day %]-total" class="hours-total" [% IF ! daily_totals %]style="display: none"[% END %]></div>
+    [% END %]
   </div>
   <div class="hour-labels">
     <ul>
@@ -20,7 +24,8 @@
     <ul>[% FOREACH date = week_dates %]<li>[% date.fmt %]</li>[% END %]</ul>
   </div>
   <div class="menu"><span class="marker">&#9662;</span><ul></ul></div>
-  <div class="total-hours"></div>
+
+  <div id="total-hours" class="hours-total"></div>
 </div>
 
 [% IF debug_key -%]
@@ -45,7 +50,8 @@
     <li><a href="/export/{{sys_name}}/{{month}}.tks"><span class="icon">&#9783;</span>Export TKS month file for {{sys_description}}</a></li>
   {{/each}}
   <li><a id="sync-now"><span class="icon">&#8635;</span>Sync now</a></li>
-  <li><a href="/password"><span class="icon">&#9786;</span>Change password</a></li>
+  <li><a href="/preferences"><span class="icon">&#10020;</span>Preferences</a></li>
+  [% IF ! user.is_ldap_user %]<li><a href="/password"><span class="icon">&#9786;</span>Change password</a></li>[% END %]
   <li><a href="/logout"><span class="icon">&#9746;</span>Log out</a></li>
 </script>
 
@@ -72,6 +78,8 @@
     var dates = [% dates %];
     var wr_systems = [% wr_systems %];
     var activities = [% activities %];
+    TKSWeb.interval_size_minutes = [% interval_size %];
     TKSWeb.show_week($('.week-view'), dates, wr_systems, activities);
+
 })();
 </script>

@@ -9,6 +9,13 @@ use TKSWeb::Schema;
 
 use DateTime;
 use MIME::Lite;
+use HTML::FillInForm;
+
+BEGIN {
+    if (config->{ldap_host}) {
+        require Net::LDAP;
+    }
+};
 
 
 our $VERSION = '0.1';
@@ -113,12 +120,21 @@ sub base_url {
 ################################  Routes  ####################################
 
 get '/login' => sub {
-    template 'login';
+    template 'login', { ldap_only => config->{ldap_only} };
 };
 
 
 post '/login' => sub {
-    my $user = get_user_from_login( param('email'), param('password') );
+    my $user;
+
+    if (! config->{ldap_only}) {
+        $user = get_user_from_login( param('email'), param('password') );
+    }
+
+    if ( ! $user && config->{ldap_host} ) {
+        $user = ldap_auth( param('email'), param('password') );
+    }
+
     if( $user ) {
         session email => $user->email;
         if( my $url = session('original_url') ) {
@@ -127,8 +143,9 @@ post '/login' => sub {
         }
         return redirect '/';
     }
+
     alert 'Invalid username or password';
-    template 'login', { email => param('email') };
+    template 'login', { email => param('email'), ldap_only => config->{ldap_only} };
 };
 
 
@@ -207,6 +224,10 @@ get '/password' => sub {
 post '/password' => sub {
     my $user = var 'user';
 
+    if ($user && $user->is_ldap_user) {
+        die "Can't change password for an LDAP user\n";
+    }
+
     my $reset_key = session('reset_key');
     if( $reset_key ) {
         $user = user_by_reset_key( $reset_key );
@@ -237,6 +258,52 @@ post '/password' => sub {
 };
 
 
+get '/preferences' => sub {
+    my $user = var 'user';
+
+    my @wr_systems = schema->resultset('WRSystem')->search();
+
+    my $html = template 'preferences', { wr_systems => \@wr_systems };
+
+    my @user_wr_systems = map { $_->wr_system_id } $user->user_wr_systems;
+
+    return HTML::FillInForm->fill( \$html, { $user->all_preferences, wr_systems => \@user_wr_systems } );
+};
+
+
+post '/preferences' => sub {
+    my $user = var 'user';
+
+    my %params = params;
+
+    my $wr_systems = delete $params{wr_systems};
+    $wr_systems = [$wr_systems] unless ref $wr_systems eq 'ARRAY';
+    if (! $wr_systems || ! @$wr_systems) {
+        flash "At least one WR system must be selected";
+        redirect '/preferences';
+        return;
+    }
+
+    $user->user_wr_systems->delete;
+    foreach my $wr_system (@$wr_systems) {
+        schema->resultset('UserWRSystem')->create(
+            {
+                app_user_id => $user->id,
+                wr_system_id => $wr_system,
+            }
+        );
+    }
+
+    my %preferences = $user->all_preferences;
+
+    foreach my $preference (keys %preferences) {
+        $user->set_preference($preference, $params{$preference} // '');
+    }
+
+    flash "Preferences updated";
+    redirect '/preferences';
+};
+
 get qr{^/week/?(?<date>\d\d\d\d-\d\d-\d\d)[.]json$} => sub {
     my $monday = monday_of_week( captures->{date} );
     return to_json({
@@ -247,15 +314,19 @@ get qr{^/week/?(?<date>\d\d\d\d-\d\d-\d\d)[.]json$} => sub {
 
 
 get qr{^/week/?(?<date>.*)$} => sub {
+    my $user = var 'user';
     my $date = captures->{date} // '';
     my $monday = monday_of_week( $date );
     return redirect "/week/$monday" if $date ne $monday;
     my $dates = dates_for_weekview($monday);
     template 'week-view', {
-        week_dates  => $dates->{week_dates},
-        dates       => to_json( $dates ),
-        wr_systems  => to_json( wr_system_list() ),
-        activities  => to_json( activities_for_week($monday) ),
+        week_dates    => $dates->{week_dates},
+        dates         => to_json( $dates ),
+        wr_systems    => to_json( wr_system_list() ),
+        activities    => to_json( activities_for_week($monday) ),
+        interval_size => $user->preference('interval_size'),
+        daily_totals  => $user->preference('daily_totals') ? 1 : 0,
+        user          => $user,
     };
 };
 
@@ -344,7 +415,7 @@ sub get_user_from_login {
 
     return unless $email;
     my $user = user_by_email( $email );
-    if( $user  and  passphrase($password)->matches($user->password) ) {
+    if( $user  and  $user->password  and  passphrase($password)->matches($user->password) ) {
         return $user;
     }
     return;
@@ -406,12 +477,11 @@ sub wr_system_list {
     my $rs = $user->wr_systems->search(
         {},
         {
-            order_by => 'wr_system_id'
+            order_by => 'wr_system.wr_system_id'
         }
     );
     while(my $wr_system = $rs->next) {
         my %sys = $wr_system->get_columns;
-        delete $sys{app_user_id};
         push @wr_systems, \%sys;
     }
     return \@wr_systems;
@@ -431,7 +501,7 @@ sub first_wr_system {
     my $user = var 'user';
     return $user->wr_systems->search(
         {},
-        { order_by => 'wr_system_id' }
+        { order_by => 'wr_system.wr_system_id' }
     )->first;
 }
 
@@ -456,6 +526,7 @@ sub activities_for_week {
         my %act = $activity->get_columns;
         delete $act{app_user_id};
         $act{id} = delete $act{activity_id};
+
         my($date, $hours, $minutes)
             = (delete $act{date_time}) =~ m{(\d\d\d\d-\d\d-\d\d) (\d\d):(\d\d)};
         $act{date} = $date;
@@ -587,6 +658,77 @@ sub add_debug_key {
     $tokens->{debug_key} = $key;
 }
 
+sub ldap_auth {
+    my $user_name = shift;
+    my $password = shift;
+
+    my $user_dn = "uid=$user_name," . config->{ldap_base};
+    my $ldap = Net::LDAP->new(config->{ldap_host}, version => 3);
+
+    if(!$ldap) {
+        error "LDAP Error: Unable to connect to LDAP server ($@)";
+        return;
+    }
+
+    my $remote_ip = request->headers->{'x-forwarded-for'} || request->address;
+
+    my $mesg = $ldap->start_tls(verify => 'none');
+    if($mesg->code != 0) {
+        error "LDAP Error: [$remote_ip] " . $mesg->error;
+        return;
+    }
+
+    $mesg = $ldap->bind($user_dn, password => $password);
+    if($mesg->code != 0) {
+        error "LDAP Error: [$remote_ip] " . $mesg->error;
+        return;
+    }
+
+    $mesg = $ldap->search( # perform a search
+        base   => $user_dn,
+        filter => "(objectClass=person)",
+        scope  => 'base',
+        attrs  => [ 'cn', 'mail' ],
+    );
+    if($mesg->code != 0) {
+        error "LDAP Error: [$remote_ip] " . $mesg->error;
+        return;
+    }
+
+    my ($entry) = $mesg->entries;
+
+    # We're logged in. See if we already have a user
+    my $user = user_by_email( $entry->get_value('mail') );
+
+    return $user if $user;
+
+    # No user, create one.
+    my $user_rec = User->create(
+        {
+            email => $entry->get_value('mail'),
+            full_name => $entry->get_value('cn'),
+            status => 'active',
+            admin => 0,
+        },
+    );
+
+    my $default_wr_system = schema->resultset('WRSystem')->find(
+        {
+            is_default => 'true',
+        }
+    );
+
+    if ($default_wr_system) {
+        schema->resultset('UserWRSystem')->create(
+            {
+                app_user_id => $user_rec->id,
+                wr_system_id => $default_wr_system->id,
+            }
+        );
+    }
+
+    return $user_rec;
+}
 
 1;
 

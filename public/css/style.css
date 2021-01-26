@@ -66,6 +66,56 @@ p.pw-reset {
   font-size: 90%;
 }
 
+.prefs {
+  width: 70%;
+  padding: 20px;
+  margin: 130px auto 50px auto;
+  color: #444444;
+  border-radius: 3px;
+  box-shadow: 1px 1px 6px 4px rgba(100, 100, 100, 0.5);
+}
+
+.prefs h1 {
+  font-size: 130%;
+  font-weight: bold;
+  margin: 0 0 1.5em 0;
+}
+
+.prefs h3 {
+  font-weight: bold;
+  margin: 1em 0 1em 0;
+}
+
+
+.prefs input.submit {
+  font-size: 110%;
+  margin: 1em 40%;
+  padding: 0.2em 1em;
+}
+
+.prefs input.text,
+.prefs input.password,
+.prefs input.select,
+.prefs input.checkbox {
+  display: block;
+  width: 30%;
+  font-size: 110%;
+  padding: 4px 6px;
+}
+
+.prefs label {
+  display: block;
+  width: 100%;
+  margin: 0.6em 0 0.2em 0;
+  font-weight: bold;
+}
+
+.prefs #api-key {
+  background: black;
+  color: white;
+  font-family: Courier, monospace;
+}
+
 /* ######################################################## */
 
 .week-view {
@@ -216,10 +266,7 @@ p.pw-reset {
   display: block;
 }
 
-.total-hours {
-  position: absolute;
-  right: 10px;
-  bottom: 4px;
+.hours-total {
   color: #eeeeee;
   font-family: arial,sans-serif;
   font-size: 36px;
@@ -227,6 +274,41 @@ p.pw-reset {
   opacity: 0.5;
   z-index: 50;
   text-shadow: 0 0 6px #333333;
+  bottom: 4px;
+  position: fixed;
+}
+
+#total-hours {
+  position: absolute;
+  right: 10px;
+}
+
+#day-1-total {
+  left: 60px;
+}
+
+#day-2-total {
+  left: 260px;
+}
+
+#day-3-total {
+  left: 460px;
+}
+
+#day-4-total {
+  left: 660px;
+}
+
+#day-5-total {
+  left: 860px;
+}
+
+#day-6-total {
+  left: 1060px;
+}
+
+#day-0-total {
+  left: 1260px;
 }
 
 .menu {

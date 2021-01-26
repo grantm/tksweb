@@ -6,3 +6,5 @@
 /tks-data
 /var
 /logs/*.log
+/.vagrant
+.project

@@ -20,9 +20,7 @@
 (function($) {
     'use strict';
 
-    var TKSWeb = window.TKSWeb = {
-        interval_size_minutes: 15
-    };
+    var TKSWeb = window.TKSWeb = {};
     var dim = {};
     var keyCode = $.ui.keyCode;
     var end_of_day = 24 * 60;
@@ -285,11 +283,21 @@
             return this.dirty_models().length > 0;
         },
         total_hours: function() {
-            var total = 0;
+            var totals = {
+                total: 0
+            };
             this.each(function(activity){
-                total += activity.get("duration");
+            	var date = new Date(activity.get("date"));
+            	var duration = parseInt(activity.get("duration")) / 60;
+
+            	if (typeof(totals[date.getDay()]) == 'undefined') {
+            		totals[date.getDay()] = 0;
+            	}
+
+            	totals[date.getDay()] += duration;
+                totals.total += duration;
             });
-            return total / 60;
+            return totals;
         },
         select_next_activity: function(cursor_date, cursor_time) {
             var next = this.current_activity
@@ -1001,9 +1009,9 @@
             this.initialise_units();
             this.initialise_ui();
             this.collection.on({
-                'add'                         : this.add_activity
-               ,'cursor_move'                 : this.scroll_to_show_cursor
-               ,'add remove change:duration'  : this.show_total_hours
+                'add'               : this.add_activity
+               ,'cursor_move'       : this.scroll_to_show_cursor
+               ,'add remove change' : this.show_total_hours
             });
             $(window).on({
                 'resize'        : this.resize
@@ -1138,17 +1146,23 @@
             this.$('.hour-labels ul').css('top', y);
         },
         show_total_hours: function() {
-            var hours = this.collection.total_hours();
-            if(hours === 0) {
-                return this.$('.total-hours').text("");
+            var totals = this.collection.total_hours();
+
+            for (var day = 0; day <= 6; day++) {
+            	var dayId = '#day-' + day + '-total';
+            	if (typeof totals[day] == 'undefined') {
+            		this.$(dayId).text("");
+            	}
+            	else {
+            		this.$(dayId).text( totals[day].toFixed(2) );
+            	}
             }
-            if( hours === Math.floor(hours) ) {
-                hours = hours + ".00";
+
+            if(totals.total === 0) {
+                return this.$('#total-hours').text("");
             }
-            else {
-                hours = (hours + "0").replace(/([.]\d\d)\d*$/, '$1');
-            }
-            this.$('.total-hours').text( hours );
+
+            this.$('#total-hours').text( totals.total.toFixed(2) );
         },
         previous_week: function(e) {
             e.preventDefault();

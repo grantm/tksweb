@@ -1,0 +1,37 @@
+[% CALL set_title('User Preferences') %]
+  <div class="form-input">
+    <form class="prefs" action="/preferences" method="post">
+    <h1>TKS-Web Preferences</h1>
+
+    <label for="interval-size">Interval Size</label>
+    <select class="input" id="interval-size" name="interval_size">
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="10">10</option>
+        <option value="12">12</option>
+        <option value="15">15</option>
+        <option value="30">30</option>
+    </select>
+    (Minimum activity size in minutes)
+
+    <label for="daily-totals"><input type="checkbox" name="daily_totals" value="1" id="daily-totals">&nbsp;Display hours spent each day</label><br>
+
+    <h3>WR Systems Used</h3>
+    [% FOREACH wr_system IN wr_systems %]
+    <input type="checkbox" name="wr_systems" value="[% wr_system.id %]">&nbsp;[% wr_system.description %]<br>
+    [% END %]
+    </p>
+
+    <input type="submit" class="submit" value="Update">
+  </form>
+  </div>
+
+  <div class="prefs">
+    <h1>TKS-Web Info</h1>
+
+    <label for="api-key">API Key</label>
+    <div id="api-key">[% user.api_key %]</div>
+    (Use this to fetch TKS files - see <a href="/help">Help</a> for more)
+  </div>
+
+<p>[ <a href="/">Home</a> ]</p>

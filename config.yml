@@ -20,6 +20,8 @@ charset: "UTF-8"
 #
 #template: "template_toolkit"
 
+logger_format: "[%T] [%P] %L %D %m"
+
 template: "template_toolkit"
 engines:
   template_toolkit:
