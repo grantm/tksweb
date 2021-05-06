@@ -61,9 +61,9 @@
 {{else}}
   <input type="hidden" name="wr_system_id" value="{{wr_system_id}}">
 {{/if}}
-  <div class="activity-wr"><label>WR Number</label><input type="text" value="{{wr_number}}" name="wr_number" pattern="^[0-9]*$"></div>
-  <div class="activity-hr"><label>Hours</label><input type="text" value="{{duration}}" name="duration" min="0.25" max="24" step="0.25" required></div>
-  <div class="activity-dc"><label>Activity Description</label><input type="text" value="{{description}}" name="description" pattern=".*" spellcheck="true" required></div>
+  <div class="activity-wr"><label for="wr-number">WR Number</label><input type="text" id="wr-number" value="{{wr_number}}" name="wr_number" pattern="^[0-9]*$"></div>
+  <div class="activity-hr"><label for="duration">Hours</label><input type="text" id="duration" value="{{duration}}" name="duration" min="0.25" max="24" step="0.25" required></div>
+  <div class="activity-dc"><label for="description">Activity Description</label><input type="text" id="description" value="{{description}}" name="description" pattern=".*" spellcheck="true" required></div>
   <input type="submit" class="save" name="save" value="Save" hidefocus="true" tabindex="-1">
 </script>
 
